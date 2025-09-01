@@ -30,6 +30,13 @@
 			<Private>true</Private>
 		</Reference>
 	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="SeguridadManager.Lib">
+			<HintPath>lib\SeguridadManager.Lib.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
 
   <ItemGroup>
     <None Update="My Project\Application.myapp">
