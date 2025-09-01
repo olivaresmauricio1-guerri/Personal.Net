@@ -1,14 +1,42 @@
+Imports System.Security.Cryptography
+Imports DSM = DataSourceManager.Lib.DataSourceManager
+
 Public Class MainForm
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Configuración inicial del formulario MDI
+        Me.Text = $"Personal V.{My.Application.Info.Version}"
         Me.WindowState = FormWindowState.Maximized
-        Me.Text = "Gestión de Personal V." & Application.ProductVersion
-        
-        ' Configurar la barra de estado
-        StatusBar1.Text = "Listo"
-        StatusBar2.Text = DateTime.Now.ToString("dd/MM/yyyy")
-        StatusBar3.Text = "Usuario: " & Environment.UserName
+
+        Try
+            Dim sucursales = DSM.ExecuteQuery(
+               DSM.Stock,
+                "SELECT Descripcion FROM Sucursales WHERE idSucursal = @Sucursal",
+                CmdParams("@Sucursal", SucursalActual))
+
+            If sucursales.Rows.Count > 0 Then
+                General.DescripcionSucursal = sucursales.Rows(0)("Descripcion").ToString()
+            End If
+
+            Dim empresas = DSM.ExecuteQuery(
+               DSM.Stock,
+                "SELECT Descripcion FROM Empresas WHERE Codigo = @Empresa",
+                CmdParams("@Empresa", 1))
+
+            If empresas.Rows.Count > 0 Then
+                General.EmpresaActual = empresas.Rows(0)("Descripcion").ToString()
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show($"Error al cargar la configuración: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        ' Actualizar los paneles con la información actual
+        Panel1.Text = $"Sistema de Personal - Sucursal: {DescripcionSucursal}"
+        Panel4.Text = UsuarioActual & " | " & Mid(General.Entorno, 1, 3).ToUpper()
+        Panel2.Text = DateTime.Now.ToString("dd/MM/yyyy")
+        Panel3.Text = DateTime.Now.ToString("HH:mm")
+
+        'AplicarOpcionesHabilitadas()
     End Sub
 
     ' Eventos del menú Configuración
@@ -34,7 +62,18 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuSalir_Click(sender As Object, e As EventArgs) Handles MnuSalir.Click
-        ' Salir de la aplicación
+        Me.Close()
+    End Sub
+
+    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        ' Cerrar todas las conexiones de base de datos
+        Try
+            DSM.CloseAllConnections()
+        Catch ex As Exception
+            ' Ignorar errores al cerrar conexiones
+        End Try
+
+        ' Terminar la aplicación completamente
         Application.Exit()
     End Sub
 
@@ -212,5 +251,4 @@ Public Class MainForm
     Private Sub MnuEditarINI_Click(sender As Object, e As EventArgs) Handles MnuEditarINI.Click
         MessageBox.Show("Función de editar .INI no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
-
 End Class

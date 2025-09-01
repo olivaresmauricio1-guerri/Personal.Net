@@ -22,7 +22,12 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        MenuStrip1 = New MenuStrip()
+        StatusBar1 = New StatusStrip()
+        Panel1 = New ToolStripStatusLabel()
+        Panel2 = New ToolStripStatusLabel()
+        Panel3 = New ToolStripStatusLabel()
+        Panel4 = New ToolStripStatusLabel()
+        ToolStripStatusLabel1 = New ToolStripStatusLabel()
         MnuConfiguracion = New ToolStripMenuItem()
         MnuConImp = New ToolStripMenuItem()
         ToolStripSeparator1 = New ToolStripSeparator()
@@ -102,25 +107,56 @@ Partial Class MainForm
         MnuAyuda = New ToolStripMenuItem()
         MnuAcercaDe = New ToolStripMenuItem()
         MnuAyudaHelp = New ToolStripMenuItem()
-        StatusStrip1 = New StatusStrip()
-        StatusBar1 = New ToolStripStatusLabel()
-        StatusBar2 = New ToolStripStatusLabel()
-        StatusBar3 = New ToolStripStatusLabel()
+        MenuStrip1 = New MenuStrip()
+        StatusBar1.SuspendLayout()
         MenuStrip1.SuspendLayout()
-        StatusStrip1.SuspendLayout()
         SuspendLayout()
         ' 
-        ' MenuStrip1
+        ' StatusBar1
         ' 
-        MenuStrip1.ImageScalingSize = New Size(20, 20)
-        MenuStrip1.Items.AddRange(New ToolStripItem() {MnuConfiguracion, MnuImportaciones, MnuActualizaciones, MnuConsultas, MnuNomencladores, MnuSeguridad, MnuVentanas, MnuAyuda})
-        MenuStrip1.Location = New Point(0, 0)
-        MenuStrip1.MdiWindowListItem = MnuVentanasActivas
-        MenuStrip1.Name = "MenuStrip1"
-        MenuStrip1.Padding = New Padding(5, 2, 0, 2)
-        MenuStrip1.Size = New Size(1434, 24)
-        MenuStrip1.TabIndex = 1
-        MenuStrip1.Text = "MenuStrip1"
+        StatusBar1.ImageScalingSize = New Size(20, 20)
+        StatusBar1.Items.AddRange(New ToolStripItem() {Panel1, Panel2, Panel3, Panel4})
+        StatusBar1.Location = New Point(0, 437)
+        StatusBar1.Name = "StatusBar1"
+        StatusBar1.Padding = New Padding(1, 0, 17, 0)
+        StatusBar1.Size = New Size(1081, 22)
+        StatusBar1.TabIndex = 1
+        StatusBar1.Text = "StatusStrip1"
+        ' 
+        ' Panel1
+        ' 
+        Panel1.BackColor = Color.Silver
+        Panel1.Name = "Panel1"
+        Panel1.Size = New Size(886, 17)
+        Panel1.Spring = True
+        Panel1.Text = "Sistema de Contabilidad"
+        Panel1.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Panel2
+        ' 
+        Panel2.BackColor = Color.Silver
+        Panel2.Name = "Panel2"
+        Panel2.Size = New Size(65, 17)
+        Panel2.Text = "01/01/2024"
+        ' 
+        ' Panel3
+        ' 
+        Panel3.BackColor = Color.Silver
+        Panel3.Name = "Panel3"
+        Panel3.Size = New Size(34, 17)
+        Panel3.Text = "16:02"
+        ' 
+        ' Panel4
+        ' 
+        Panel4.BackColor = Color.Silver
+        Panel4.Name = "Panel4"
+        Panel4.Size = New Size(47, 17)
+        Panel4.Text = "Usuario"
+        ' 
+        ' ToolStripStatusLabel1
+        ' 
+        ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
+        ToolStripStatusLabel1.Size = New Size(23, 23)
         ' 
         ' MnuConfiguracion
         ' 
@@ -294,91 +330,91 @@ Partial Class MainForm
         ' MnuListadoMensualSucursal
         ' 
         MnuListadoMensualSucursal.Name = "MnuListadoMensualSucursal"
-        MnuListadoMensualSucursal.Size = New Size(264, 22)
+        MnuListadoMensualSucursal.Size = New Size(266, 22)
         MnuListadoMensualSucursal.Text = "Listado Mensual x Sucursal"
         ' 
         ' ToolStripSeparator10
         ' 
         ToolStripSeparator10.Name = "ToolStripSeparator10"
-        ToolStripSeparator10.Size = New Size(261, 6)
+        ToolStripSeparator10.Size = New Size(263, 6)
         ' 
         ' MnuListadoMensualOficina
         ' 
         MnuListadoMensualOficina.Name = "MnuListadoMensualOficina"
-        MnuListadoMensualOficina.Size = New Size(264, 22)
+        MnuListadoMensualOficina.Size = New Size(266, 22)
         MnuListadoMensualOficina.Text = "&Listado Mensual x Sucursal x Oficina"
         ' 
         ' ToolStripSeparator11
         ' 
         ToolStripSeparator11.Name = "ToolStripSeparator11"
-        ToolStripSeparator11.Size = New Size(261, 6)
+        ToolStripSeparator11.Size = New Size(263, 6)
         ' 
         ' MnuListadoDiario
         ' 
         MnuListadoDiario.Name = "MnuListadoDiario"
-        MnuListadoDiario.Size = New Size(264, 22)
+        MnuListadoDiario.Size = New Size(266, 22)
         MnuListadoDiario.Text = "Listado Diario Control Horario"
         ' 
         ' ToolStripSeparator12
         ' 
         ToolStripSeparator12.Name = "ToolStripSeparator12"
-        ToolStripSeparator12.Size = New Size(261, 6)
+        ToolStripSeparator12.Size = New Size(263, 6)
         ' 
         ' MnuConsultarAgentes
         ' 
         MnuConsultarAgentes.Name = "MnuConsultarAgentes"
-        MnuConsultarAgentes.Size = New Size(264, 22)
+        MnuConsultarAgentes.Size = New Size(266, 22)
         MnuConsultarAgentes.Text = "&Consultar Agentes"
         ' 
         ' ToolStripSeparator13
         ' 
         ToolStripSeparator13.Name = "ToolStripSeparator13"
-        ToolStripSeparator13.Size = New Size(261, 6)
+        ToolStripSeparator13.Size = New Size(263, 6)
         ' 
         ' MnuResumenAsistencia
         ' 
         MnuResumenAsistencia.Name = "MnuResumenAsistencia"
-        MnuResumenAsistencia.Size = New Size(264, 22)
+        MnuResumenAsistencia.Size = New Size(266, 22)
         MnuResumenAsistencia.Text = "&Resumen de Asistencia"
         ' 
         ' MnuResumenEventuales
         ' 
         MnuResumenEventuales.Name = "MnuResumenEventuales"
-        MnuResumenEventuales.Size = New Size(264, 22)
+        MnuResumenEventuales.Size = New Size(266, 22)
         MnuResumenEventuales.Text = "Resumen de Asistencia Eventuales"
         ' 
         ' ToolStripSeparator14
         ' 
         ToolStripSeparator14.Name = "ToolStripSeparator14"
-        ToolStripSeparator14.Size = New Size(261, 6)
+        ToolStripSeparator14.Size = New Size(263, 6)
         ' 
         ' MnuInasistenciaSinAviso
         ' 
         MnuInasistenciaSinAviso.Name = "MnuInasistenciaSinAviso"
-        MnuInasistenciaSinAviso.Size = New Size(264, 22)
+        MnuInasistenciaSinAviso.Size = New Size(266, 22)
         MnuInasistenciaSinAviso.Text = "Inasistencia sin aviso"
         ' 
         ' MnuListadoInasistencias
         ' 
         MnuListadoInasistencias.Name = "MnuListadoInasistencias"
-        MnuListadoInasistencias.Size = New Size(264, 22)
+        MnuListadoInasistencias.Size = New Size(266, 22)
         MnuListadoInasistencias.Text = "Listado de Inasistencias"
         ' 
         ' ToolStripSeparator15
         ' 
         ToolStripSeparator15.Name = "ToolStripSeparator15"
-        ToolStripSeparator15.Size = New Size(261, 6)
+        ToolStripSeparator15.Size = New Size(263, 6)
         ' 
         ' MnuListadoAgentes
         ' 
         MnuListadoAgentes.Name = "MnuListadoAgentes"
-        MnuListadoAgentes.Size = New Size(264, 22)
+        MnuListadoAgentes.Size = New Size(266, 22)
         MnuListadoAgentes.Text = "&Listados de Agentes"
         ' 
         ' MnuCumpleanos
         ' 
         MnuCumpleanos.Name = "MnuCumpleanos"
-        MnuCumpleanos.Size = New Size(264, 22)
+        MnuCumpleanos.Size = New Size(266, 22)
         MnuCumpleanos.Text = "Cumpleaños del Mes"
         ' 
         ' MnuNomencladores
@@ -391,73 +427,73 @@ Partial Class MainForm
         ' MnuAreas
         ' 
         MnuAreas.Name = "MnuAreas"
-        MnuAreas.Size = New Size(172, 22)
+        MnuAreas.Size = New Size(171, 22)
         MnuAreas.Text = "&Áreas"
         ' 
         ' ToolStripSeparator16
         ' 
         ToolStripSeparator16.Name = "ToolStripSeparator16"
-        ToolStripSeparator16.Size = New Size(169, 6)
+        ToolStripSeparator16.Size = New Size(168, 6)
         ' 
         ' MnuCategorias
         ' 
         MnuCategorias.Name = "MnuCategorias"
-        MnuCategorias.Size = New Size(172, 22)
+        MnuCategorias.Size = New Size(171, 22)
         MnuCategorias.Text = "&Categorías"
         ' 
         ' ToolStripSeparator17
         ' 
         ToolStripSeparator17.Name = "ToolStripSeparator17"
-        ToolStripSeparator17.Size = New Size(169, 6)
+        ToolStripSeparator17.Size = New Size(168, 6)
         ' 
         ' MnuFeriados
         ' 
         MnuFeriados.Name = "MnuFeriados"
-        MnuFeriados.Size = New Size(172, 22)
+        MnuFeriados.Size = New Size(171, 22)
         MnuFeriados.Text = "&Feriados"
         ' 
         ' ToolStripSeparator18
         ' 
         ToolStripSeparator18.Name = "ToolStripSeparator18"
-        ToolStripSeparator18.Size = New Size(169, 6)
+        ToolStripSeparator18.Size = New Size(168, 6)
         ' 
         ' MnuEncargados
         ' 
         MnuEncargados.Name = "MnuEncargados"
-        MnuEncargados.Size = New Size(172, 22)
+        MnuEncargados.Size = New Size(171, 22)
         MnuEncargados.Text = "Encargados"
         ' 
         ' ToolStripSeparator19
         ' 
         ToolStripSeparator19.Name = "ToolStripSeparator19"
-        ToolStripSeparator19.Size = New Size(169, 6)
+        ToolStripSeparator19.Size = New Size(168, 6)
         ' 
         ' MnuSucursales
         ' 
         MnuSucursales.Name = "MnuSucursales"
-        MnuSucursales.Size = New Size(172, 22)
+        MnuSucursales.Size = New Size(171, 22)
         MnuSucursales.Text = "&Sucursales"
         ' 
         ' ToolStripSeparator20
         ' 
         ToolStripSeparator20.Name = "ToolStripSeparator20"
-        ToolStripSeparator20.Size = New Size(169, 6)
+        ToolStripSeparator20.Size = New Size(168, 6)
         ' 
         ' MnuTiposInasistencias
         ' 
         MnuTiposInasistencias.Name = "MnuTiposInasistencias"
-        MnuTiposInasistencias.Size = New Size(172, 22)
+        MnuTiposInasistencias.Size = New Size(171, 22)
         MnuTiposInasistencias.Text = "&Tipos Inasistencias"
         ' 
         ' ToolStripSeparator21
         ' 
         ToolStripSeparator21.Name = "ToolStripSeparator21"
-        ToolStripSeparator21.Size = New Size(169, 6)
+        ToolStripSeparator21.Size = New Size(168, 6)
         ' 
         ' MnuTipoActividad
         ' 
         MnuTipoActividad.Name = "MnuTipoActividad"
-        MnuTipoActividad.Size = New Size(172, 22)
+        MnuTipoActividad.Size = New Size(171, 22)
         MnuTipoActividad.Text = "&Tipo Actividad"
         ' 
         ' MnuSeguridad
@@ -579,59 +615,46 @@ Partial Class MainForm
         MnuAyudaHelp.Size = New Size(135, 22)
         MnuAyudaHelp.Text = "A&yuda"
         ' 
-        ' StatusStrip1
+        ' MenuStrip1
         ' 
-        StatusStrip1.ImageScalingSize = New Size(20, 20)
-        StatusStrip1.Items.AddRange(New ToolStripItem() {StatusBar1, StatusBar2, StatusBar3})
-        StatusStrip1.Location = New Point(0, 835)
-        StatusStrip1.Name = "StatusStrip1"
-        StatusStrip1.Padding = New Padding(1, 0, 12, 0)
-        StatusStrip1.Size = New Size(1434, 22)
-        StatusStrip1.TabIndex = 2
-        StatusStrip1.Text = "StatusStrip1"
-        ' 
-        ' StatusBar1
-        ' 
-        StatusBar1.Name = "StatusBar1"
-        StatusBar1.Size = New Size(1336, 17)
-        StatusBar1.Spring = True
-        StatusBar1.Text = "Guerrini Neumáticos S.A"
-        ' 
-        ' StatusBar2
-        ' 
-        StatusBar2.Name = "StatusBar2"
-        StatusBar2.Size = New Size(47, 17)
-        StatusBar2.Text = "Usuario"
-        ' 
-        ' StatusBar3
-        ' 
-        StatusBar3.Name = "StatusBar3"
-        StatusBar3.Size = New Size(38, 17)
-        StatusBar3.Text = "Fecha"
+        MenuStrip1.ImageScalingSize = New Size(20, 20)
+        MenuStrip1.Items.AddRange(New ToolStripItem() {MnuConfiguracion, MnuImportaciones, MnuActualizaciones, MnuConsultas, MnuNomencladores, MnuSeguridad, MnuVentanas, MnuAyuda})
+        MenuStrip1.Location = New Point(0, 0)
+        MenuStrip1.MdiWindowListItem = MnuVentanasActivas
+        MenuStrip1.Name = "MenuStrip1"
+        MenuStrip1.Padding = New Padding(5, 2, 0, 2)
+        MenuStrip1.Size = New Size(1081, 24)
+        MenuStrip1.TabIndex = 1
+        MenuStrip1.Text = "MenuStrip1"
         ' 
         ' MainForm
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
-        ClientSize = New Size(1434, 857)
-        Controls.Add(StatusStrip1)
+        ClientSize = New Size(1081, 459)
+        Controls.Add(StatusBar1)
         Controls.Add(MenuStrip1)
         IsMdiContainer = True
         MainMenuStrip = MenuStrip1
         Name = "MainForm"
         Text = "Sistema de Gestión de Personal - GUERRINI NEUMATICOS S.A"
         WindowState = FormWindowState.Maximized
+        StatusBar1.ResumeLayout(False)
+        StatusBar1.PerformLayout()
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
-        StatusStrip1.ResumeLayout(False)
-        StatusStrip1.PerformLayout()
         ResumeLayout(False)
         PerformLayout()
 
     End Sub
 
-    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents StatusBar1 As StatusStrip
+    Friend WithEvents Panel1 As ToolStripStatusLabel
+    Friend WithEvents Panel2 As ToolStripStatusLabel
+    Friend WithEvents Panel3 As ToolStripStatusLabel
+    Friend WithEvents Panel4 As ToolStripStatusLabel
+    Friend WithEvents ToolStripStatusLabel1 As ToolStripStatusLabel
     Friend WithEvents MnuConfiguracion As ToolStripMenuItem
     Friend WithEvents MnuConImp As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
@@ -711,8 +734,5 @@ Partial Class MainForm
     Friend WithEvents MnuAyuda As ToolStripMenuItem
     Friend WithEvents MnuAcercaDe As ToolStripMenuItem
     Friend WithEvents MnuAyudaHelp As ToolStripMenuItem
-    Friend WithEvents StatusStrip1 As StatusStrip
-    Friend WithEvents StatusBar1 As ToolStripStatusLabel
-    Friend WithEvents StatusBar2 As ToolStripStatusLabel
-    Friend WithEvents StatusBar3 As ToolStripStatusLabel
+    Friend WithEvents MenuStrip1 As MenuStrip
 End Class

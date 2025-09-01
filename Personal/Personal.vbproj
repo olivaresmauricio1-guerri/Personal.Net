@@ -3,9 +3,11 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <StartupObject>Sub Main</StartupObject>
-    <UseWindowsForms>true</UseWindowsForms>
-    <MyType>WindowsForms</MyType>
+	  <StartupObject>Personal.frmSesion</StartupObject>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <MyType>WindowsForms</MyType>
+	  <PlatformTarget>x86</PlatformTarget>
+	  <RuntimeIdentifier>win-x86</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,11 +24,27 @@
     </Compile>
   </ItemGroup>
 
+	<ItemGroup>
+		<Reference Include="DataSourceManager.Lib">
+			<HintPath>lib\DataSourceManager.Lib.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
+
   <ItemGroup>
     <None Update="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="imagenes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
+    <PackageReference Include="System.Data.OleDb" Version="9.0.8" />
   </ItemGroup>
 
 </Project>

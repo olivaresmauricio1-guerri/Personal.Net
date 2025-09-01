@@ -4,7 +4,7 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Module General
 
-    Public Const modulo As String = "Seguridad"
+    Public Const modulo As String = "Reloj"
 
     ' Public ReadOnly UsuarioPorDefecto As String = SistemaINI("USUARIO")
     Public UsuarioActual As String = SistemaINI("USUARIO")
@@ -13,7 +13,7 @@ Public Module General
     Public ReadOnly SucursalActual As String = SistemaINI("SUCURSAL")
     Public ReadOnly PuntoVentaActual As String = SistemaINI("PUNTODEVENTA")
 
-    ' Public OpcionesHabilitadas As String = ""
+    Public OpcionesHabilitadas As String = ""
     Public ClaveErronea As Boolean = True
 
 #If DEBUG Then
