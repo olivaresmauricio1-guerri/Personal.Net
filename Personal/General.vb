@@ -24,6 +24,7 @@ Public Module General
     Public ReadOnly ProveedoresConnectionString As String = SistemaINI("DEBUG_DBPROVEEDORES")
     Public ReadOnly BancosConnectionString As String = SistemaINI("DEBUG_DBBANCOS")
     Public ReadOnly ContabilidadConnectionString As String = SistemaINI("DEBUG_DBCONTABILIDAD")
+    Public ReadOnly PersonalConnectionString As String = SistemaINI("DEBUG_DBPERSONAL")
 
     Public ReadOnly SqlApiServiceActivo As Boolean = If(SistemaINI("DEBUG_SQLAPISERVICE") = "ACTIVO", True, False)
     Public ReadOnly SqlApiServiceUrl As String = SistemaINI("DEBUG_SQLAPISERVICEURL")
@@ -40,6 +41,7 @@ Public Module General
     Public ReadOnly ProveedoresConnectionString As String = "Data Source=SERVERNT;Initial Catalog=Proveedores;Integrated Security=True;TrustServerCertificate=True"
     Public ReadOnly BancosConnectionString As String = "Data Source=SERVERNT;Initial Catalog=Bancos;Integrated Security=True;TrustServerCertificate=True"
     Public ReadOnly ContabilidadConnectionString As String = "Data Source=SERVERNT;Initial Catalog=Conta;Integrated Security=True;TrustServerCertificate=True"
+    Public ReadOnly PersonalConnectionString As String = "Data Source=SERVERNT;Initial Catalog=Personal;Integrated Security=True;TrustServerCertificate=True"
     
     Public ReadOnly SqlApiServiceActivo As Boolean = If(SistemaINI("SQLAPISERVICE") = "ACTIVO", True, False)
     Public ReadOnly SqlApiServiceUrl As String = SistemaINI("SQLAPISERVICEURL")
@@ -139,6 +141,7 @@ Public Module General
             {DSM.Proveedores, ProveedoresConnectionString},
             {DSM.Bancos, BancosConnectionString},
             {DSM.Contabilidad, ContabilidadConnectionString},
+            {DSM.Personal, PersonalConnectionString},
             {DSM.Stock_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Stock.mdb;"},
             {DSM.Seguridad_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Seguridad.mdb;"},
             {DSM.Proveedores_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Provee.mdb;"},
