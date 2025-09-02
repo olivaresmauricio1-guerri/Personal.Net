@@ -201,7 +201,6 @@ Partial Class frmSucursales
         DgvListado.MultiSelect = False
         DgvListado.Name = "DgvListado"
         DgvListado.ReadOnly = True
-        DgvListado.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         DgvListado.Size = New Size(560, 248)
         DgvListado.TabIndex = 32
         ' 

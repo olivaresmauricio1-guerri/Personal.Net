@@ -232,7 +232,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuTiposInasistencias_Click(sender As Object, e As EventArgs) Handles MnuTiposInasistencias.Click
-        MessageBox.Show("Función de tipos inasistencias no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmTipoInasistencias.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuTipoActividad_Click(sender As Object, e As EventArgs) Handles MnuTipoActividad.Click

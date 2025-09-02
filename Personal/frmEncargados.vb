@@ -24,7 +24,22 @@ Public Class frmEncargados
         FormModoConsulta()
         GridBuscar()
         GridConfigurarColumnas()
+        CargarSucursales()
         Me.KeyPreview = True
+    End Sub
+
+    Private Sub CargarSucursales()
+        Try
+            Dim sql = "SELECT Id, Descripcion FROM Institutos ORDER BY Descripcion"
+            Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql)
+
+            cmbSucursal.DataSource = tabla
+            cmbSucursal.DisplayMember = "Descripcion"
+            cmbSucursal.ValueMember = "Id"
+            cmbSucursal.SelectedIndex = -1
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar sucursales: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Sub TxtBuscar_TextChanged(sender As Object, e As EventArgs) Handles TxtBuscar.TextChanged
@@ -68,7 +83,7 @@ Public Class frmEncargados
 
     Private Sub CmdModificar_Click(sender As Object, e As EventArgs) Handles CmdModificar.Click
         FormModoEdicion()
-        TxtInstituto.Focus()
+        cmbSucursal.Focus()
     End Sub
 
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles CmdBorrar.Click
@@ -86,15 +101,15 @@ Public Class frmEncargados
     End Sub
 
     Public Sub CmdAceptar_Click(sender As Object, e As EventArgs) Handles CmdAceptar.Click
-        Dim instituto = TxtInstituto.Text.Trim
+        Dim instituto = cmbSucursal.Text.Trim
         Dim encargado = TxtEncargado.Text.Trim
         Dim oficina = TxtOficina.Text.Trim
         Dim telefono = TxtTelefono.Text.Trim
 
         ' Validaciones básicas
         If String.IsNullOrEmpty(instituto) Then
-            MessageBox.Show("El campo Instituto no puede estar vacío.")
-            TxtInstituto.Focus()
+            MessageBox.Show("Debe seleccionar una sucursal.")
+            cmbSucursal.Focus()
             Return
         End If
 
@@ -234,7 +249,7 @@ Public Class frmEncargados
     ''' </summary>
     Private Sub FormLimpiarSeleccionado()
         TxtId.Text = String.Empty
-        TxtInstituto.Text = String.Empty
+        cmbSucursal.SelectedIndex = -1
         TxtEncargado.Text = String.Empty
         TxtOficina.Text = String.Empty
         TxtTelefono.Text = String.Empty
@@ -247,7 +262,16 @@ Public Class frmEncargados
     Private Sub FormObtenerSeleccionado()
         If filaActual IsNot Nothing Then
             TxtId.Text = filaActual.Cells("Id").Value.ToString()
-            TxtInstituto.Text = If(filaActual.Cells("Instituto").Value IsNot DBNull.Value, filaActual.Cells("Instituto").Value.ToString(), String.Empty)
+
+            ' Seleccionar el instituto en el ComboBox basado en el texto del Instituto
+            Dim institutoTexto = If(filaActual.Cells("Instituto").Value IsNot DBNull.Value, filaActual.Cells("Instituto").Value.ToString(), String.Empty)
+            If Not String.IsNullOrEmpty(institutoTexto) Then
+                cmbSucursal.Text = institutoTexto
+            Else
+                cmbSucursal.SelectedIndex = -1
+            End If
+
+
             TxtEncargado.Text = If(filaActual.Cells("Encargado").Value IsNot DBNull.Value, filaActual.Cells("Encargado").Value.ToString(), String.Empty)
             TxtOficina.Text = If(filaActual.Cells("Oficina").Value IsNot DBNull.Value, filaActual.Cells("Oficina").Value.ToString(), String.Empty)
             TxtTelefono.Text = If(filaActual.Cells("Telefono").Value IsNot DBNull.Value, filaActual.Cells("Telefono").Value.ToString(), String.Empty)
@@ -259,14 +283,14 @@ Public Class frmEncargados
     ''' </summary>
     Public Sub FormModoConsulta()
         SetControlesEnabled(True, CmdAgregar, CmdModificar, CmdBorrar)
-        SetControlesEnabled(False, CmdAceptar, CmdCancelar, TxtInstituto, TxtEncargado, TxtOficina, TxtTelefono)
+        SetControlesEnabled(False, CmdAceptar, CmdCancelar, cmbSucursal, TxtEncargado, TxtOficina, TxtTelefono)
     End Sub
 
     ''' <summary>
     ''' Habilita o deshabilita los controles para aceptar o cancelar una edicion.
     ''' </summary>
     Public Sub FormModoEdicion()
-        SetControlesEnabled(True, CmdAceptar, CmdCancelar, TxtInstituto, TxtEncargado, TxtOficina, TxtTelefono)
+        SetControlesEnabled(True, CmdAceptar, CmdCancelar, cmbSucursal, TxtEncargado, TxtOficina, TxtTelefono)
         SetControlesEnabled(False, CmdAgregar, CmdModificar, CmdBorrar)
     End Sub
 

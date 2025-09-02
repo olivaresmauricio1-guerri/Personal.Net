@@ -37,7 +37,7 @@ Partial Class frmEncargados
         Label4 = New Label()
         TxtEncargado = New TextBox()
         Label3 = New Label()
-        TxtInstituto = New TextBox()
+        cmbSucursal = New ComboBox()
         Label2 = New Label()
         TxtId = New TextBox()
         Label1 = New Label()
@@ -207,13 +207,15 @@ Partial Class frmEncargados
         Label3.TabIndex = 23
         Label3.Text = "Sucursal:"
         ' 
-        ' TxtInstituto
+        ' cmbSucursal
         ' 
-        TxtInstituto.Location = New Point(324, 356)
-        TxtInstituto.Margin = New Padding(4, 3, 4, 3)
-        TxtInstituto.Name = "TxtInstituto"
-        TxtInstituto.Size = New Size(231, 23)
-        TxtInstituto.TabIndex = 22
+        cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList
+        cmbSucursal.FormattingEnabled = True
+        cmbSucursal.Location = New Point(324, 356)
+        cmbSucursal.Margin = New Padding(4, 3, 4, 3)
+        cmbSucursal.Name = "cmbSucursal"
+        cmbSucursal.Size = New Size(231, 23)
+        cmbSucursal.TabIndex = 22
         ' 
         ' Label2
         ' 
@@ -262,7 +264,6 @@ Partial Class frmEncargados
         DgvListado.MultiSelect = False
         DgvListado.Name = "DgvListado"
         DgvListado.ReadOnly = True
-        DgvListado.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         DgvListado.Size = New Size(773, 248)
         DgvListado.TabIndex = 32
         ' 
@@ -281,7 +282,7 @@ Partial Class frmEncargados
         Controls.Add(Label4)
         Controls.Add(TxtEncargado)
         Controls.Add(Label3)
-        Controls.Add(TxtInstituto)
+        Controls.Add(cmbSucursal)
         Controls.Add(Label2)
         Controls.Add(TxtId)
         Controls.Add(chkEncabezados)
@@ -319,7 +320,7 @@ Partial Class frmEncargados
     Friend WithEvents Label4 As Label
     Friend WithEvents TxtEncargado As TextBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents TxtInstituto As TextBox
+    Friend WithEvents cmbSucursal As ComboBox
     Friend WithEvents Label2 As Label
     Friend WithEvents TxtId As TextBox
     Friend WithEvents Label1 As Label
