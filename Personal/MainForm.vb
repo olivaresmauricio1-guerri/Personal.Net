@@ -212,11 +212,11 @@ Public Class MainForm
 
     ' Eventos del menú Nomencladores
     Private Sub MnuAreas_Click(sender As Object, e As EventArgs) Handles MnuAreas.Click
-        MessageBox.Show("Función de áreas no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmAreas.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuCategorias_Click(sender As Object, e As EventArgs) Handles MnuCategorias.Click
-        MessageBox.Show("Función de categorías no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmCategorias.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuFeriados_Click(sender As Object, e As EventArgs) Handles MnuFeriados.Click
@@ -224,15 +224,15 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuEncargados_Click(sender As Object, e As EventArgs) Handles MnuEncargados.Click
-        MessageBox.Show("Función de encargados no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmEncargados.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuSucursales_Click(sender As Object, e As EventArgs) Handles MnuSucursales.Click
-        MessageBox.Show("Función de sucursales no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmSucursales.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuTiposInasistencias_Click(sender As Object, e As EventArgs) Handles MnuTiposInasistencias.Click
-        MessageBox.Show("Función de tipos inasistencias no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmTipoInasistencias.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuTipoActividad_Click(sender As Object, e As EventArgs) Handles MnuTipoActividad.Click
