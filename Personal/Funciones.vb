@@ -2,6 +2,8 @@
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 
+Imports System.Diagnostics
+
 Public Module Funciones
 
     Public Function CmdParams(ParamArray values() As Object) As Dictionary(Of String, Object)
@@ -331,6 +333,38 @@ Public Module Funciones
     '    SendMessage(ctrl.Handle, WM_SETREDRAW, 1, 0)
     'End Sub
 
+    Public Sub AsegurarRegistroZkBridge()
+
+        ' ¿Ya está registrado?
+        Dim t = Type.GetTypeFromProgID("ZkBridge.Attendance", throwOnError:=False)
+        If t IsNot Nothing Then Exit Sub
+
+        ' Ejecutar el registrador con UAC
+        Dim script = IO.Path.Combine(AppContext.BaseDirectory, "register-zkbridge.cmd")
+        If Not IO.File.Exists(script) Then
+            Throw New Exception("Falta register-zkbridge.cmd en la carpeta de la app.")
+        End If
+
+        Dim psi As New ProcessStartInfo(script) With {
+        .UseShellExecute = True,
+        .Verb = "runas" ' fuerza UAC
+    }
+        Dim p = Process.Start(psi)
+        p.WaitForExit()
+
+        ' Reintenta resolver el ProgID
+        t = Type.GetTypeFromProgID("ZkBridge.Attendance", throwOnError:=False)
+        If t Is Nothing Then
+            Throw New Exception("No se pudo registrar ZkBridge (necesita permisos de admin).")
+        End If
+    End Sub
+
+    Public Function CrearZkBridge() As Object
+        Funciones.AsegurarRegistroZkBridge()
+        Dim t = Type.GetTypeFromProgID("ZkBridge.Attendance")
+        Dim zk = Activator.CreateInstance(t)
+        Return zk
+    End Function
 
 
 End Module

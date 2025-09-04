@@ -79,7 +79,8 @@ Public Class MainForm
 
     ' Eventos del menú Importaciones
     Private Sub MnuBajaNovedades_Click(sender As Object, e As EventArgs) Handles MnuBajaNovedades.Click
-        MessageBox.Show("Función de bajar novedades reloj no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        ' MessageBox.Show("Función de bajar novedades reloj no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmBajaReloj.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuImportarAuto_Click(sender As Object, e As EventArgs) Handles MnuImportarAuto.Click

@@ -8,6 +8,7 @@
 	  <MyType>WindowsForms</MyType>
 	  <PlatformTarget>x86</PlatformTarget>
 	  <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+	  <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -53,5 +54,86 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
     <PackageReference Include="System.Data.OleDb" Version="9.0.8" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ZkBridge\ZkBridge.vbproj" />
+	</ItemGroup>
+
+	<Target Name="PackZkBridge" AfterTargets="Build;Publish">
+
+		<!-- Compila el wrapper x86 con la misma configuración -->
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\ZkBridge\ZkBridge.vbproj"
+				 Targets="Build"
+				 Properties="Configuration=$(Configuration);Platform=x86" />
+
+		<!-- Carpetas de salida -->
+		<PropertyGroup>
+			<!-- Carpeta de BUILD (junto al EXE que corrés con F5) -->
+			<_BuildOut>$(TargetDir)</_BuildOut>
+
+			<!-- Carpeta de PUBLISH (puede venir vacía si no es publish) -->
+			<_PubOut Condition="'$(PublishDir)' != ''">$(PublishDir)</_PubOut>
+		</PropertyGroup>
+
+		<!-- Archivos a copiar -->
+		<ItemGroup>
+			<_ZkBridgeFiles Include="$(MSBuildProjectDirectory)\..\ZkBridge\bin\$(Configuration)\**\ZkBridge.*" />
+		</ItemGroup>
+
+		<!-- Copiar al directorio de BUILD -->
+		<Copy SourceFiles="@(_ZkBridgeFiles)"
+			  DestinationFolder="$(_BuildOut)ZkBridge\%(RecursiveDir)"
+			  SkipUnchangedFiles="true" />
+
+		<!-- Copiar al directorio de PUBLISH (si existe) -->
+		<Copy SourceFiles="@(_ZkBridgeFiles)"
+			  DestinationFolder="$(_PubOut)ZkBridge\%(RecursiveDir)"
+			  SkipUnchangedFiles="true"
+			  Condition="'$(_PubOut)' != ''" />
+
+		<!-- Generar scripts en BUILD -->
+		<PropertyGroup>
+			<_RegCmdPathBuild>$(_BuildOut)register-zkbridge.cmd</_RegCmdPathBuild>
+			<_UnregCmdPathBuild>$(_BuildOut)unregister-zkbridge.cmd</_UnregCmdPathBuild>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_RegLines Include="@echo off" />
+			<_RegLines Include="setlocal" />
+			<_RegLines Include="set THIS=%~dp0" />
+			<_RegLines Include="set REGASM=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\regasm.exe" />
+			<_RegLines Include="if not exist &quot;%REGASM%&quot; echo No se encontró RegAsm x86 &amp;&amp; exit /b 1" />
+			<_RegLines Include="rem Registrar solo si no existe el ProgID" />
+			<!-- ¡OJO! escapado: 2&gt;&amp;1 y &amp;&amp; -->
+			<_RegLines Include="reg query HKLM\Software\Classes\ZkBridge.Attendance\CLSID &gt;nul 2&gt;&amp;1 &amp;&amp; goto :eof" />
+			<_RegLines Include="echo Registrando ZkBridge..." />
+			<_RegLines Include="&quot;%REGASM%&quot; &quot;%THIS%ZkBridge\ZkBridge.dll&quot; /codebase /tlb" />
+			<_RegLines Include="endlocal" />
+
+			<_UnregLines Include="@echo off" />
+			<_UnregLines Include="setlocal" />
+			<_UnregLines Include="set THIS=%~dp0" />
+			<_UnregLines Include="set REGASM=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\regasm.exe" />
+			<_UnregLines Include="if not exist &quot;%REGASM%&quot; echo No se encontró RegAsm x86 &amp;&amp; exit /b 1" />
+			<_UnregLines Include="&quot;%REGASM%&quot; &quot;%THIS%ZkBridge\ZkBridge.dll&quot; /unregister" />
+			<_UnregLines Include="endlocal" />
+		</ItemGroup>
+
+		<WriteLinesToFile File="$(_RegCmdPathBuild)" Lines="@(_RegLines)" Overwrite="true" />
+		<WriteLinesToFile File="$(_UnregCmdPathBuild)" Lines="@(_UnregLines)" Overwrite="true" />
+
+		<!-- Generar scripts en PUBLISH (si existe) -->
+		<PropertyGroup>
+			<_RegCmdPathPub>$(_PubOut)register-zkbridge.cmd</_RegCmdPathPub>
+			<_UnregCmdPathPub>$(_PubOut)unregister-zkbridge.cmd</_UnregCmdPathPub>
+		</PropertyGroup>
+
+		<WriteLinesToFile File="$(_RegCmdPathPub)" Lines="@(_RegLines)" Overwrite="true"
+						  Condition="'$(_PubOut)' != ''" />
+		<WriteLinesToFile File="$(_UnregCmdPathPub)" Lines="@(_UnregLines)" Overwrite="true"
+						  Condition="'$(_PubOut)' != ''" />
+
+	</Target>
+
 
 </Project>
