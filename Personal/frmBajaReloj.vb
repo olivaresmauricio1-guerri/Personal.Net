@@ -159,7 +159,7 @@ Partial Class frmBajaReloj
             New With {.Nombre = "Reloj Casa Central", .IP = "192.168.2.5", .Puerto = 4370},
             New With {.Nombre = "Reloj Autoshop Mdz", .IP = "192.168.2.6", .Puerto = 4370},
             New With {.Nombre = "Reloj Zona Franca", .IP = "192.168.3.5", .Puerto = 4370},
-            New With {.Nombre = "Reloj Halpern", .IP = "192.168.4.50", .Puerto = 4370},
+            New With {.Nombre = "Reloj Halpern", .IP = "192.168.4.50", .Puerto = 4371},
             New With {.Nombre = "Reloj Neuquen", .IP = "181.171.90.106", .Puerto = 4370}
         }
 
