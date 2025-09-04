@@ -187,7 +187,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuResumenAsistencia_Click(sender As Object, e As EventArgs) Handles MnuResumenAsistencia.Click
-        MessageBox.Show("Función de resumen de asistencia no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmResumenAsistencia.abrirInstancia(Me)
     End Sub
 
     Private Sub MnuResumenEventuales_Click(sender As Object, e As EventArgs) Handles MnuResumenEventuales.Click
