@@ -3,6 +3,8 @@ Imports System.Threading
 Imports System.Web.Script.Serialization
 Imports zkemkeeper
 Imports System.IO
+Imports System.Net.Sockets
+
 
 
 Friend Module ZkLog
@@ -22,7 +24,7 @@ End Module
 <Guid("D2E1B4F4-2A57-4C34-B842-8E1AF1B31234")>
 <InterfaceType(ComInterfaceType.InterfaceIsIDispatch)>
 Public Interface IZkBridge
-    Function Conectar(ip As String, puerto As Integer) As Boolean
+    Function Conectar(ip As String, puerto As Integer, Optional commKey As Integer = 0) As Boolean
     Sub Desconectar()
     Function CargarLogs() As Integer
     Function ObtenerLogs(Optional pagina As Integer = 0) As String
@@ -44,6 +46,7 @@ Public Class ZkBridge
 
     Private _ip As String = ""
     Private _puerto As Integer = 4370
+    Private _commKey As Integer = 0
     Private _connected As Boolean = False
     Private ReadOnly _lock As New Object()
     Private _logsCache As List(Of Object) = New List(Of Object)()
@@ -58,10 +61,9 @@ Public Class ZkBridge
     End Sub
 
     ' ===== API expuesta por COM =====
-    Public Function Conectar(ip As String, puerto As Integer) As Boolean Implements IZkBridge.Conectar
+    Public Function Conectar(ip As String, puerto As Integer, Optional commKey As Integer = 0) As Boolean Implements IZkBridge.Conectar
         SyncLock _lock
-            _ip = ip
-            _puerto = puerto
+            _ip = ip : _puerto = puerto : _commKey = commKey
             _connected = TryConectar()
             Return _connected
         End SyncLock
@@ -191,13 +193,53 @@ Public Class ZkBridge
     Private Function TryConectar() As Boolean
         For i As Integer = 1 To 3
             Try
-                If _zk.Connect_Net(_ip, _puerto) Then
+                W($"TryConectar intento {i} a {_ip}:{_puerto} con commKey={_commKey}")
+
+                W($"Precheck TCP FAIL a {_ip}:{_puerto} (puerto cerrado/filtrado)")
+
+                ' 1) Intento con la clave indicada
+                Try
+                    _zk.SetCommPassword(_commKey)
+                    W("SetCommPassword OK")
+                Catch ex As Exception
+                    W($"SetCommPassword EX: {ex.Message}")
+                End Try
+
+                Dim ok As Boolean = _zk.Connect_Net(_ip, _puerto)
+                If ok Then
+                    W("Connect_Net OK (con clave)")
                     _connected = True
                     Return True
+                Else
+                    Dim errno As Integer = 0
+                    Try : _zk.GetLastError(errno) : Catch : End Try
+                    W($"Connect_Net FAIL (con clave), errno={errno}")
                 End If
-            Catch
-                ' ignore y reintentar
+
+                ' 2) Si falló y la clave no era 0, probá SIN clave (dispositivos sin commkey)
+                If _commKey <> 0 Then
+                    Try
+                        _zk.SetCommPassword(0)
+                        W("Retry SetCommPassword(0) OK")
+                    Catch ex As Exception
+                        W($"Retry SetCommPassword(0) EX: {ex.Message}")
+                    End Try
+
+                    ok = _zk.Connect_Net(_ip, _puerto)
+                    If ok Then
+                        W("Connect_Net OK (sin clave, el equipo no usa comm key)")
+                        _connected = True
+                        Return True
+                    Else
+                        Dim errno2 As Integer = 0
+                        Try : _zk.GetLastError(errno2) : Catch : End Try
+                        W($"Connect_Net FAIL (sin clave), errno={errno2}")
+                    End If
+                End If
+            Catch ex As Exception
+                W($"TryConectar EX: {ex.Message}")
             End Try
+
             Thread.Sleep(500 * i)
         Next
         _connected = False

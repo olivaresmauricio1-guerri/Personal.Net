@@ -11,6 +11,7 @@ Partial Class frmBajaReloj
         Public Property Nombre As String
         Public Property Ip As String
         Public Property Puerto As Integer
+        Public Property CommKey As Integer = 0
         Public Property Conectado As Boolean
         Public Property UltimaVerif As DateTime?
         Public Property Conectando As Boolean
@@ -112,7 +113,7 @@ Partial Class frmBajaReloj
 
     Private Sub CargarRelojes()
 
-        Dim sql = "SELECT Nombre, Ip, Puerto FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
+        Dim sql = "SELECT Nombre, Ip, Puerto, ClaveCom FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
         Dim dtRelojes As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, Nothing)
 
         relojes.Clear()
@@ -123,6 +124,7 @@ Partial Class frmBajaReloj
                 .Nombre = CStr(row("Nombre")),
                 .Ip = CStr(row("Ip")),
                 .Puerto = If(IsDBNull(row("Puerto")), 4370, Convert.ToInt32(row("Puerto"))),
+                .CommKey = If(IsDBNull(row("ClaveCom")), 0, Convert.ToInt32(row("ClaveCom"))),
                 .Conectado = False,
                 .UltimaVerif = Nothing
             }
@@ -219,7 +221,7 @@ Partial Class frmBajaReloj
 
                     Dim ok As Boolean = False
                     Try
-                        ok = zk.Conectar(reloj.Ip, reloj.Puerto)
+                        ok = zk.Conectar(reloj.Ip, reloj.Puerto, reloj.CommKey)
                     Catch exConn As Exception
                         ok = False
                     End Try
