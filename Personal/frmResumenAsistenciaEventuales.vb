@@ -1,8 +1,8 @@
 Imports System.Data.SqlClient
 Imports DSM = DataSourceManager.Lib.DataSourceManager
 
-Public Class frmResumenAsistencia
-    Private Shared instancia As frmResumenAsistencia
+Public Class frmResumenAsistenciaEventuales
+    Private Shared instancia As frmResumenAsistenciaEventuales
     Private filaActual As DataRow
     Private filaActualIndice As Integer = -1
     Private dtEmpleados As DataTable
@@ -12,7 +12,7 @@ Public Class frmResumenAsistencia
 
     Public Shared Sub AbrirInstancia(mdiParent As Form)
         If instancia Is Nothing OrElse instancia.IsDisposed Then
-            instancia = New frmResumenAsistencia()
+            instancia = New frmResumenAsistenciaEventuales()
             instancia.MdiParent = mdiParent
         End If
         instancia.Show()
@@ -20,9 +20,9 @@ Public Class frmResumenAsistencia
         instancia.Focus()
     End Sub
     ' Singleton pattern
-    Public Shared Function ObtenerInstancia() As frmResumenAsistencia
+    Public Shared Function ObtenerInstancia() As frmResumenAsistenciaEventuales
         If instancia Is Nothing OrElse instancia.IsDisposed Then
-            instancia = New frmResumenAsistencia()
+            instancia = New frmResumenAsistenciaEventuales()
         End If
         Return instancia
     End Function
@@ -57,6 +57,7 @@ Public Class frmResumenAsistencia
             CmbMeses.DisplayMember = "Mes"
             CmbMeses.ValueMember = "idMes"
             CmbMeses.SelectedIndex = -1
+
         Catch ex As Exception
             MessageBox.Show("Error al cargar meses: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -67,7 +68,7 @@ Public Class frmResumenAsistencia
             ' Deshabilitar el evento temporalmente
             RemoveHandler CmbNombres.SelectedIndexChanged, AddressOf CmbNombres_SelectedIndexChanged
 
-            Dim sql As String = "SELECT * From Agentes WHERE Baja = '' OR Baja IS NULL ORDER BY NOMBRE;"
+            Dim sql As String = "SELECT * From Eventuales WHERE Baja = '' OR Baja IS NULL ORDER BY NOMBRE;"
             Dim dtEmpleados = DSM.ExecuteQuery(DSM.Personal, sql)
 
             ' Cargar ComboBox de nombres
@@ -157,7 +158,7 @@ Public Class frmResumenAsistencia
     ' Cargar datos del empleado seleccionado
     Private Sub CargarDatosEmpleado(legajo As String)
         Try
-            Dim sql As String = "SELECT * FROM Agentes WHERE Legajo = @legajo"
+            Dim sql As String = "SELECT * FROM Eventuales WHERE Legajo = @legajo"
             Dim parametros As New Dictionary(Of String, Object) From {{"@legajo", legajo}}
             Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
 
