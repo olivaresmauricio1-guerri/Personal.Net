@@ -89,7 +89,7 @@ Public Class MainForm
 
     ' Eventos del menú Actualizaciones
     Private Sub MnuMantenimientoAgentes_Click(sender As Object, e As EventArgs) Handles MnuMantenimientoAgentes.Click
-        MessageBox.Show("Función de mantenimiento de agentes no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmAgentes.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuMantenimientoEventuales_Click(sender As Object, e As EventArgs) Handles MnuMantenimientoEventuales.Click
