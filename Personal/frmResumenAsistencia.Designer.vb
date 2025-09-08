@@ -131,7 +131,7 @@ Partial Class frmResumenAsistencia
         ' CmdImprimir
         ' 
         CmdImprimir.FlatStyle = FlatStyle.Flat
-        CmdImprimir.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Bold)
+        CmdImprimir.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
         CmdImprimir.Location = New Point(671, 584)
         CmdImprimir.Margin = New Padding(4, 3, 4, 3)
         CmdImprimir.Name = "CmdImprimir"
@@ -143,7 +143,7 @@ Partial Class frmResumenAsistencia
         ' CmdInasistencias
         ' 
         CmdInasistencias.FlatStyle = FlatStyle.Flat
-        CmdInasistencias.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Bold)
+        CmdInasistencias.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
         CmdInasistencias.Location = New Point(555, 584)
         CmdInasistencias.Margin = New Padding(4, 3, 4, 3)
         CmdInasistencias.Name = "CmdInasistencias"
@@ -155,7 +155,7 @@ Partial Class frmResumenAsistencia
         ' CmdResumen
         ' 
         CmdResumen.FlatStyle = FlatStyle.Flat
-        CmdResumen.Font = New Font("Microsoft Sans Serif", 9.0F, FontStyle.Bold)
+        CmdResumen.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
         CmdResumen.Location = New Point(744, 16)
         CmdResumen.Margin = New Padding(4, 3, 4, 3)
         CmdResumen.Name = "CmdResumen"
@@ -790,7 +790,7 @@ Partial Class frmResumenAsistencia
         ' 
         ' frmResumenAsistencia
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(837, 622)
         Controls.Add(DgvInasistencias)
@@ -815,7 +815,7 @@ Partial Class frmResumenAsistencia
         MinimizeBox = False
         Name = "frmResumenAsistencia"
         StartPosition = FormStartPosition.CenterScreen
-        Text = "Resumen de Asistencia"
+        Text = "Consultas - Resumen de Asistencia"
         CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInasistencias, ComponentModel.ISupportInitialize).EndInit()
         GroupBox1.ResumeLayout(False)
