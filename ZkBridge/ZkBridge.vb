@@ -2,6 +2,21 @@
 Imports System.Threading
 Imports System.Web.Script.Serialization
 Imports zkemkeeper
+Imports System.IO
+
+
+Friend Module ZkLog
+    Private ReadOnly PathLog As String = "c:\util\zkbridge.log"
+
+    Public Sub W(msg As String)
+        Try
+            ' Directory.CreateDirectory(IO.Path.GetDirectoryName(PathLog))
+            File.AppendAllText(PathLog, $"{DateTime.Now:HH:mm:ss.fff} [T{Thread.CurrentThread.ManagedThreadId}] {msg}{Environment.NewLine}")
+        Catch
+        End Try
+        Debug.WriteLine("[ZkBridge] " & msg) ' también al Output
+    End Sub
+End Module
 
 <ComVisible(True)>
 <Guid("D2E1B4F4-2A57-4C34-B842-8E1AF1B31234")>
@@ -9,8 +24,10 @@ Imports zkemkeeper
 Public Interface IZkBridge
     Function Conectar(ip As String, puerto As Integer) As Boolean
     Sub Desconectar()
-    Function LeerLogs() As String ' JSON
-
+    Function CargarLogs() As Integer
+    Function ObtenerLogs(Optional pagina As Integer = 0) As String
+    Function TotalLogs() As Integer
+    Function PageSize() As Integer
     Function Ping() As Boolean
 End Interface
 
@@ -20,6 +37,7 @@ End Interface
 <ProgId("ZkBridge.Attendance")>
 Public Class ZkBridge
     Implements IZkBridge
+    Private Const PAGE_SIZE As Integer = 50
 
     ' IMPORTANTE: WithEvents para capturar eventos del ActiveX
     Private WithEvents _zk As New CZKEM()
@@ -28,6 +46,7 @@ Public Class ZkBridge
     Private _puerto As Integer = 4370
     Private _connected As Boolean = False
     Private ReadOnly _lock As New Object()
+    Private _logsCache As List(Of Object) = New List(Of Object)()
 
     ' ===== Eventos del SDK: marcan el estado en tiempo real =====
     Private Sub _zk_OnConnected() Handles _zk.OnConnected
@@ -61,59 +80,109 @@ Public Class ZkBridge
         End SyncLock
     End Function
 
-    Public Function LeerLogs() As String Implements IZkBridge.LeerLogs
+    Private _machine As Integer = 1 ' el que uses/detectes
+
+    Public Function CargarLogs() As Integer Implements IZkBridge.CargarLogs
         SyncLock _lock
-            ' 1) Asegurar conexión (con heartbeat)
-            If Not EnsureConnected() Then
-                Return "[]"
-            End If
+            If Not EnsureConnected() Then Return 0
 
-            ' 2) Intentar lectura con política de reintentos
-            Dim logs As List(Of Object) = TryOpWithReconnect(
-                Function()
-                    Dim ok As Boolean = False
-                    Try
-                        ok = _zk.ReadGeneralLogData(1)
-                    Catch
-                        ok = False
-                    End Try
-                    If Not ok Then
-                        ' Si falla, forzamos excepción para disparar reconexión en TryOpWithReconnect
-                        Throw New COMException("ReadGeneralLogData failed")
-                    End If
+            Dim logs As New List(Of Object)()
+            Dim m = _machine
 
-                    Dim res As New List(Of Object)()
-                    Dim dwTMachineNumber As Integer
-                    Dim dwEnrollNumber As Integer
-                    Dim dwEMachineNumber As Integer
-                    Dim dwVerifyMode As Integer
-                    Dim dwInOutMode As Integer
-                    Dim dwYear As Integer
-                    Dim dwMonth As Integer
-                    Dim dwDay As Integer
-                    Dim dwHour As Integer
-                    Dim dwMinute As Integer
+            Try
+                ' Si estás conviviendo con otro sistema, mejor NO deshabilitar el equipo:
+                'Try : _zk.EnableDevice(m, False) : Catch : End Try
 
-                    While _zk.GetGeneralLogData(1, dwTMachineNumber, dwEnrollNumber, dwEMachineNumber,
-                                                dwVerifyMode, dwInOutMode, dwYear, dwMonth, dwDay, dwHour, dwMinute)
-                        Dim fechaHora As New DateTime(dwYear, dwMonth, dwDay, dwHour, dwMinute, 0)
-                        res.Add(New With {
-                            .id = dwEnrollNumber,
-                            .fechaHora = fechaHora.ToString("yyyy-MM-dd HH:mm"),
-                            .verifyMode = dwVerifyMode,
-                            .inOutMode = dwInOutMode,
-                            .tMachine = dwTMachineNumber,
-                            .eMachine = dwEMachineNumber
+                ' 1) Conteo total (rápido). Si 0, salir.
+                Dim total As Integer = -1
+                Try : _zk.GetDeviceStatus(m, 6, total) : Catch : total = -1 : End Try
+                If total = 0 Then
+                    _logsCache = logs
+                    Return 0
+                End If
+
+                ' 2) Preparar buffer: usar SSR "all" y, si no está, fallback a legacy
+                Dim prepared As Boolean = False
+                Try : prepared = _zk.ReadAllGLogData(m) : Catch : prepared = False : End Try
+                If Not prepared Then
+                    Try : prepared = _zk.ReadGeneralLogData(m) : Catch : prepared = False : End Try
+                End If
+                If Not prepared Then
+                    _logsCache = logs
+                    Return 0
+                End If
+
+                ' 3) Enumerar primero con SSR (string + seconds)
+                Dim any As Boolean = False
+                Try
+                    Dim enroll As String = ""
+                    Dim verify, inout, y, mm, d, h, nn, ss, workcode As Integer
+                    While _zk.SSR_GetGeneralLogData(m, enroll, verify, inout, y, mm, d, h, nn, ss, workcode)
+                        Dim fh As New DateTime(y, mm, d, h, nn, Math.Max(0, ss))
+                        logs.Add(New With {
+                            .id = If(enroll, ""),
+                            .fechaHora = fh.ToString("yyyy-MM-dd HH:mm:ss"),
+                            .verifyMode = verify,
+                            .inOutMode = inout
+                        })
+                        any = True
+                    End While
+                Catch
+                    any = False
+                End Try
+
+                ' 4) Si SSR no devolvió nada, fallback a legacy (sin seconds, id entero)
+                If Not any Then
+                    Dim tMachine, enrollInt, eMachine As Integer
+                    Dim verify, inout As Integer
+                    Dim y, mm, d, h, nn As Integer
+                    While _zk.GetGeneralLogData(m, tMachine, enrollInt, eMachine, verify, inout, y, mm, d, h, nn)
+                        Dim fh As New DateTime(y, mm, d, h, nn, 0)
+                        logs.Add(New With {
+                            .id = enrollInt.ToString(),
+                            .fechaHora = fh.ToString("yyyy-MM-dd HH:mm:ss"),
+                            .verifyMode = verify,
+                            .inOutMode = inout
                         })
                     End While
-                    Return res
-                End Function,
-                maxRetries:=2
-            )
+                End If
+
+            Finally
+                ' Si deshabilitaste arriba, re-habilitá acá:
+                'Try : _zk.EnableDevice(m, True) : Catch : End Try
+                Try : _zk.RefreshData(m) : Catch : End Try
+            End Try
+
+            _logsCache = logs
+            Return _logsCache.Count
+        End SyncLock
+    End Function
+
+    Public Function ObtenerLogs(Optional pagina As Integer = 0) As String Implements IZkBridge.ObtenerLogs
+        SyncLock _lock
+            If _logsCache Is Nothing OrElse _logsCache.Count = 0 Then Return "[]"
+            If pagina < 0 Then pagina = 0
+
+            Dim start As Integer = pagina * PAGE_SIZE
+            If start >= _logsCache.Count Then Return "[]"
+
+            Dim count As Integer = Math.Min(PAGE_SIZE, _logsCache.Count - start)
+            Dim slice = _logsCache.GetRange(start, count)
 
             Dim ser = New JavaScriptSerializer()
-            Return ser.Serialize(logs)
+            Return ser.Serialize(slice)
         End SyncLock
+    End Function
+
+    Public Function TotalLogs() As Integer Implements IZkBridge.TotalLogs
+        SyncLock _lock
+            If _logsCache Is Nothing Then Return 0
+            Return _logsCache.Count
+        End SyncLock
+    End Function
+
+    Public Function PageSize() As Integer Implements IZkBridge.PageSize
+        Return PAGE_SIZE
     End Function
 
     ' ===== Utilitarios internos =====

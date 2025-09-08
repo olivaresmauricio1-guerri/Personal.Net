@@ -18,9 +18,10 @@ Partial Class frmBajaReloj
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         dgvRelojes = New DataGridView()
-        btnImportar = New Button()
+        btnImportarTodo = New Button()
+        cmdSalir = New Button()
         btnConectar = New Button()
-        chkMonitoreo = New CheckBox()
+        cmdImportarSeleccionado = New Button()
         CType(dgvRelojes, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -28,9 +29,8 @@ Partial Class frmBajaReloj
         ' 
         dgvRelojes.AllowUserToAddRows = False
         dgvRelojes.AllowUserToDeleteRows = False
-        dgvRelojes.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        dgvRelojes.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         dgvRelojes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        dgvRelojes.BackgroundColor = SystemColors.Window
         dgvRelojes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         dgvRelojes.Location = New Point(12, 12)
         dgvRelojes.MultiSelect = False
@@ -41,57 +41,84 @@ Partial Class frmBajaReloj
         dgvRelojes.Size = New Size(776, 300)
         dgvRelojes.TabIndex = 0
         ' 
-        ' btnImportar
+        ' btnImportarTodo
         ' 
-        btnImportar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
-        btnImportar.Location = New Point(158, 326)
-        btnImportar.Name = "btnImportar"
-        btnImportar.Size = New Size(140, 36)
-        btnImportar.TabIndex = 1
-        btnImportar.Text = "Importar logs"
-        btnImportar.UseVisualStyleBackColor = True
+        btnImportarTodo.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        btnImportarTodo.Cursor = Cursors.Hand
+        btnImportarTodo.FlatStyle = FlatStyle.Flat
+        btnImportarTodo.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnImportarTodo.Location = New Point(168, 332)
+        btnImportarTodo.Name = "btnImportarTodo"
+        btnImportarTodo.Size = New Size(124, 30)
+        btnImportarTodo.TabIndex = 1
+        btnImportarTodo.Text = "Importar Todo"
+        btnImportarTodo.UseVisualStyleBackColor = True
+        ' 
+        ' cmdSalir
+        ' 
+        cmdSalir.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        cmdSalir.BackColor = Color.IndianRed
+        cmdSalir.Cursor = Cursors.Hand
+        cmdSalir.FlatStyle = FlatStyle.Flat
+        cmdSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        cmdSalir.ForeColor = Color.White
+        cmdSalir.Location = New Point(688, 332)
+        cmdSalir.Name = "cmdSalir"
+        cmdSalir.Size = New Size(100, 30)
+        cmdSalir.TabIndex = 3
+        cmdSalir.Text = "Salir"
+        cmdSalir.UseVisualStyleBackColor = False
         ' 
         ' btnConectar
         ' 
         btnConectar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
-        btnConectar.Location = New Point(12, 326)
+        btnConectar.Cursor = Cursors.Hand
+        btnConectar.FlatStyle = FlatStyle.Flat
+        btnConectar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnConectar.Location = New Point(12, 332)
         btnConectar.Name = "btnConectar"
-        btnConectar.Size = New Size(140, 36)
+        btnConectar.Size = New Size(150, 30)
         btnConectar.TabIndex = 2
-        btnConectar.Text = "Conectar"
+        btnConectar.Text = "Probar Conexiones"
         btnConectar.UseVisualStyleBackColor = True
         ' 
-        ' chkMonitoreo
+        ' cmdImportarSeleccionado
         ' 
-        chkMonitoreo.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
-        chkMonitoreo.AutoSize = True
-        chkMonitoreo.Location = New Point(316, 335)
-        chkMonitoreo.Name = "chkMonitoreo"
-        chkMonitoreo.Size = New Size(132, 19)
-        chkMonitoreo.TabIndex = 3
-        chkMonitoreo.Text = "Monitoreo (cada 5s)"
-        chkMonitoreo.UseVisualStyleBackColor = True
+        cmdImportarSeleccionado.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        cmdImportarSeleccionado.Cursor = Cursors.Hand
+        cmdImportarSeleccionado.FlatStyle = FlatStyle.Flat
+        cmdImportarSeleccionado.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        cmdImportarSeleccionado.Location = New Point(298, 332)
+        cmdImportarSeleccionado.Name = "cmdImportarSeleccionado"
+        cmdImportarSeleccionado.Size = New Size(171, 30)
+        cmdImportarSeleccionado.TabIndex = 4
+        cmdImportarSeleccionado.Text = "Importar Seleccionado"
+        cmdImportarSeleccionado.UseVisualStyleBackColor = True
+        cmdImportarSeleccionado.Visible = False
         ' 
         ' frmBajaReloj
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 374)
-        Controls.Add(btnImportar)
+        Controls.Add(cmdImportarSeleccionado)
+        Controls.Add(cmdSalir)
+        Controls.Add(btnImportarTodo)
         Controls.Add(btnConectar)
-        Controls.Add(chkMonitoreo)
         Controls.Add(dgvRelojes)
+        MinimizeBox = False
+        MinimumSize = New Size(816, 413)
         Name = "frmBajaReloj"
         Text = "Monitoreo de Relojes ZKTeco"
         CType(dgvRelojes, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
-        PerformLayout()
 
     End Sub
 
     Friend WithEvents dgvRelojes As System.Windows.Forms.DataGridView
-    Friend WithEvents btnImportar As System.Windows.Forms.Button
-    Friend WithEvents btnConectar As System.Windows.Forms.Button
-    Friend WithEvents chkMonitoreo As System.Windows.Forms.CheckBox
+    Friend WithEvents btnImportarTodo As System.Windows.Forms.Button
+    Friend WithEvents cmdSalir As Button
+    Friend WithEvents btnConectar As Button
+    Friend WithEvents cmdImportarSeleccionado As Button
 
 End Class
