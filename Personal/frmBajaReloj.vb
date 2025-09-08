@@ -1,5 +1,9 @@
-﻿Imports System.Text.Json
+Imports System.Globalization
 Imports System.Runtime.InteropServices
+Imports System.Text.Json
+Imports System.Threading
+
+Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Partial Class frmBajaReloj
 
@@ -7,13 +11,12 @@ Partial Class frmBajaReloj
         Public Property Nombre As String
         Public Property Ip As String
         Public Property Puerto As Integer
-        Public Property Zk As Object          ' COM (late binding) - se creará al Conectar
         Public Property Conectado As Boolean
         Public Property UltimaVerif As DateTime?
+        Public Property Conectando As Boolean
     End Class
 
     Private relojes As New List(Of Reloj)
-    Private WithEvents tmr As New Timer()
 
     Private Shared instancia As frmBajaReloj
     Public Shared Sub AbrirInstancia(mdiParent As Form)
@@ -26,198 +29,383 @@ Partial Class frmBajaReloj
         instancia.Focus()
     End Sub
 
-    ' --- LOAD: liviano (no registra COM, no conecta, no arranca timer) ---
-    Private Sub frmBajaReloj_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Columnas (si no están)
-        If dgvRelojes.Columns.Count = 0 Then
-            dgvRelojes.Columns.Clear()
-            dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Nombre", .HeaderText = "Reloj"})
-            dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "IP", .HeaderText = "IP"})
-            dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Puerto", .HeaderText = "Puerto"})
-            dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Estado", .HeaderText = "Estado"})
-            dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Ultima", .HeaderText = "Última verificación"})
-        End If
+    ' ------------------------------------------------------------------------------------------------------------------------
+    ' ------------------------------------------------------------------------------------------------------------------------
+    ' ------------------------------------------------------------------------------------------------------------------------
 
-        CargarRelojes() ' solo filas; no crea COM
-        tmr.Interval = 5000 ' 5s
-        ' NO se inicia el timer acá
+    Private Sub frmBajaReloj_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        InicializarGrilla()
+        CargarRelojes()
     End Sub
 
     Private Sub frmBajaReloj_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
-        For Each reloj In relojes
-            Try
-                If reloj.Zk IsNot Nothing Then reloj.Zk.Desconectar()
-            Catch
-            End Try
-
-            Try
-                If reloj.Zk IsNot Nothing Then Marshal.FinalReleaseComObject(reloj.Zk)
-            Catch
-            End Try
-        Next
         relojes.Clear()
         instancia = Nothing
     End Sub
 
-    ' --- Botón CONECTAR: registra COM (si hace falta), crea COM y conecta ---
-    Private Sub btnConectar_Click(sender As Object, e As EventArgs) Handles btnConectar.Click
-        Try
-            ' registra solo si falta
-            If (Type.GetTypeFromProgID("ZkBridge.Attendance", throwOnError:=False) Is Nothing) Then
-                Funciones.AsegurarRegistroZkBridge() ' o EnsureZkBridgeRegistered()
-            End If
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End Try
-
-        SetBusy(True)
-        Try
-            ' obtener el indice de la fila seleccionada
-            If dgvRelojes.SelectedRows.Count > 0 Then
-                Dim indice = dgvRelojes.SelectedRows(0).Index
-                ConectarReloj(indice) ' síncrono; se dispara a demanda
-            End If
-
-            If chkMonitoreo.Checked Then tmr.Start()
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Conectar", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            SetBusy(False)
-        End Try
-    End Sub
-
-    ' --- Check monitoreo: start/stop timer, sin conectar automáticamente ---
-    Private Sub chkMonitoreo_CheckedChanged(sender As Object, e As EventArgs) Handles chkMonitoreo.CheckedChanged
-        If chkMonitoreo.Checked Then
-            tmr.Start()
-        Else
-            tmr.Stop()
+    Private Sub dgvRelojes_SelectionChanged(sender As Object, e As EventArgs) Handles dgvRelojes.SelectionChanged
+        Dim indiceSeleccionado As Integer = -1
+        If dgvRelojes.SelectedRows.Count > 0 Then
+            indiceSeleccionado = dgvRelojes.SelectedRows(0).Index
         End If
+        cmdImportarSeleccionado.Visible = (indiceSeleccionado >= 0 AndAlso indiceSeleccionado < relojes.Count)
     End Sub
 
-    ' --- Importar: a demanda; ignora relojes no conectados ---
-    Private Sub btnImportar_Click(sender As Object, e As EventArgs) Handles btnImportar.Click
-        MessageBox.Show("Funcionalidad de importación no implementada en este ejemplo.", "Importar logs", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    Private Sub btnImportarTodo_Click(sender As Object, e As EventArgs) Handles btnImportarTodo.Click
+        InicializarGrilla()
+        CargarRelojes()
 
-        'Dim total As Integer = 0
-        'Dim detalle As New List(Of String)
-
-        'SetBusy(True)
-        'Try
-        '    For Each r In relojes
-        '        If Not r.Conectado OrElse r.Zk Is Nothing Then Continue For
-        '        Try
-        '            Dim json As String = r.Zk.LeerLogs()
-        '            Dim count As Integer = 0
-        '            If Not String.IsNullOrWhiteSpace(json) Then
-        '                Using doc = JsonDocument.Parse(json)
-        '                    If doc.RootElement.ValueKind = JsonValueKind.Array Then
-        '                        count = doc.RootElement.GetArrayLength()
-        '                    End If
-        '                End Using
-        '            End If
-        '            total += count
-        '            detalle.Add($"{r.Nombre}: {count} registros")
-        '        Catch ex As Exception
-        '            detalle.Add($"{r.Nombre}: error ({ex.Message})")
-        '        End Try
-        '    Next
-        'Finally
-        '    SetBusy(False)
-        'End Try
-
-        'MessageBox.Show(String.Join(Environment.NewLine, detalle) &
-        '                Environment.NewLine & Environment.NewLine &
-        '                $"TOTAL: {total} registros",
-        '                "Importación de logs",
-        '                MessageBoxButtons.OK,
-        '                MessageBoxIcon.Information)
-    End Sub
-
-    ' --- Timer: solo “pingea” si hay COM creado ---
-    Private Sub tmr_Tick(sender As Object, e As EventArgs) Handles tmr.Tick
+        If Not AsegurarRegistroZkBridge() Then
+            MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
         For i = 0 To relojes.Count - 1
-            Dim r = relojes(i)
-            If r.Zk Is Nothing Then Continue For
-            Try
-                Dim ok As Boolean = r.Zk.Ping()
-                r.Conectado = ok
-                r.UltimaVerif = DateTime.Now
-            Catch
-                r.Conectado = False
-                r.UltimaVerif = DateTime.Now
-            End Try
-            PintarFila(i, r)
+            ConectarRelojAsync(i, True)
         Next
     End Sub
 
-    ' ---- Lógica ----
+    Private Sub cmdImportarSeleccionado_Click(sender As Object, e As EventArgs) Handles cmdImportarSeleccionado.Click
+        Dim indiceSeleccionado As Integer = -1
+        If dgvRelojes.SelectedRows.Count > 0 Then
+            indiceSeleccionado = dgvRelojes.SelectedRows(0).Index
+        End If
+        If indiceSeleccionado < 0 OrElse indiceSeleccionado >= relojes.Count Then
+            MessageBox.Show("No hay ningún reloj seleccionado.", "Importar marcaciones", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        If Not AsegurarRegistroZkBridge() Then
+            MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+        ConectarRelojAsync(indiceSeleccionado, True)
+    End Sub
+
+    Private Sub btnConectar_Click(sender As Object, e As EventArgs) Handles btnConectar.Click
+        InicializarGrilla()
+        CargarRelojes()
+
+        If Not AsegurarRegistroZkBridge() Then
+            MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+        For i = 0 To relojes.Count - 1
+            ConectarRelojAsync(i)
+        Next
+    End Sub
+
+    Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
+        Me.Close()
+    End Sub
+
+    ' ------------------------------------------------------------------------------------------------------------------------
+    ' ------------------------------------------------------------------------------------------------------------------------
+    ' ------------------------------------------------------------------------------------------------------------------------
+
+    Private Sub InicializarGrilla()
+        dgvRelojes.Columns.Clear()
+        dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Nombre", .HeaderText = "Reloj"})
+        dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "IP", .HeaderText = "IP"})
+        dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Puerto", .HeaderText = "Puerto"})
+        dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Estado", .HeaderText = "Estado"})
+        dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Ultima", .HeaderText = "Última verificación"})
+    End Sub
+
     Private Sub CargarRelojes()
-        ' TODO: reemplazar por tus IPs reales
-        Dim endpoints = {
-            New With {.Nombre = "Reloj Casa Central", .IP = "192.168.2.5", .Puerto = 4370},
-            New With {.Nombre = "Reloj Autoshop Mdz", .IP = "192.168.2.6", .Puerto = 4370},
-            New With {.Nombre = "Reloj Zona Franca", .IP = "192.168.3.5", .Puerto = 4370},
-            New With {.Nombre = "Reloj Halpern", .IP = "192.168.4.50", .Puerto = 4371},
-            New With {.Nombre = "Reloj Neuquen", .IP = "181.171.90.106", .Puerto = 4370}
-        }
+
+        Dim sql = "SELECT Nombre, Ip, Puerto FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
+        Dim dtRelojes As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, Nothing)
 
         relojes.Clear()
         dgvRelojes.Rows.Clear()
 
-        For Each ep In endpoints
-            Dim r As New Reloj With {
-                .Nombre = ep.Nombre,
-                .Ip = ep.IP,
-                .Puerto = ep.Puerto,
-                .Zk = Nothing, ' <-- NO creamos COM acá
+        For Each row As DataRow In dtRelojes.Rows
+            Dim reloj As New Reloj With {
+                .Nombre = CStr(row("Nombre")),
+                .Ip = CStr(row("Ip")),
+                .Puerto = If(IsDBNull(row("Puerto")), 4370, Convert.ToInt32(row("Puerto"))),
                 .Conectado = False,
                 .UltimaVerif = Nothing
             }
-            relojes.Add(r)
-            dgvRelojes.Rows.Add(r.Nombre, r.Ip, r.Puerto.ToString(), "—", "—")
+            relojes.Add(reloj)
+            dgvRelojes.Rows.Add(reloj.Nombre, reloj.Ip, reloj.Puerto.ToString(), "—", "—")
         Next
 
+        dgvRelojes.ClearSelection()
+        dgvRelojes.AllowUserToResizeColumns = True
+        dgvRelojes.AllowUserToResizeRows = False
+        dgvRelojes.AllowUserToOrderColumns = True
+
+        dgvRelojes.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgvRelojes.Columns("IP").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgvRelojes.Columns("Puerto").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgvRelojes.Columns("Estado").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgvRelojes.Columns("Ultima").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
         ConfigurarEstiloGrid(dgvRelojes)
+        CargarRutasDesdeDb()
     End Sub
 
-    Private Sub ConectarReloj(indice As Integer)
-        Dim reloj = relojes(indice)
+    Private Sub CargarRutasDesdeDb()
+        Dim sql = "
+        SELECT Red, Mascara, Gateway
+        FROM dbo.RutasEstaticas
+        WHERE Activo = 1;"
+        Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, Nothing)
 
-        If reloj.Zk Is Nothing Then
-            reloj.Zk = Funciones.CrearZkBridge()
+        Dim rutas As New List(Of (red As String, mask As String, gw As String))
+        For Each row As DataRow In dt.Rows
+            rutas.Add((CStr(row("Red")), CStr(row("Mascara")), CStr(row("Gateway"))))
+        Next
+
+        Red.EstablecerRutas(rutas)
+    End Sub
+
+    ' registra ZkBridge si no está registrado
+    Private Function AsegurarRegistroZkBridge()
+        Try
+            If (Type.GetTypeFromProgID("ZkBridge.Attendance", throwOnError:=False) Is Nothing) Then
+                Funciones.AsegurarRegistroZkBridge()
+            End If
+            Return True
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        Return False
+    End Function
+
+    ' abre un hilo para el reloj indicado y conecta
+    Private Sub ConectarRelojAsync(indice As Integer, Optional cargarMarcaciones As Boolean = False)
+        If indice < 0 OrElse indice >= relojes.Count Then Return
+        Dim reloj = relojes(indice)
+        If reloj.Conectando Then Return
+
+        reloj.Conectando = True
+        If Me.IsHandleCreated Then Me.BeginInvoke(
+            Sub()
+                dgvRelojes.Rows(indice).Cells("Estado").Value = "Conectando..."
+                dgvRelojes.Rows(indice).Cells("Ultima").Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                ResaltarEstado(indice)
+            End Sub)
+
+        Dim th As New Thread(
+            Sub()
+                Dim zk As Object = Nothing
+                Try
+                    ' ---- todo lo de este hilo queda dentro de Try para no afectar otros relojes ----
+
+                    ' rutas si aplica (no comparte estado entre hilos)
+                    Try
+                        If Red.NecesitaRutaParaIp(reloj.Ip) Then Red.AsegurarRutasParaIp(reloj.Ip)
+                    Catch exRt As Exception
+                        ' no aborta: registra y sigue
+                        ' Opcional: loguear exRt.Message
+                    End Try
+
+                    ' COM en este STA
+                    Try
+                        zk = Funciones.CrearZkBridge()
+                    Catch exCom As Exception
+                        reloj.Conectando = False
+                        reloj.Conectado = False
+                        reloj.UltimaVerif = DateTime.Now
+                        If Me.IsHandleCreated Then SafeUI(
+                            Sub()
+                                dgvRelojes.Rows(indice).Cells("Estado").Value = "Error al crear COM"
+                                dgvRelojes.Rows(indice).Cells("Ultima").Value = reloj.UltimaVerif.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                ResaltarEstado(indice)
+                            End Sub)
+                        Return
+                    End Try
+
+                    Dim ok As Boolean = False
+                    Try
+                        ok = zk.Conectar(reloj.Ip, reloj.Puerto)
+                    Catch exConn As Exception
+                        ok = False
+                    End Try
+
+                    reloj.Conectando = False
+                    reloj.Conectado = ok
+                    reloj.UltimaVerif = DateTime.Now
+
+                    If Me.IsHandleCreated Then SafeUI(
+                        Sub()
+                            dgvRelojes.Rows(indice).Cells("Estado").Value = If(ok, "Conectado", "Desconectado")
+                            dgvRelojes.Rows(indice).Cells("Ultima").Value = reloj.UltimaVerif.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                            ResaltarEstado(indice)
+                        End Sub)
+
+                    ' ================== Importación opcional con % ==================
+                    If ok AndAlso cargarMarcaciones Then
+                        If Me.IsHandleCreated Then SafeUI(
+                            Sub()
+                                dgvRelojes.Rows(indice).Cells("Estado").Value = "Importando..."
+                                ResaltarEstado(indice)
+                            End Sub)
+
+                        ' 1) Cargar logs en memoria del bridge
+                        Dim totalLogs As Integer = 0
+                        Try
+                            zk.CargarLogs()
+                            ' Si expusiste los métodos; si no, asumí PAGE_SIZE=50
+                            Try : totalLogs = CInt(zk.TotalLogs()) : Catch : totalLogs = 0 : End Try
+                        Catch
+                            totalLogs = 0
+                        End Try
+
+                        ' 2) Iterar por páginas y calcular %
+                        Dim pagina As Integer = 0
+                        Dim processed As Integer = 0
+                        Dim pageSize As Integer = 50
+                        Try : pageSize = CInt(zk.PageSize()) : Catch : pageSize = 50 : End Try
+
+                        Dim json As String = Nothing
+                        Try : json = zk.ObtenerLogs(pagina) : Catch : json = "[]" : End Try
+
+                        While Not String.IsNullOrWhiteSpace(json)
+                            Dim batch As Integer = 0
+
+                            Try
+                                Using doc = JsonDocument.Parse(json)
+                                    If doc.RootElement.ValueKind = JsonValueKind.Array Then
+                                        Dim arr = doc.RootElement.EnumerateArray()
+                                        Dim hay = arr.Any()
+                                        If Not hay Then Exit While
+
+                                        For Each elem In doc.RootElement.EnumerateArray()
+                                            If Not elem.TryGetProperty("id", Nothing) Then Continue For
+                                            If Not elem.TryGetProperty("fechaHora", Nothing) Then Continue For
+
+                                            Dim sql = "
+                                                INSERT INTO dbo.Marcaciones (dispositivo, puerto, legajo, fechahora)
+                                                SELECT @dispositivo, @puerto, @legajo, @fechahora
+                                                WHERE NOT EXISTS (
+                                                    SELECT 1 FROM dbo.Marcaciones WITH (UPDLOCK, HOLDLOCK)
+                                                    WHERE legajo = @legajo AND fechahora = @fechahora
+                                                );"
+
+                                            Dim fh As DateTime
+                                            Dim okDate = DateTime.TryParseExact(
+                                                elem.GetProperty("fechaHora").GetString(),
+                                                "yyyy-MM-dd HH:mm:ss",
+                                                CultureInfo.InvariantCulture,
+                                                DateTimeStyles.None,
+                                                fh)
+
+                                            If Not okDate Then Continue For
+                                            Dim parametros = CmdParams(
+                                                "@dispositivo", reloj.Ip,
+                                                "@puerto", reloj.Puerto,
+                                                "@legajo", elem.GetProperty("id").ToString(),
+                                                "@fechaHora", fh)
+
+                                            Try
+                                                DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+                                                batch += 1
+                                            Catch
+                                                ' error de inserción: continuar sin interrumpir
+                                            End Try
+                                        Next
+                                    End If
+                                End Using
+                            Catch
+                                ' error parseando JSON: continuar
+                            End Try
+
+                            processed += batch
+
+                            ' %: si no conocemos total, estimamos con páginas (opcional)
+                            Dim pct As Integer
+                            If totalLogs > 0 Then
+                                pct = CInt(Math.Floor(processed * 100.0 / totalLogs))
+                            Else
+                                ' fallback: % aproximado por páginas
+                                Dim estimado As Integer = (pagina + 1) * pageSize
+                                pct = CInt(Math.Min(100, Math.Floor(estimado * 100.0 / Math.Max(estimado, 1))))
+                            End If
+
+                            If Me.IsHandleCreated Then SafeUI(
+                                Sub()
+                                    dgvRelojes.Rows(indice).Cells("Estado").Value = $"Importando {pct}%"
+                                    ResaltarEstado(indice)
+                                End Sub)
+
+                            pagina += 1
+                            Try : json = zk.ObtenerLogs(pagina) : Catch : Exit While : End Try
+                        End While
+
+                        If Me.IsHandleCreated Then SafeUI(
+                            Sub()
+                                If totalLogs > 0 Then
+                                    dgvRelojes.Rows(indice).Cells("Estado").Value = $"Importado {processed}/{totalLogs}"
+                                Else
+                                    dgvRelojes.Rows(indice).Cells("Estado").Value = $"Importado {processed}"
+                                End If
+                                ResaltarEstado(indice)
+                            End Sub)
+                    End If
+
+                Catch ex As Exception
+                    ' Cualquier excepción NO afecta a otros hilos/relojes
+                    reloj.Conectando = False
+                    reloj.Conectado = False
+                    reloj.UltimaVerif = DateTime.Now
+                    If Me.IsHandleCreated Then SafeUI(
+                        Sub()
+                            dgvRelojes.Rows(indice).Cells("Estado").Value = "Error/Timeout"
+                            dgvRelojes.Rows(indice).Cells("Ultima").Value = reloj.UltimaVerif.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                            ResaltarEstado(indice)
+                        End Sub)
+                Finally
+                    ' Liberar COM con doble try
+                    Try
+                        If zk IsNot Nothing Then
+                            Try : zk.Desconectar() : Catch : End Try
+                        End If
+                    Finally
+                        Try
+                            If zk IsNot Nothing Then Marshal.FinalReleaseComObject(zk)
+                        Catch
+                        End Try
+                    End Try
+                End Try
+            End Sub)
+
+        th.IsBackground = True
+        th.SetApartmentState(ApartmentState.STA) ' COM/ActiveX ⇒ STA
+        th.Start() ' ← ¡no esperamos! la UI sigue
+    End Sub
+
+    Private Sub SafeUI(action As Action)
+        Try
+            If Not Me.IsHandleCreated Then Return
+            Me.BeginInvoke(New MethodInvoker(
+            Sub()
+                Try
+                    action()
+                Catch
+                    ' swallow: la UI no debe romper el hilo de importación
+                End Try
+            End Sub))
+        Catch
+            ' swallow BeginInvoke failures
+        End Try
+    End Sub
+
+    ' da formato a la fila según estado del reloj
+    Private Sub ResaltarEstado(indice As Integer)
+        Dim reloj = relojes(indice)
+        Dim row = dgvRelojes.Rows(indice)
+
+        Dim colorSel As Drawing.Color
+        If reloj.Conectando Then
+            colorSel = Drawing.Color.FromArgb(255, 249, 196) ' amarillo pálido
+        ElseIf reloj.Conectado Then
+            colorSel = Drawing.Color.FromArgb(220, 255, 235) ' verde claro
+        Else
+            colorSel = Drawing.Color.FromArgb(255, 235, 235) ' rojo claro
         End If
 
-        Try
-            Dim ok As Boolean = reloj.Zk.Conectar(reloj.Ip, reloj.Puerto)
-            reloj.Conectado = ok
-            reloj.UltimaVerif = DateTime.Now
-        Catch
-            reloj.Conectado = False
-            reloj.UltimaVerif = DateTime.Now
-        End Try
-        PintarFila(indice, reloj)
+        row.DefaultCellStyle.BackColor = colorSel
     End Sub
-
-    Private Sub PintarFila(rowIndex As Integer, r As Reloj)
-        If rowIndex < 0 OrElse rowIndex >= dgvRelojes.Rows.Count Then Return
-        Dim row = dgvRelojes.Rows(rowIndex)
-        row.Cells("Estado").Value = If(r.Conectado, "Conectado", "Desconectado")
-        row.Cells("Ultima").Value = If(r.UltimaVerif.HasValue, r.UltimaVerif.Value.ToString("yyyy-MM-dd HH:mm:ss"), "—")
-        row.DefaultCellStyle.BackColor =
-            If(r.Conectado,
-               Drawing.Color.FromArgb(220, 255, 235),
-               Drawing.Color.FromArgb(255, 235, 235))
-    End Sub
-
-    ' UX: cursor de espera y deshabilitar botones mientras corre algo pesado
-    Private Sub SetBusy(busy As Boolean)
-        Me.UseWaitCursor = busy
-        btnConectar.Enabled = Not busy
-        btnImportar.Enabled = Not busy
-        chkMonitoreo.Enabled = Not busy
-        Me.Refresh()
-    End Sub
-
 End Class
