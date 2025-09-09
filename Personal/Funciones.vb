@@ -18,10 +18,6 @@ Public Module Funciones
         Return dict
     End Function
 
-    Public Sub CmdShow(sql As String, parametros As IEnumerable(Of Object))
-        MessageBox.Show(sql & " " & String.Join(", ", parametros.Select(Function(p) If(p IsNot Nothing, p.ToString(), "NULL")).ToArray()))
-    End Sub
-
     Public Sub CopiarDataGrid(grid As DataGridView, Optional incluirEncabezados As Boolean = True)
         If grid Is Nothing Then Exit Sub
 
@@ -132,208 +128,20 @@ Public Module Funciones
     End Sub
 
 
-    Public Function DataRowToDictionary(row As DataRow) As Dictionary(Of String, Object)
-        Dim dict As New Dictionary(Of String, Object)
-        For Each col As DataColumn In row.Table.Columns
-            dict(col.ColumnName) = row(col)
-        Next
-        Return dict
-    End Function
-
-    Public Function DataTableToListOfDictionary(dt As DataTable) As List(Of Dictionary(Of String, Object))
-        Dim lista As New List(Of Dictionary(Of String, Object))
-        For Each row As DataRow In dt.Rows
-            lista.Add(DataRowToDictionary(row))
-        Next
-        Return lista
-    End Function
-
-    Public Function DataGridViewRowToDictionary(row As DataGridViewRow) As Dictionary(Of String, Object)
-        Dim dict As New Dictionary(Of String, Object)
-        For Each cell As DataGridViewCell In row.Cells
-            dict(row.DataGridView.Columns(cell.ColumnIndex).Name) = cell.Value
-        Next
-        Return dict
-    End Function
-
-    Public Function DataGridViewToListOfDictionary(dgv As DataGridView) As List(Of Dictionary(Of String, Object))
-        Dim lista As New List(Of Dictionary(Of String, Object))
-        For Each row As DataGridViewRow In dgv.Rows
-            If Not row.IsNewRow Then ' Ignora la fila vacía para nuevas entradas
-                lista.Add(DataGridViewRowToDictionary(row))
+    ' registra ZkBridge si no está registrado
+    Public Function AsegurarRegistroZkBridge()
+        Try
+            If (Type.GetTypeFromProgID("ZkBridge.Attendance", throwOnError:=False) Is Nothing) Then
+                Funciones._AsegurarRegistroZkBridge()
             End If
-        Next
-        Return lista
+            Return True
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        Return False
     End Function
 
-    Public Function RedimensionarImagen(original As Image, ancho As Integer, alto As Integer) As Image
-        Dim bmp As New Bitmap(ancho, alto)
-        Using g As Graphics = Graphics.FromImage(bmp)
-            g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
-            g.Clear(Color.Transparent)
-            g.DrawImage(original, 0, 0, ancho, alto)
-        End Using
-        Return bmp
-    End Function
-
-    Public Function InvertirColores(imagen As Image) As Bitmap
-        Dim bmp As New Bitmap(imagen)
-        For x = 0 To bmp.Width - 1
-            For y = 0 To bmp.Height - 1
-                Dim c = bmp.GetPixel(x, y)
-                Dim invertido = Color.FromArgb(c.A, 255 - c.R, 255 - c.G, 255 - c.B)
-                bmp.SetPixel(x, y, invertido)
-            Next
-        Next
-        Return bmp
-    End Function
-
-    Public Function Encriptar(Pass As String)
-        Dim Encrip, Letra As String
-        Dim i, j As Integer
-        Encrip = ""
-        If Len(Pass) > 0 Then
-            For i = Len(Pass) To 1 Step -1
-                Letra = Mid(Pass, i, 1)
-                Encrip = Encrip & Letra
-            Next
-            Pass = Encrip
-            Encrip = ""
-            For i = 1 To Len(Pass)
-                j = Asc(Mid(Pass, i, 1)) + 11 + i
-                If j > 255 Then
-                    j = j - 255
-                End If
-                Encrip = Encrip + Chr(j)
-            Next
-        End If
-        Return Encrip
-    End Function
-
-    ' ====== PUBLIC: usar esto donde mostrás la consulta ======
-    Public Sub ApplySqlFormatting(rtb As RichTextBox, sql As String)
-        Dim formatted = PrettySql(sql)
-
-        ' Fuente base monoespaciada
-        Dim baseFont As New Font("Consolas", 10.0F, FontStyle.Regular)
-
-        ' Congelar repintado para que no parpadee
-        ' SuspendRedraw(rtb)
-        rtb.SuspendLayout()
-
-        rtb.Clear()
-        rtb.Font = baseFont
-        rtb.Text = formatted
-
-        ' Reset estilo base
-        rtb.SelectAll()
-        rtb.SelectionColor = Color.Black
-        rtb.SelectionFont = baseFont
-
-        ' ====== Resaltado por regex ======
-        ' Comentarios
-        Colorize(rtb, New Regex("--.*$", RegexOptions.Multiline),
-                 Color.ForestGreen, FontStyle.Italic, baseFont)
-        Colorize(rtb, New Regex("/\*.*?\*/", RegexOptions.Singleline),
-                 Color.ForestGreen, FontStyle.Italic, baseFont)
-
-        ' Strings '...'
-        Colorize(rtb, New Regex("'(''|[^'])*'"),
-                 Color.SaddleBrown, FontStyle.Regular, baseFont)
-
-        ' Palabras clave (negrita + azul)
-        Dim keywords = "\b(SELECT|UPDATE|INSERT|INTO|DELETE|FROM|WHERE|SET|VALUES|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|ON|GROUP|BY|ORDER|HAVING|TOP|DISTINCT|AS|AND|OR|NOT|NULL|IS|LIKE|IN|BETWEEN|EXISTS|CASE|WHEN|THEN|ELSE|END)\b"
-        Colorize(rtb, New Regex(keywords, RegexOptions.IgnoreCase),
-                 Color.RoyalBlue, FontStyle.Bold, baseFont)
-
-        ' Funciones (azul + itálica)
-        Dim functions = "\b(AVG|COUNT|MIN|MAX|SUM|ABS|ROUND|LEN|SUBSTRING|DATEDIFF|DATEADD|GETDATE|COALESCE|ISNULL|CONVERT|CAST|UPPER|LOWER|FORMAT)\b"
-        Colorize(rtb, New Regex(functions, RegexOptions.IgnoreCase),
-                 Color.RoyalBlue, FontStyle.Italic, baseFont)
-
-        ' Números
-        Colorize(rtb, New Regex("\b\d+(\.\d+)?\b"),
-                 Color.MediumVioletRed, FontStyle.Regular, baseFont)
-
-        ' Fin
-        rtb.SelectionLength = 0
-        rtb.SelectionStart = 0
-        rtb.ResumeLayout()
-        ' ResumeRedraw(rtb)
-        rtb.Invalidate()
-    End Sub
-
-    ' ====== PRETTY PRINT ======
-    Private Function PrettySql(sql As String) As String
-        If String.IsNullOrWhiteSpace(sql) Then Return String.Empty
-
-        Dim s = sql.Trim()
-
-        ' Normalizar CR/LF y tabs a espacios
-        s = s.Replace(vbCr, "").Replace(vbLf, " ").Replace(vbTab, " ")
-
-        ' Poner en mayúscula algunos tokens sin tocar strings (simple, rápido)
-        ' Luego insertamos saltos de línea
-        Dim tokens As String() = {
-            "SELECT", "UPDATE", "INSERT INTO", "DELETE",
-            "FROM", "WHERE", "SET", "VALUES",
-            "JOIN", "INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN",
-            "GROUP BY", "ORDER BY", "HAVING", "ON"
-        }
-
-        For Each t In tokens.OrderByDescending(Function(x) x.Length)
-            s = Regex.Replace(s, "\b" & Regex.Escape(t) & "\b", t,
-                              RegexOptions.IgnoreCase)
-        Next
-
-        ' Saltos de línea antes de bloques conocidos
-        Dim breakers As String() = {
-            "SELECT", "UPDATE", "INSERT INTO", "DELETE",
-            "FROM", "WHERE", "SET", "VALUES",
-            "INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN", "JOIN",
-            "GROUP BY", "ORDER BY", "HAVING", "ON"
-        }
-        For Each b In breakers.OrderByDescending(Function(x) x.Length)
-            s = Regex.Replace(s, "\s+" & Regex.Escape(b) & "\s+", vbCrLf & b & " ",
-                              RegexOptions.IgnoreCase)
-            ' Inicio de texto
-            s = Regex.Replace(s, "^" & Regex.Escape(b) & "\s+", b & " ",
-                              RegexOptions.IgnoreCase)
-        Next
-
-        ' Una línea por cada columna en SET y SELECT (básico)
-        s = Regex.Replace(s, "\s*,\s*", "," & vbCrLf & "    ")
-
-        ' Limpieza de espacios y saltos repetidos
-        s = Regex.Replace(s, " +", " ")
-        s = Regex.Replace(s, "(\r\n){2,}", vbCrLf)
-
-        Return s.Trim()
-    End Function
-
-    ' ====== HERRAMIENTAS DE RESALTADO ======
-    Private Sub Colorize(rtb As RichTextBox, re As Regex, color As Color, style As FontStyle, baseFont As Font)
-        For Each m As Match In re.Matches(rtb.Text)
-            rtb.Select(m.Index, m.Length)
-            rtb.SelectionColor = color
-            rtb.SelectionFont = New Font(baseFont, style)
-        Next
-    End Sub
-
-    ' ====== EVITAR PARPADEO ======
-    ' (Opcional, pero mejora la UX al colorear mucho texto)
-    '<DllImport("user32.dll")>
-    'Private Shared Function SendMessage(hWnd As IntPtr, msg As Integer, wParam As Integer, lParam As Integer) As IntPtr
-    'End Function
-    'Private Const WM_SETREDRAW As Integer = &HB
-    'Private Sub SuspendRedraw(ctrl As Control)
-    '    SendMessage(ctrl.Handle, WM_SETREDRAW, 0, 0)
-    'End Sub
-    'Private Sub ResumeRedraw(ctrl As Control)
-    '    SendMessage(ctrl.Handle, WM_SETREDRAW, 1, 0)
-    'End Sub
-
-    Public Sub AsegurarRegistroZkBridge()
+    Public Sub _AsegurarRegistroZkBridge()
 
         ' ¿Ya está registrado?
         Dim t = Type.GetTypeFromProgID("ZkBridge.Attendance", throwOnError:=False)
@@ -360,7 +168,7 @@ Public Module Funciones
     End Sub
 
     Public Function CrearZkBridge() As Object
-        Funciones.AsegurarRegistroZkBridge()
+        Funciones._AsegurarRegistroZkBridge()
         Dim t = Type.GetTypeFromProgID("ZkBridge.Attendance")
         Dim zk = Activator.CreateInstance(t)
         Return zk

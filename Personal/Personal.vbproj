@@ -65,9 +65,7 @@
 	<Target Name="PackZkBridge" AfterTargets="Build;Publish">
 
 		<!-- Compila el wrapper x86 con la misma configuración -->
-		<MSBuild Projects="$(MSBuildProjectDirectory)\..\ZkBridge\ZkBridge.vbproj"
-				 Targets="Build"
-				 Properties="Configuration=$(Configuration);Platform=x86" />
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\ZkBridge\ZkBridge.vbproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=x86" />
 
 		<!-- Carpetas de salida -->
 		<PropertyGroup>
@@ -84,15 +82,10 @@
 		</ItemGroup>
 
 		<!-- Copiar al directorio de BUILD -->
-		<Copy SourceFiles="@(_ZkBridgeFiles)"
-			  DestinationFolder="$(_BuildOut)ZkBridge\%(RecursiveDir)"
-			  SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(_ZkBridgeFiles)" DestinationFolder="$(_BuildOut)ZkBridge\%(RecursiveDir)" SkipUnchangedFiles="true" />
 
 		<!-- Copiar al directorio de PUBLISH (si existe) -->
-		<Copy SourceFiles="@(_ZkBridgeFiles)"
-			  DestinationFolder="$(_PubOut)ZkBridge\%(RecursiveDir)"
-			  SkipUnchangedFiles="true"
-			  Condition="'$(_PubOut)' != ''" />
+		<Copy SourceFiles="@(_ZkBridgeFiles)" DestinationFolder="$(_PubOut)ZkBridge\%(RecursiveDir)" SkipUnchangedFiles="true" Condition="'$(_PubOut)' != ''" />
 
 		<!-- Generar scripts en BUILD -->
 		<PropertyGroup>
@@ -131,10 +124,8 @@
 			<_UnregCmdPathPub>$(_PubOut)unregister-zkbridge.cmd</_UnregCmdPathPub>
 		</PropertyGroup>
 
-		<WriteLinesToFile File="$(_RegCmdPathPub)" Lines="@(_RegLines)" Overwrite="true"
-						  Condition="'$(_PubOut)' != ''" />
-		<WriteLinesToFile File="$(_UnregCmdPathPub)" Lines="@(_UnregLines)" Overwrite="true"
-						  Condition="'$(_PubOut)' != ''" />
+		<WriteLinesToFile File="$(_RegCmdPathPub)" Lines="@(_RegLines)" Overwrite="true" Condition="'$(_PubOut)' != ''" />
+		<WriteLinesToFile File="$(_UnregCmdPathPub)" Lines="@(_UnregLines)" Overwrite="true" Condition="'$(_PubOut)' != ''" />
 
 	</Target>
 

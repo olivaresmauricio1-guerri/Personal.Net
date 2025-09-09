@@ -47,12 +47,13 @@ Partial Class frmBajaReloj
         btnImportarTodo.Cursor = Cursors.Hand
         btnImportarTodo.FlatStyle = FlatStyle.Flat
         btnImportarTodo.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnImportarTodo.Location = New Point(168, 332)
+        btnImportarTodo.Location = New Point(558, 332)
         btnImportarTodo.Name = "btnImportarTodo"
         btnImportarTodo.Size = New Size(124, 30)
         btnImportarTodo.TabIndex = 1
         btnImportarTodo.Text = "Importar Todo"
         btnImportarTodo.UseVisualStyleBackColor = True
+        btnImportarTodo.Visible = False
         ' 
         ' cmdSalir
         ' 
@@ -88,7 +89,7 @@ Partial Class frmBajaReloj
         cmdImportarSeleccionado.Cursor = Cursors.Hand
         cmdImportarSeleccionado.FlatStyle = FlatStyle.Flat
         cmdImportarSeleccionado.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        cmdImportarSeleccionado.Location = New Point(298, 332)
+        cmdImportarSeleccionado.Location = New Point(168, 332)
         cmdImportarSeleccionado.Name = "cmdImportarSeleccionado"
         cmdImportarSeleccionado.Size = New Size(171, 30)
         cmdImportarSeleccionado.TabIndex = 4
