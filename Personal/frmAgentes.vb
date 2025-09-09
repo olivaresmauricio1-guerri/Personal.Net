@@ -152,14 +152,14 @@ Public Class frmAgentes
     Private Sub CmdAgregar_Click(sender As Object, e As EventArgs) Handles btnAgregar.Click
         filaActual = Nothing
         filaActualIndice = -1
-        FormModoEdicion()
-        FormLimpiarSeleccionado()
-        txtLegajo.Focus()
+        FormModoEdicion
+        FormLimpiarSeleccionado
+        txtLegajo.Focus
     End Sub
 
     Private Sub CmdModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
-        FormModoEdicion()
-        txtNombre.Focus()
+        FormModoEdicion
+        txtNombre.Focus
     End Sub
 
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles btnBorrar.Click
@@ -179,25 +179,25 @@ Public Class frmAgentes
             DSM.Execute(DSM.Personal, sqlComentarios, parametros, True)
             DSM.Execute(DSM.Personal, sqlAgente, parametros, True)
 
-            FormModoConsulta()
-            GridBuscar()
+            FormModoConsulta
+            GridBuscar
         End If
     End Sub
 
     Public Sub CmdAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click
-        If Not ValidarDatos() Then Return
+        If Not ValidarDatos Then Return
 
         Try
             If filaActual Is Nothing Then
                 ' INSERT
-                InsertarNuevoAgente()
+                InsertarNuevoAgente
             Else
                 ' UPDATE
-                ActualizarAgente()
+                ActualizarAgente
             End If
 
-            FormModoConsulta()
-            GridBuscar()
+            FormModoConsulta
+            GridBuscar
             MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             MessageBox.Show("Error al guardar: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -205,16 +205,16 @@ Public Class frmAgentes
     End Sub
 
     Public Sub CmdCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
-        FormModoConsulta()
+        FormModoConsulta
         If filaActual IsNot Nothing Then
-            FormObtenerSeleccionado()
+            FormObtenerSeleccionado
         Else
-            FormLimpiarSeleccionado()
+            FormLimpiarSeleccionado
         End If
     End Sub
 
     Public Sub CmdSalir_Click(sender As Object, e As EventArgs) Handles btnSalir.Click
-        Close()
+        Close
     End Sub
 
     Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkCopiar.LinkClicked
@@ -334,7 +334,7 @@ Public Class frmAgentes
             {"@Oficina", If(String.IsNullOrEmpty(txtOficina.Text.Trim), DBNull.Value, txtOficina.Text.Trim)},
             {"@Critico", chkCritico.Checked},
             {"@MayorDedicacion", chkMayorDedicacion.Checked},
-            {"@HorasDedicacion", If(String.IsNullOrEmpty(txtHorasDedicacion.Text.Trim), DBNull.Value, txtHorasDedicacion.Text.Trim)},
+            {"@HorasDedicacion", If(String.IsNullOrEmpty(txtUrgencias.Text.Trim), DBNull.Value, txtUrgencias.Text.Trim)},
             {"@HorasSemanales", If(String.IsNullOrEmpty(txtHorasSemanales.Text.Trim), DBNull.Value, txtHorasSemanales.Text.Trim)},
             {"@HorasDiarias", If(String.IsNullOrEmpty(cmbHorasDiarias.Text.Trim), DBNull.Value, cmbHorasDiarias.Text.Trim)},
             {"@Escalafon", If(String.IsNullOrEmpty(cmbEscalafon.Text.Trim), DBNull.Value, cmbEscalafon.Text.Trim)},
@@ -347,7 +347,7 @@ Public Class frmAgentes
             {"@Telefono", If(String.IsNullOrEmpty(txtTelefono.Text.Trim), DBNull.Value, txtTelefono.Text.Trim)},
             {"@Interno", If(String.IsNullOrEmpty(txtInterno.Text.Trim), DBNull.Value, txtInterno.Text.Trim)},
             {"@Celular", If(String.IsNullOrEmpty(txtCelular.Text.Trim), DBNull.Value, txtCelular.Text.Trim)},
-            {"@Rpv", If(String.IsNullOrEmpty(txtRpv.Text.Trim), DBNull.Value, txtRpv.Text.Trim)},
+            {"@Rpv", If(String.IsNullOrEmpty(txtUltimaActualizacion.Text.Trim), DBNull.Value, txtUltimaActualizacion.Text.Trim)},
             {"@iNGRESO", If(String.IsNullOrEmpty(txtIngreso.Text.Trim), DBNull.Value, txtIngreso.Text.Trim)},
             {"@Baja", If(String.IsNullOrEmpty(txtBaja.Text.Trim), DBNull.Value, txtBaja.Text.Trim)},
             {"@CUIL", If(String.IsNullOrEmpty(txtCUIL.Text.Trim), DBNull.Value, txtCUIL.Text.Trim)},
@@ -403,14 +403,14 @@ Public Class frmAgentes
         txtNro.Clear()
         txtLocalidad.Clear()
         txtOficina.Clear()
-        txtHorasDedicacion.Clear()
+        txtUrgencias.Clear()
         txtHorasSemanales.Clear()
         txtLicAnual.Clear()
         txtComentario.Clear()
         txtTelefono.Clear()
         txtInterno.Clear()
         txtCelular.Clear()
-        txtRpv.Clear()
+        txtUltimaActualizacion.Clear()
         txtIngreso.Clear()
         txtBaja.Clear()
         txtCUIL.Clear()
@@ -462,7 +462,7 @@ Public Class frmAgentes
             chkCritico.Checked = If(IsDBNull(row("Critico")), False, Convert.ToBoolean(row("Critico")))
             chkMayorDedicacion.Checked = If(IsDBNull(row("MayorDedicacion")), False, Convert.ToBoolean(row("MayorDedicacion")))
 
-            txtHorasDedicacion.Text = If(IsDBNull(row("HorasDedicacion")), "", row("HorasDedicacion").ToString())
+            txtUrgencias.Text = If(IsDBNull(row("HorasDedicacion")), "", row("HorasDedicacion").ToString())
             txtHorasSemanales.Text = If(IsDBNull(row("HorasSemanales")), "", row("HorasSemanales").ToString())
             cmbHorasDiarias.Text = If(IsDBNull(row("HorasDiarias")), "", row("HorasDiarias").ToString())
             cmbEscalafon.Text = If(IsDBNull(row("Escalafon")), "", row("Escalafon").ToString())
@@ -476,7 +476,7 @@ Public Class frmAgentes
             txtTelefono.Text = If(IsDBNull(row("Telefono")), "", row("Telefono").ToString())
             txtInterno.Text = If(IsDBNull(row("Interno")), "", row("Interno").ToString())
             txtCelular.Text = If(IsDBNull(row("Celular")), "", row("Celular").ToString())
-            txtRpv.Text = If(IsDBNull(row("Rpv")), "", row("Rpv").ToString())
+            txtUltimaActualizacion.Text = If(IsDBNull(row("Rpv")), "", row("Rpv").ToString())
             txtIngreso.Text = If(IsDBNull(row("iNGRESO")), "", row("iNGRESO").ToString())
             txtBaja.Text = If(IsDBNull(row("Baja")), "", row("Baja").ToString())
             txtCUIL.Text = If(IsDBNull(row("CUIL")), "", row("CUIL").ToString())
@@ -523,9 +523,9 @@ Public Class frmAgentes
         ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
         SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
                            txtCalle, txtNro, txtLocalidad, txtOficina, chkCritico, chkMayorDedicacion,
-                           txtHorasDedicacion, txtHorasSemanales, cmbHorasDiarias, cmbEscalafon, cmbJefe,
+                           txtUrgencias, txtHorasSemanales, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
-                           txtInterno, txtCelular, txtRpv, txtIngreso, txtBaja, txtCUIL, txtTitulo,
+                           txtInterno, txtCelular, txtUltimaActualizacion, txtIngreso, txtBaja, txtCUIL, txtTitulo,
                            txtMotivo, cmbEstadoParental, txtFechaJubilacion, chkMarcaAqui, cmbTipoDto,
                            txtNroDto, CmbMotivo, txtCargo)
     End Sub

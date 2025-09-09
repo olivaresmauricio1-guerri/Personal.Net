@@ -25,13 +25,12 @@ Partial Class frmAgentes
         TabControl1 = New TabControl()
         TabPage1 = New TabPage()
         GroupBox1 = New GroupBox()
-        chkMarcaAqui = New CheckBox()
+        CmbMotivo = New ComboBox()
+        Label45 = New Label()
         txtFechaJubilacion = New TextBox()
         Label30 = New Label()
         cmbEstadoParental = New ComboBox()
         Label29 = New Label()
-        txtMotivo = New TextBox()
-        Label28 = New Label()
         txtTitulo = New TextBox()
         Label27 = New Label()
         txtCUIL = New TextBox()
@@ -40,7 +39,7 @@ Partial Class frmAgentes
         Label25 = New Label()
         txtIngreso = New TextBox()
         Label24 = New Label()
-        txtRpv = New TextBox()
+        txtUltimaActualizacion = New TextBox()
         Label23 = New Label()
         txtCelular = New TextBox()
         Label22 = New Label()
@@ -63,12 +62,8 @@ Partial Class frmAgentes
         Label14 = New Label()
         cmbHorasDiarias = New ComboBox()
         Label13 = New Label()
-        txtHorasSemanales = New TextBox()
-        Label12 = New Label()
-        txtHorasDedicacion = New TextBox()
+        txtUrgencias = New TextBox()
         Label11 = New Label()
-        chkMayorDedicacion = New CheckBox()
-        chkCritico = New CheckBox()
         txtOficina = New TextBox()
         Label10 = New Label()
         txtLocalidad = New TextBox()
@@ -85,8 +80,6 @@ Partial Class frmAgentes
         Label4 = New Label()
         txtCargo = New TextBox()
         Label31 = New Label()
-        txtCargoPampa = New TextBox()
-        Label32 = New Label()
         txtNroDto = New TextBox()
         Label33 = New Label()
         cmbTipoDto = New ComboBox()
@@ -140,8 +133,6 @@ Partial Class frmAgentes
         TxtBuscar = New TextBox()
         Label44 = New Label()
         DgvListado = New DataGridView()
-        CmbMotivo = New ComboBox()
-        Label45 = New Label()
         TabControl1.SuspendLayout()
         TabPage1.SuspendLayout()
         GroupBox1.SuspendLayout()
@@ -165,7 +156,7 @@ Partial Class frmAgentes
         TabControl1.Margin = New Padding(4, 3, 4, 3)
         TabControl1.Name = "TabControl1"
         TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(933, 462)
+        TabControl1.Size = New Size(933, 691)
         TabControl1.TabIndex = 0
         ' 
         ' TabPage1
@@ -175,7 +166,7 @@ Partial Class frmAgentes
         TabPage1.Margin = New Padding(4, 3, 4, 3)
         TabPage1.Name = "TabPage1"
         TabPage1.Padding = New Padding(4, 3, 4, 3)
-        TabPage1.Size = New Size(925, 434)
+        TabPage1.Size = New Size(925, 663)
         TabPage1.TabIndex = 0
         TabPage1.Text = "Datos del Agente"
         TabPage1.UseVisualStyleBackColor = True
@@ -184,13 +175,10 @@ Partial Class frmAgentes
         ' 
         GroupBox1.Controls.Add(CmbMotivo)
         GroupBox1.Controls.Add(Label45)
-        GroupBox1.Controls.Add(chkMarcaAqui)
         GroupBox1.Controls.Add(txtFechaJubilacion)
         GroupBox1.Controls.Add(Label30)
         GroupBox1.Controls.Add(cmbEstadoParental)
         GroupBox1.Controls.Add(Label29)
-        GroupBox1.Controls.Add(txtMotivo)
-        GroupBox1.Controls.Add(Label28)
         GroupBox1.Controls.Add(txtTitulo)
         GroupBox1.Controls.Add(Label27)
         GroupBox1.Controls.Add(txtCUIL)
@@ -199,7 +187,7 @@ Partial Class frmAgentes
         GroupBox1.Controls.Add(Label25)
         GroupBox1.Controls.Add(txtIngreso)
         GroupBox1.Controls.Add(Label24)
-        GroupBox1.Controls.Add(txtRpv)
+        GroupBox1.Controls.Add(txtUltimaActualizacion)
         GroupBox1.Controls.Add(Label23)
         GroupBox1.Controls.Add(txtCelular)
         GroupBox1.Controls.Add(Label22)
@@ -222,12 +210,8 @@ Partial Class frmAgentes
         GroupBox1.Controls.Add(Label14)
         GroupBox1.Controls.Add(cmbHorasDiarias)
         GroupBox1.Controls.Add(Label13)
-        GroupBox1.Controls.Add(txtHorasSemanales)
-        GroupBox1.Controls.Add(Label12)
-        GroupBox1.Controls.Add(txtHorasDedicacion)
+        GroupBox1.Controls.Add(txtUrgencias)
         GroupBox1.Controls.Add(Label11)
-        GroupBox1.Controls.Add(chkMayorDedicacion)
-        GroupBox1.Controls.Add(chkCritico)
         GroupBox1.Controls.Add(txtOficina)
         GroupBox1.Controls.Add(Label10)
         GroupBox1.Controls.Add(txtLocalidad)
@@ -244,8 +228,6 @@ Partial Class frmAgentes
         GroupBox1.Controls.Add(Label4)
         GroupBox1.Controls.Add(txtCargo)
         GroupBox1.Controls.Add(Label31)
-        GroupBox1.Controls.Add(txtCargoPampa)
-        GroupBox1.Controls.Add(Label32)
         GroupBox1.Controls.Add(txtNroDto)
         GroupBox1.Controls.Add(Label33)
         GroupBox1.Controls.Add(cmbTipoDto)
@@ -261,34 +243,41 @@ Partial Class frmAgentes
         GroupBox1.Margin = New Padding(4, 3, 4, 3)
         GroupBox1.Name = "GroupBox1"
         GroupBox1.Padding = New Padding(4, 3, 4, 3)
-        GroupBox1.Size = New Size(917, 428)
+        GroupBox1.Size = New Size(917, 657)
         GroupBox1.TabIndex = 0
         GroupBox1.TabStop = False
-        GroupBox1.Text = "Información del Agente"
         ' 
-        ' chkMarcaAqui
+        ' CmbMotivo
         ' 
-        chkMarcaAqui.AutoSize = True
-        chkMarcaAqui.Location = New Point(758, 392)
-        chkMarcaAqui.Margin = New Padding(4, 3, 4, 3)
-        chkMarcaAqui.Name = "chkMarcaAqui"
-        chkMarcaAqui.Size = New Size(87, 19)
-        chkMarcaAqui.TabIndex = 67
-        chkMarcaAqui.Text = "Marca Aquí"
-        chkMarcaAqui.UseVisualStyleBackColor = True
+        CmbMotivo.FormattingEnabled = True
+        CmbMotivo.Location = New Point(408, 281)
+        CmbMotivo.Margin = New Padding(4, 3, 4, 3)
+        CmbMotivo.Name = "CmbMotivo"
+        CmbMotivo.Size = New Size(209, 23)
+        CmbMotivo.TabIndex = 69
+        ' 
+        ' Label45
+        ' 
+        Label45.AutoSize = True
+        Label45.Location = New Point(314, 285)
+        Label45.Margin = New Padding(4, 0, 4, 0)
+        Label45.Name = "Label45"
+        Label45.Size = New Size(44, 15)
+        Label45.TabIndex = 68
+        Label45.Text = "Moivo:"
         ' 
         ' txtFechaJubilacion
         ' 
-        txtFechaJubilacion.Location = New Point(758, 358)
+        txtFechaJubilacion.Location = New Point(758, 285)
         txtFechaJubilacion.Margin = New Padding(4, 3, 4, 3)
         txtFechaJubilacion.Name = "txtFechaJubilacion"
-        txtFechaJubilacion.Size = New Size(139, 23)
+        txtFechaJubilacion.Size = New Size(143, 23)
         txtFechaJubilacion.TabIndex = 66
         ' 
         ' Label30
         ' 
         Label30.AutoSize = True
-        Label30.Location = New Point(642, 361)
+        Label30.Location = New Point(642, 288)
         Label30.Margin = New Padding(4, 0, 4, 0)
         Label30.Name = "Label30"
         Label30.Size = New Size(97, 15)
@@ -298,7 +287,7 @@ Partial Class frmAgentes
         ' cmbEstadoParental
         ' 
         cmbEstadoParental.FormattingEnabled = True
-        cmbEstadoParental.Location = New Point(758, 323)
+        cmbEstadoParental.Location = New Point(408, 134)
         cmbEstadoParental.Margin = New Padding(4, 3, 4, 3)
         cmbEstadoParental.Name = "cmbEstadoParental"
         cmbEstadoParental.Size = New Size(139, 23)
@@ -307,43 +296,25 @@ Partial Class frmAgentes
         ' Label29
         ' 
         Label29.AutoSize = True
-        Label29.Location = New Point(642, 327)
+        Label29.Location = New Point(310, 135)
         Label29.Margin = New Padding(4, 0, 4, 0)
         Label29.Name = "Label29"
         Label29.Size = New Size(91, 15)
         Label29.TabIndex = 63
         Label29.Text = "Estado Parental:"
         ' 
-        ' txtMotivo
-        ' 
-        txtMotivo.Location = New Point(758, 288)
-        txtMotivo.Margin = New Padding(4, 3, 4, 3)
-        txtMotivo.Name = "txtMotivo"
-        txtMotivo.Size = New Size(139, 23)
-        txtMotivo.TabIndex = 62
-        ' 
-        ' Label28
-        ' 
-        Label28.AutoSize = True
-        Label28.Location = New Point(642, 292)
-        Label28.Margin = New Padding(4, 0, 4, 0)
-        Label28.Name = "Label28"
-        Label28.Size = New Size(48, 15)
-        Label28.TabIndex = 61
-        Label28.Text = "Motivo:"
-        ' 
         ' txtTitulo
         ' 
-        txtTitulo.Location = New Point(758, 254)
+        txtTitulo.Location = New Point(758, 137)
         txtTitulo.Margin = New Padding(4, 3, 4, 3)
         txtTitulo.Name = "txtTitulo"
-        txtTitulo.Size = New Size(139, 23)
+        txtTitulo.Size = New Size(143, 23)
         txtTitulo.TabIndex = 60
         ' 
         ' Label27
         ' 
         Label27.AutoSize = True
-        Label27.Location = New Point(642, 257)
+        Label27.Location = New Point(642, 140)
         Label27.Margin = New Padding(4, 0, 4, 0)
         Label27.Name = "Label27"
         Label27.Size = New Size(41, 15)
@@ -352,7 +323,7 @@ Partial Class frmAgentes
         ' 
         ' txtCUIL
         ' 
-        txtCUIL.Location = New Point(758, 219)
+        txtCUIL.Location = New Point(758, 49)
         txtCUIL.Margin = New Padding(4, 3, 4, 3)
         txtCUIL.Name = "txtCUIL"
         txtCUIL.Size = New Size(139, 23)
@@ -361,7 +332,7 @@ Partial Class frmAgentes
         ' Label26
         ' 
         Label26.AutoSize = True
-        Label26.Location = New Point(642, 223)
+        Label26.Location = New Point(642, 53)
         Label26.Margin = New Padding(4, 0, 4, 0)
         Label26.Name = "Label26"
         Label26.Size = New Size(35, 15)
@@ -370,7 +341,7 @@ Partial Class frmAgentes
         ' 
         ' txtBaja
         ' 
-        txtBaja.Location = New Point(758, 185)
+        txtBaja.Location = New Point(93, 276)
         txtBaja.Margin = New Padding(4, 3, 4, 3)
         txtBaja.Name = "txtBaja"
         txtBaja.Size = New Size(139, 23)
@@ -379,7 +350,7 @@ Partial Class frmAgentes
         ' Label25
         ' 
         Label25.AutoSize = True
-        Label25.Location = New Point(642, 188)
+        Label25.Location = New Point(14, 279)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
         Label25.Size = New Size(32, 15)
@@ -388,7 +359,7 @@ Partial Class frmAgentes
         ' 
         ' txtIngreso
         ' 
-        txtIngreso.Location = New Point(758, 150)
+        txtIngreso.Location = New Point(758, 226)
         txtIngreso.Margin = New Padding(4, 3, 4, 3)
         txtIngreso.Name = "txtIngreso"
         txtIngreso.Size = New Size(139, 23)
@@ -397,43 +368,43 @@ Partial Class frmAgentes
         ' Label24
         ' 
         Label24.AutoSize = True
-        Label24.Location = New Point(642, 153)
+        Label24.Location = New Point(642, 229)
         Label24.Margin = New Padding(4, 0, 4, 0)
         Label24.Name = "Label24"
         Label24.Size = New Size(49, 15)
         Label24.TabIndex = 53
         Label24.Text = "Ingreso:"
         ' 
-        ' txtRpv
+        ' txtUltimaActualizacion
         ' 
-        txtRpv.Location = New Point(758, 115)
-        txtRpv.Margin = New Padding(4, 3, 4, 3)
-        txtRpv.Name = "txtRpv"
-        txtRpv.Size = New Size(139, 23)
-        txtRpv.TabIndex = 52
+        txtUltimaActualizacion.Location = New Point(765, 256)
+        txtUltimaActualizacion.Margin = New Padding(4, 3, 4, 3)
+        txtUltimaActualizacion.Name = "txtUltimaActualizacion"
+        txtUltimaActualizacion.Size = New Size(132, 23)
+        txtUltimaActualizacion.TabIndex = 52
         ' 
         ' Label23
         ' 
         Label23.AutoSize = True
-        Label23.Location = New Point(642, 119)
+        Label23.Location = New Point(641, 260)
         Label23.Margin = New Padding(4, 0, 4, 0)
         Label23.Name = "Label23"
-        Label23.Size = New Size(30, 15)
+        Label23.Size = New Size(119, 15)
         Label23.TabIndex = 51
-        Label23.Text = "Rpv:"
+        Label23.Text = "Última Actualización:"
         ' 
         ' txtCelular
         ' 
-        txtCelular.Location = New Point(758, 81)
+        txtCelular.Location = New Point(758, 108)
         txtCelular.Margin = New Padding(4, 3, 4, 3)
         txtCelular.Name = "txtCelular"
-        txtCelular.Size = New Size(139, 23)
+        txtCelular.Size = New Size(143, 23)
         txtCelular.TabIndex = 50
         ' 
         ' Label22
         ' 
         Label22.AutoSize = True
-        Label22.Location = New Point(642, 84)
+        Label22.Location = New Point(642, 111)
         Label22.Margin = New Padding(4, 0, 4, 0)
         Label22.Name = "Label22"
         Label22.Size = New Size(47, 15)
@@ -442,7 +413,7 @@ Partial Class frmAgentes
         ' 
         ' txtInterno
         ' 
-        txtInterno.Location = New Point(758, 46)
+        txtInterno.Location = New Point(93, 190)
         txtInterno.Margin = New Padding(4, 3, 4, 3)
         txtInterno.Name = "txtInterno"
         txtInterno.Size = New Size(139, 23)
@@ -451,7 +422,7 @@ Partial Class frmAgentes
         ' Label21
         ' 
         Label21.AutoSize = True
-        Label21.Location = New Point(642, 50)
+        Label21.Location = New Point(12, 188)
         Label21.Margin = New Padding(4, 0, 4, 0)
         Label21.Name = "Label21"
         Label21.Size = New Size(48, 15)
@@ -460,7 +431,7 @@ Partial Class frmAgentes
         ' 
         ' txtTelefono
         ' 
-        txtTelefono.Location = New Point(758, 12)
+        txtTelefono.Location = New Point(408, 105)
         txtTelefono.Margin = New Padding(4, 3, 4, 3)
         txtTelefono.Name = "txtTelefono"
         txtTelefono.Size = New Size(139, 23)
@@ -469,7 +440,7 @@ Partial Class frmAgentes
         ' Label20
         ' 
         Label20.AutoSize = True
-        Label20.Location = New Point(642, 15)
+        Label20.Location = New Point(310, 106)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
         Label20.Size = New Size(56, 15)
@@ -479,16 +450,16 @@ Partial Class frmAgentes
         ' cmbCategoria
         ' 
         cmbCategoria.FormattingEnabled = True
-        cmbCategoria.Location = New Point(408, 392)
+        cmbCategoria.Location = New Point(758, 168)
         cmbCategoria.Margin = New Padding(4, 3, 4, 3)
         cmbCategoria.Name = "cmbCategoria"
-        cmbCategoria.Size = New Size(209, 23)
+        cmbCategoria.Size = New Size(143, 23)
         cmbCategoria.TabIndex = 44
         ' 
         ' Label19
         ' 
         Label19.AutoSize = True
-        Label19.Location = New Point(327, 396)
+        Label19.Location = New Point(642, 172)
         Label19.Margin = New Padding(4, 0, 4, 0)
         Label19.Name = "Label19"
         Label19.Size = New Size(61, 15)
@@ -498,7 +469,7 @@ Partial Class frmAgentes
         ' chkNomarca
         ' 
         chkNomarca.AutoSize = True
-        chkNomarca.Location = New Point(327, 358)
+        chkNomarca.Location = New Point(408, 349)
         chkNomarca.Margin = New Padding(4, 3, 4, 3)
         chkNomarca.Name = "chkNomarca"
         chkNomarca.Size = New Size(78, 19)
@@ -508,17 +479,18 @@ Partial Class frmAgentes
         ' 
         ' txtComentario
         ' 
-        txtComentario.Location = New Point(408, 323)
+        txtComentario.Location = New Point(93, 305)
         txtComentario.Margin = New Padding(4, 3, 4, 3)
         txtComentario.Multiline = True
         txtComentario.Name = "txtComentario"
-        txtComentario.Size = New Size(209, 22)
+        txtComentario.ScrollBars = ScrollBars.Both
+        txtComentario.Size = New Size(209, 120)
         txtComentario.TabIndex = 41
         ' 
         ' Label18
         ' 
         Label18.AutoSize = True
-        Label18.Location = New Point(327, 327)
+        Label18.Location = New Point(12, 309)
         Label18.Margin = New Padding(4, 0, 4, 0)
         Label18.Name = "Label18"
         Label18.Size = New Size(73, 15)
@@ -528,7 +500,7 @@ Partial Class frmAgentes
         ' cmbCaracter
         ' 
         cmbCaracter.FormattingEnabled = True
-        cmbCaracter.Location = New Point(408, 288)
+        cmbCaracter.Location = New Point(408, 252)
         cmbCaracter.Margin = New Padding(4, 3, 4, 3)
         cmbCaracter.Name = "cmbCaracter"
         cmbCaracter.Size = New Size(209, 23)
@@ -537,7 +509,7 @@ Partial Class frmAgentes
         ' Label17
         ' 
         Label17.AutoSize = True
-        Label17.Location = New Point(327, 292)
+        Label17.Location = New Point(313, 255)
         Label17.Margin = New Padding(4, 0, 4, 0)
         Label17.Name = "Label17"
         Label17.Size = New Size(54, 15)
@@ -546,7 +518,7 @@ Partial Class frmAgentes
         ' 
         ' txtLicAnual
         ' 
-        txtLicAnual.Location = New Point(408, 254)
+        txtLicAnual.Location = New Point(408, 223)
         txtLicAnual.Margin = New Padding(4, 3, 4, 3)
         txtLicAnual.Name = "txtLicAnual"
         txtLicAnual.Size = New Size(209, 23)
@@ -555,7 +527,7 @@ Partial Class frmAgentes
         ' Label16
         ' 
         Label16.AutoSize = True
-        Label16.Location = New Point(327, 257)
+        Label16.Location = New Point(313, 226)
         Label16.Margin = New Padding(4, 0, 4, 0)
         Label16.Name = "Label16"
         Label16.Size = New Size(62, 15)
@@ -565,7 +537,7 @@ Partial Class frmAgentes
         ' cmbJefe
         ' 
         cmbJefe.FormattingEnabled = True
-        cmbJefe.Location = New Point(408, 219)
+        cmbJefe.Location = New Point(408, 194)
         cmbJefe.Margin = New Padding(4, 3, 4, 3)
         cmbJefe.Name = "cmbJefe"
         cmbJefe.Size = New Size(209, 23)
@@ -574,7 +546,7 @@ Partial Class frmAgentes
         ' Label15
         ' 
         Label15.AutoSize = True
-        Label15.Location = New Point(327, 223)
+        Label15.Location = New Point(313, 197)
         Label15.Margin = New Padding(4, 0, 4, 0)
         Label15.Name = "Label15"
         Label15.Size = New Size(30, 15)
@@ -584,7 +556,7 @@ Partial Class frmAgentes
         ' cmbEscalafon
         ' 
         cmbEscalafon.FormattingEnabled = True
-        cmbEscalafon.Location = New Point(408, 185)
+        cmbEscalafon.Location = New Point(408, 165)
         cmbEscalafon.Margin = New Padding(4, 3, 4, 3)
         cmbEscalafon.Name = "cmbEscalafon"
         cmbEscalafon.Size = New Size(209, 23)
@@ -593,7 +565,7 @@ Partial Class frmAgentes
         ' Label14
         ' 
         Label14.AutoSize = True
-        Label14.Location = New Point(327, 188)
+        Label14.Location = New Point(313, 168)
         Label14.Margin = New Padding(4, 0, 4, 0)
         Label14.Name = "Label14"
         Label14.Size = New Size(60, 15)
@@ -603,7 +575,7 @@ Partial Class frmAgentes
         ' cmbHorasDiarias
         ' 
         cmbHorasDiarias.FormattingEnabled = True
-        cmbHorasDiarias.Location = New Point(408, 150)
+        cmbHorasDiarias.Location = New Point(408, 310)
         cmbHorasDiarias.Margin = New Padding(4, 3, 4, 3)
         cmbHorasDiarias.Name = "cmbHorasDiarias"
         cmbHorasDiarias.Size = New Size(209, 23)
@@ -612,74 +584,34 @@ Partial Class frmAgentes
         ' Label13
         ' 
         Label13.AutoSize = True
-        Label13.Location = New Point(327, 153)
+        Label13.Location = New Point(314, 313)
         Label13.Margin = New Padding(4, 0, 4, 0)
         Label13.Name = "Label13"
         Label13.Size = New Size(79, 15)
         Label13.TabIndex = 30
         Label13.Text = "Horas Diarias:"
         ' 
-        ' txtHorasSemanales
+        ' txtUrgencias
         ' 
-        txtHorasSemanales.Location = New Point(408, 115)
-        txtHorasSemanales.Margin = New Padding(4, 3, 4, 3)
-        txtHorasSemanales.Name = "txtHorasSemanales"
-        txtHorasSemanales.Size = New Size(209, 23)
-        txtHorasSemanales.TabIndex = 29
-        ' 
-        ' Label12
-        ' 
-        Label12.AutoSize = True
-        Label12.Location = New Point(327, 119)
-        Label12.Margin = New Padding(4, 0, 4, 0)
-        Label12.Name = "Label12"
-        Label12.Size = New Size(100, 15)
-        Label12.TabIndex = 28
-        Label12.Text = "Horas Semanales:"
-        ' 
-        ' txtHorasDedicacion
-        ' 
-        txtHorasDedicacion.Location = New Point(408, 81)
-        txtHorasDedicacion.Margin = New Padding(4, 3, 4, 3)
-        txtHorasDedicacion.Name = "txtHorasDedicacion"
-        txtHorasDedicacion.Size = New Size(209, 23)
-        txtHorasDedicacion.TabIndex = 27
+        txtUrgencias.Location = New Point(93, 132)
+        txtUrgencias.Margin = New Padding(4, 3, 4, 3)
+        txtUrgencias.Name = "txtUrgencias"
+        txtUrgencias.Size = New Size(209, 23)
+        txtUrgencias.TabIndex = 27
         ' 
         ' Label11
         ' 
         Label11.AutoSize = True
-        Label11.Location = New Point(327, 84)
+        Label11.Location = New Point(12, 134)
         Label11.Margin = New Padding(4, 0, 4, 0)
         Label11.Name = "Label11"
-        Label11.Size = New Size(103, 15)
+        Label11.Size = New Size(59, 15)
         Label11.TabIndex = 26
-        Label11.Text = "Horas Dedicación:"
-        ' 
-        ' chkMayorDedicacion
-        ' 
-        chkMayorDedicacion.AutoSize = True
-        chkMayorDedicacion.Location = New Point(408, 46)
-        chkMayorDedicacion.Margin = New Padding(4, 3, 4, 3)
-        chkMayorDedicacion.Name = "chkMayorDedicacion"
-        chkMayorDedicacion.Size = New Size(122, 19)
-        chkMayorDedicacion.TabIndex = 25
-        chkMayorDedicacion.Text = "Mayor Dedicación"
-        chkMayorDedicacion.UseVisualStyleBackColor = True
-        ' 
-        ' chkCritico
-        ' 
-        chkCritico.AutoSize = True
-        chkCritico.Location = New Point(327, 46)
-        chkCritico.Margin = New Padding(4, 3, 4, 3)
-        chkCritico.Name = "chkCritico"
-        chkCritico.Size = New Size(61, 19)
-        chkCritico.TabIndex = 24
-        chkCritico.Text = "Crítico"
-        chkCritico.UseVisualStyleBackColor = True
+        Label11.Text = "Urgencias"
         ' 
         ' txtOficina
         ' 
-        txtOficina.Location = New Point(408, 12)
+        txtOficina.Location = New Point(93, 247)
         txtOficina.Margin = New Padding(4, 3, 4, 3)
         txtOficina.Name = "txtOficina"
         txtOficina.Size = New Size(209, 23)
@@ -688,7 +620,7 @@ Partial Class frmAgentes
         ' Label10
         ' 
         Label10.AutoSize = True
-        Label10.Location = New Point(327, 15)
+        Label10.Location = New Point(12, 250)
         Label10.Margin = New Padding(4, 0, 4, 0)
         Label10.Name = "Label10"
         Label10.Size = New Size(48, 15)
@@ -697,7 +629,7 @@ Partial Class frmAgentes
         ' 
         ' txtLocalidad
         ' 
-        txtLocalidad.Location = New Point(93, 392)
+        txtLocalidad.Location = New Point(93, 102)
         txtLocalidad.Margin = New Padding(4, 3, 4, 3)
         txtLocalidad.Name = "txtLocalidad"
         txtLocalidad.Size = New Size(209, 23)
@@ -706,7 +638,7 @@ Partial Class frmAgentes
         ' Label9
         ' 
         Label9.AutoSize = True
-        Label9.Location = New Point(12, 396)
+        Label9.Location = New Point(12, 106)
         Label9.Margin = New Padding(4, 0, 4, 0)
         Label9.Name = "Label9"
         Label9.Size = New Size(61, 15)
@@ -715,16 +647,16 @@ Partial Class frmAgentes
         ' 
         ' txtNro
         ' 
-        txtNro.Location = New Point(93, 358)
+        txtNro.Location = New Point(758, 79)
         txtNro.Margin = New Padding(4, 3, 4, 3)
         txtNro.Name = "txtNro"
-        txtNro.Size = New Size(209, 23)
+        txtNro.Size = New Size(143, 23)
         txtNro.TabIndex = 19
         ' 
         ' Label8
         ' 
         Label8.AutoSize = True
-        Label8.Location = New Point(12, 361)
+        Label8.Location = New Point(641, 82)
         Label8.Margin = New Padding(4, 0, 4, 0)
         Label8.Name = "Label8"
         Label8.Size = New Size(30, 15)
@@ -733,7 +665,7 @@ Partial Class frmAgentes
         ' 
         ' txtCalle
         ' 
-        txtCalle.Location = New Point(93, 323)
+        txtCalle.Location = New Point(408, 76)
         txtCalle.Margin = New Padding(4, 3, 4, 3)
         txtCalle.Name = "txtCalle"
         txtCalle.Size = New Size(209, 23)
@@ -742,7 +674,7 @@ Partial Class frmAgentes
         ' Label7
         ' 
         Label7.AutoSize = True
-        Label7.Location = New Point(12, 327)
+        Label7.Location = New Point(312, 78)
         Label7.Margin = New Padding(4, 0, 4, 0)
         Label7.Name = "Label7"
         Label7.Size = New Size(36, 15)
@@ -752,16 +684,16 @@ Partial Class frmAgentes
         ' dtpNacimiento
         ' 
         dtpNacimiento.Format = DateTimePickerFormat.Short
-        dtpNacimiento.Location = New Point(93, 288)
+        dtpNacimiento.Location = New Point(762, 20)
         dtpNacimiento.Margin = New Padding(4, 3, 4, 3)
         dtpNacimiento.Name = "dtpNacimiento"
-        dtpNacimiento.Size = New Size(209, 23)
+        dtpNacimiento.Size = New Size(135, 23)
         dtpNacimiento.TabIndex = 15
         ' 
         ' Label6
         ' 
         Label6.AutoSize = True
-        Label6.Location = New Point(12, 292)
+        Label6.Location = New Point(641, 24)
         Label6.Margin = New Padding(4, 0, 4, 0)
         Label6.Name = "Label6"
         Label6.Size = New Size(72, 15)
@@ -772,16 +704,16 @@ Partial Class frmAgentes
         ' 
         cmbSexo.FormattingEnabled = True
         cmbSexo.Items.AddRange(New Object() {"M", "F"})
-        cmbSexo.Location = New Point(93, 254)
+        cmbSexo.Location = New Point(93, 73)
         cmbSexo.Margin = New Padding(4, 3, 4, 3)
         cmbSexo.Name = "cmbSexo"
-        cmbSexo.Size = New Size(209, 23)
+        cmbSexo.Size = New Size(96, 23)
         cmbSexo.TabIndex = 13
         ' 
         ' Label5
         ' 
         Label5.AutoSize = True
-        Label5.Location = New Point(12, 257)
+        Label5.Location = New Point(12, 76)
         Label5.Margin = New Padding(4, 0, 4, 0)
         Label5.Name = "Label5"
         Label5.Size = New Size(34, 15)
@@ -790,7 +722,7 @@ Partial Class frmAgentes
         ' 
         ' txtCorreoE
         ' 
-        txtCorreoE.Location = New Point(93, 219)
+        txtCorreoE.Location = New Point(93, 161)
         txtCorreoE.Margin = New Padding(4, 3, 4, 3)
         txtCorreoE.Name = "txtCorreoE"
         txtCorreoE.Size = New Size(209, 23)
@@ -799,7 +731,7 @@ Partial Class frmAgentes
         ' Label4
         ' 
         Label4.AutoSize = True
-        Label4.Location = New Point(12, 223)
+        Label4.Location = New Point(11, 164)
         Label4.Margin = New Padding(4, 0, 4, 0)
         Label4.Name = "Label4"
         Label4.Size = New Size(57, 15)
@@ -808,7 +740,7 @@ Partial Class frmAgentes
         ' 
         ' txtCargo
         ' 
-        txtCargo.Location = New Point(93, 185)
+        txtCargo.Location = New Point(93, 218)
         txtCargo.Margin = New Padding(4, 3, 4, 3)
         txtCargo.Name = "txtCargo"
         txtCargo.Size = New Size(209, 23)
@@ -817,34 +749,16 @@ Partial Class frmAgentes
         ' Label31
         ' 
         Label31.AutoSize = True
-        Label31.Location = New Point(12, 188)
+        Label31.Location = New Point(12, 217)
         Label31.Margin = New Padding(4, 0, 4, 0)
         Label31.Name = "Label31"
         Label31.Size = New Size(42, 15)
         Label31.TabIndex = 8
         Label31.Text = "Cargo:"
         ' 
-        ' txtCargoPampa
-        ' 
-        txtCargoPampa.Location = New Point(93, 150)
-        txtCargoPampa.Margin = New Padding(4, 3, 4, 3)
-        txtCargoPampa.Name = "txtCargoPampa"
-        txtCargoPampa.Size = New Size(209, 23)
-        txtCargoPampa.TabIndex = 7
-        ' 
-        ' Label32
-        ' 
-        Label32.AutoSize = True
-        Label32.Location = New Point(12, 153)
-        Label32.Margin = New Padding(4, 0, 4, 0)
-        Label32.Name = "Label32"
-        Label32.Size = New Size(82, 15)
-        Label32.TabIndex = 6
-        Label32.Text = "Cargo Pampa:"
-        ' 
         ' txtNroDto
         ' 
-        txtNroDto.Location = New Point(93, 115)
+        txtNroDto.Location = New Point(408, 47)
         txtNroDto.Margin = New Padding(4, 3, 4, 3)
         txtNroDto.Name = "txtNroDto"
         txtNroDto.Size = New Size(209, 23)
@@ -853,7 +767,7 @@ Partial Class frmAgentes
         ' Label33
         ' 
         Label33.AutoSize = True
-        Label33.Location = New Point(12, 119)
+        Label33.Location = New Point(312, 49)
         Label33.Margin = New Padding(4, 0, 4, 0)
         Label33.Name = "Label33"
         Label33.Size = New Size(52, 15)
@@ -864,16 +778,16 @@ Partial Class frmAgentes
         ' 
         cmbTipoDto.FormattingEnabled = True
         cmbTipoDto.Items.AddRange(New Object() {"DNI", "LC", "LE", "CI", "Pasaporte"})
-        cmbTipoDto.Location = New Point(93, 81)
+        cmbTipoDto.Location = New Point(93, 44)
         cmbTipoDto.Margin = New Padding(4, 3, 4, 3)
         cmbTipoDto.Name = "cmbTipoDto"
-        cmbTipoDto.Size = New Size(209, 23)
+        cmbTipoDto.Size = New Size(96, 23)
         cmbTipoDto.TabIndex = 3
         ' 
         ' Label34
         ' 
         Label34.AutoSize = True
-        Label34.Location = New Point(12, 84)
+        Label34.Location = New Point(12, 47)
         Label34.Margin = New Padding(4, 0, 4, 0)
         Label34.Name = "Label34"
         Label34.Size = New Size(56, 15)
@@ -883,16 +797,16 @@ Partial Class frmAgentes
         ' cmbInstituto
         ' 
         cmbInstituto.FormattingEnabled = True
-        cmbInstituto.Location = New Point(93, 46)
+        cmbInstituto.Location = New Point(758, 197)
         cmbInstituto.Margin = New Padding(4, 3, 4, 3)
         cmbInstituto.Name = "cmbInstituto"
-        cmbInstituto.Size = New Size(209, 23)
+        cmbInstituto.Size = New Size(143, 23)
         cmbInstituto.TabIndex = 1
         ' 
         ' Label3
         ' 
         Label3.AutoSize = True
-        Label3.Location = New Point(12, 50)
+        Label3.Location = New Point(645, 201)
         Label3.Margin = New Padding(4, 0, 4, 0)
         Label3.Name = "Label3"
         Label3.Size = New Size(54, 15)
@@ -901,7 +815,7 @@ Partial Class frmAgentes
         ' 
         ' txtNombre
         ' 
-        txtNombre.Location = New Point(93, 12)
+        txtNombre.Location = New Point(408, 16)
         txtNombre.Margin = New Padding(4, 3, 4, 3)
         txtNombre.Name = "txtNombre"
         txtNombre.Size = New Size(209, 23)
@@ -910,7 +824,7 @@ Partial Class frmAgentes
         ' Label2
         ' 
         Label2.AutoSize = True
-        Label2.Location = New Point(12, 15)
+        Label2.Location = New Point(312, 17)
         Label2.Margin = New Padding(4, 0, 4, 0)
         Label2.Name = "Label2"
         Label2.Size = New Size(54, 15)
@@ -919,16 +833,16 @@ Partial Class frmAgentes
         ' 
         ' txtLegajo
         ' 
-        txtLegajo.Location = New Point(93, 23)
+        txtLegajo.Location = New Point(93, 15)
         txtLegajo.Margin = New Padding(4, 3, 4, 3)
         txtLegajo.Name = "txtLegajo"
-        txtLegajo.Size = New Size(209, 23)
+        txtLegajo.Size = New Size(96, 23)
         txtLegajo.TabIndex = 0
         ' 
         ' Label1
         ' 
         Label1.AutoSize = True
-        Label1.Location = New Point(12, 27)
+        Label1.Location = New Point(12, 18)
         Label1.Margin = New Padding(4, 0, 4, 0)
         Label1.Name = "Label1"
         Label1.Size = New Size(45, 15)
@@ -942,7 +856,7 @@ Partial Class frmAgentes
         TabPage2.Margin = New Padding(4, 3, 4, 3)
         TabPage2.Name = "TabPage2"
         TabPage2.Padding = New Padding(4, 3, 4, 3)
-        TabPage2.Size = New Size(925, 434)
+        TabPage2.Size = New Size(925, 663)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Grupo Familiar"
         TabPage2.UseVisualStyleBackColor = True
@@ -970,7 +884,7 @@ Partial Class frmAgentes
         GroupBox2.Margin = New Padding(4, 3, 4, 3)
         GroupBox2.Name = "GroupBox2"
         GroupBox2.Padding = New Padding(4, 3, 4, 3)
-        GroupBox2.Size = New Size(917, 428)
+        GroupBox2.Size = New Size(917, 657)
         GroupBox2.TabIndex = 0
         GroupBox2.TabStop = False
         GroupBox2.Text = "Información del Grupo Familiar"
@@ -1129,7 +1043,7 @@ Partial Class frmAgentes
         TabPage3.Margin = New Padding(4, 3, 4, 3)
         TabPage3.Name = "TabPage3"
         TabPage3.Padding = New Padding(4, 3, 4, 3)
-        TabPage3.Size = New Size(925, 434)
+        TabPage3.Size = New Size(925, 663)
         TabPage3.TabIndex = 2
         TabPage3.Text = "Comentarios"
         TabPage3.UseVisualStyleBackColor = True
@@ -1151,7 +1065,7 @@ Partial Class frmAgentes
         GroupBox3.Margin = New Padding(4, 3, 4, 3)
         GroupBox3.Name = "GroupBox3"
         GroupBox3.Padding = New Padding(4, 3, 4, 3)
-        GroupBox3.Size = New Size(917, 428)
+        GroupBox3.Size = New Size(917, 657)
         GroupBox3.TabIndex = 0
         GroupBox3.TabStop = False
         GroupBox3.Text = "Comentarios y Novedades"
@@ -1258,7 +1172,7 @@ Partial Class frmAgentes
         Panel1.Controls.Add(btnBorrar)
         Panel1.Controls.Add(btnModificar)
         Panel1.Controls.Add(btnAgregar)
-        Panel1.Location = New Point(14, 485)
+        Panel1.Location = New Point(6, 711)
         Panel1.Margin = New Padding(4, 3, 4, 3)
         Panel1.Name = "Panel1"
         Panel1.Size = New Size(933, 58)
@@ -1386,30 +1300,11 @@ Partial Class frmAgentes
         DgvListado.Size = New Size(443, 438)
         DgvListado.TabIndex = 2
         ' 
-        ' CmbMotivo
-        ' 
-        CmbMotivo.FormattingEnabled = True
-        CmbMotivo.Location = New Point(478, 356)
-        CmbMotivo.Margin = New Padding(4, 3, 4, 3)
-        CmbMotivo.Name = "CmbMotivo"
-        CmbMotivo.Size = New Size(139, 23)
-        CmbMotivo.TabIndex = 69
-        ' 
-        ' Label45
-        ' 
-        Label45.AutoSize = True
-        Label45.Location = New Point(408, 360)
-        Label45.Margin = New Padding(4, 0, 4, 0)
-        Label45.Name = "Label45"
-        Label45.Size = New Size(44, 15)
-        Label45.TabIndex = 68
-        Label45.Text = "Moivo:"
-        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1435, 554)
+        ClientSize = New Size(1435, 781)
         Controls.Add(Panel2)
         Controls.Add(Panel1)
         Controls.Add(TabControl1)
@@ -1459,10 +1354,8 @@ Partial Class frmAgentes
     Friend WithEvents Label9 As Label
     Friend WithEvents txtOficina As TextBox
     Friend WithEvents Label10 As Label
-    Friend WithEvents txtHorasDedicacion As TextBox
+    Friend WithEvents txtUrgencias As TextBox
     Friend WithEvents Label11 As Label
-    Friend WithEvents txtHorasSemanales As TextBox
-    Friend WithEvents Label12 As Label
     Friend WithEvents cmbHorasDiarias As ComboBox
     Friend WithEvents Label13 As Label
     Friend WithEvents cmbEscalafon As ComboBox
@@ -1483,7 +1376,7 @@ Partial Class frmAgentes
     Friend WithEvents Label21 As Label
     Friend WithEvents txtCelular As TextBox
     Friend WithEvents Label22 As Label
-    Friend WithEvents txtRpv As TextBox
+    Friend WithEvents txtUltimaActualizacion As TextBox
     Friend WithEvents Label23 As Label
     Friend WithEvents txtIngreso As TextBox
     Friend WithEvents Label24 As Label
@@ -1493,24 +1386,17 @@ Partial Class frmAgentes
     Friend WithEvents Label26 As Label
     Friend WithEvents txtTitulo As TextBox
     Friend WithEvents Label27 As Label
-    Friend WithEvents txtMotivo As TextBox
-    Friend WithEvents Label28 As Label
     Friend WithEvents cmbEstadoParental As ComboBox
     Friend WithEvents Label29 As Label
     Friend WithEvents txtFechaJubilacion As TextBox
     Friend WithEvents Label30 As Label
     Friend WithEvents txtCargo As TextBox
     Friend WithEvents Label31 As Label
-    Friend WithEvents txtCargoPampa As TextBox
-    Friend WithEvents Label32 As Label
     Friend WithEvents txtNroDto As TextBox
     Friend WithEvents Label33 As Label
     Friend WithEvents cmbTipoDto As ComboBox
     Friend WithEvents Label34 As Label
-    Friend WithEvents chkCritico As CheckBox
-    Friend WithEvents chkMayorDedicacion As CheckBox
     Friend WithEvents chkNomarca As CheckBox
-    Friend WithEvents chkMarcaAqui As CheckBox
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents txtNombreFamiliar As TextBox
