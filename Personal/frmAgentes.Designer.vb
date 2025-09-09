@@ -250,7 +250,7 @@ Partial Class frmAgentes
         ' CmbMotivo
         ' 
         CmbMotivo.FormattingEnabled = True
-        CmbMotivo.Location = New Point(408, 281)
+        CmbMotivo.Location = New Point(418, 281)
         CmbMotivo.Margin = New Padding(4, 3, 4, 3)
         CmbMotivo.Name = "CmbMotivo"
         CmbMotivo.Size = New Size(209, 23)
@@ -259,7 +259,7 @@ Partial Class frmAgentes
         ' Label45
         ' 
         Label45.AutoSize = True
-        Label45.Location = New Point(314, 285)
+        Label45.Location = New Point(322, 285)
         Label45.Margin = New Padding(4, 0, 4, 0)
         Label45.Name = "Label45"
         Label45.Size = New Size(44, 15)
@@ -268,7 +268,7 @@ Partial Class frmAgentes
         ' 
         ' txtFechaJubilacion
         ' 
-        txtFechaJubilacion.Location = New Point(758, 285)
+        txtFechaJubilacion.Location = New Point(758, 283)
         txtFechaJubilacion.Margin = New Padding(4, 3, 4, 3)
         txtFechaJubilacion.Name = "txtFechaJubilacion"
         txtFechaJubilacion.Size = New Size(143, 23)
@@ -277,7 +277,7 @@ Partial Class frmAgentes
         ' Label30
         ' 
         Label30.AutoSize = True
-        Label30.Location = New Point(642, 288)
+        Label30.Location = New Point(641, 286)
         Label30.Margin = New Padding(4, 0, 4, 0)
         Label30.Name = "Label30"
         Label30.Size = New Size(97, 15)
@@ -287,7 +287,7 @@ Partial Class frmAgentes
         ' cmbEstadoParental
         ' 
         cmbEstadoParental.FormattingEnabled = True
-        cmbEstadoParental.Location = New Point(408, 134)
+        cmbEstadoParental.Location = New Point(418, 134)
         cmbEstadoParental.Margin = New Padding(4, 3, 4, 3)
         cmbEstadoParental.Name = "cmbEstadoParental"
         cmbEstadoParental.Size = New Size(139, 23)
@@ -296,7 +296,7 @@ Partial Class frmAgentes
         ' Label29
         ' 
         Label29.AutoSize = True
-        Label29.Location = New Point(310, 135)
+        Label29.Location = New Point(322, 135)
         Label29.Margin = New Padding(4, 0, 4, 0)
         Label29.Name = "Label29"
         Label29.Size = New Size(91, 15)
@@ -305,7 +305,7 @@ Partial Class frmAgentes
         ' 
         ' txtTitulo
         ' 
-        txtTitulo.Location = New Point(758, 137)
+        txtTitulo.Location = New Point(758, 135)
         txtTitulo.Margin = New Padding(4, 3, 4, 3)
         txtTitulo.Name = "txtTitulo"
         txtTitulo.Size = New Size(143, 23)
@@ -314,7 +314,7 @@ Partial Class frmAgentes
         ' Label27
         ' 
         Label27.AutoSize = True
-        Label27.Location = New Point(642, 140)
+        Label27.Location = New Point(641, 138)
         Label27.Margin = New Padding(4, 0, 4, 0)
         Label27.Name = "Label27"
         Label27.Size = New Size(41, 15)
@@ -323,7 +323,7 @@ Partial Class frmAgentes
         ' 
         ' txtCUIL
         ' 
-        txtCUIL.Location = New Point(758, 49)
+        txtCUIL.Location = New Point(758, 47)
         txtCUIL.Margin = New Padding(4, 3, 4, 3)
         txtCUIL.Name = "txtCUIL"
         txtCUIL.Size = New Size(139, 23)
@@ -332,7 +332,7 @@ Partial Class frmAgentes
         ' Label26
         ' 
         Label26.AutoSize = True
-        Label26.Location = New Point(642, 53)
+        Label26.Location = New Point(641, 51)
         Label26.Margin = New Padding(4, 0, 4, 0)
         Label26.Name = "Label26"
         Label26.Size = New Size(35, 15)
@@ -350,7 +350,7 @@ Partial Class frmAgentes
         ' Label25
         ' 
         Label25.AutoSize = True
-        Label25.Location = New Point(14, 279)
+        Label25.Location = New Point(12, 279)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
         Label25.Size = New Size(32, 15)
@@ -359,16 +359,16 @@ Partial Class frmAgentes
         ' 
         ' txtIngreso
         ' 
-        txtIngreso.Location = New Point(758, 226)
+        txtIngreso.Location = New Point(758, 224)
         txtIngreso.Margin = New Padding(4, 3, 4, 3)
         txtIngreso.Name = "txtIngreso"
-        txtIngreso.Size = New Size(139, 23)
+        txtIngreso.Size = New Size(143, 23)
         txtIngreso.TabIndex = 54
         ' 
         ' Label24
         ' 
         Label24.AutoSize = True
-        Label24.Location = New Point(642, 229)
+        Label24.Location = New Point(641, 227)
         Label24.Margin = New Padding(4, 0, 4, 0)
         Label24.Name = "Label24"
         Label24.Size = New Size(49, 15)
@@ -377,16 +377,16 @@ Partial Class frmAgentes
         ' 
         ' txtUltimaActualizacion
         ' 
-        txtUltimaActualizacion.Location = New Point(765, 256)
+        txtUltimaActualizacion.Location = New Point(765, 254)
         txtUltimaActualizacion.Margin = New Padding(4, 3, 4, 3)
         txtUltimaActualizacion.Name = "txtUltimaActualizacion"
-        txtUltimaActualizacion.Size = New Size(132, 23)
+        txtUltimaActualizacion.Size = New Size(136, 23)
         txtUltimaActualizacion.TabIndex = 52
         ' 
         ' Label23
         ' 
         Label23.AutoSize = True
-        Label23.Location = New Point(641, 260)
+        Label23.Location = New Point(641, 258)
         Label23.Margin = New Padding(4, 0, 4, 0)
         Label23.Name = "Label23"
         Label23.Size = New Size(119, 15)
@@ -395,7 +395,7 @@ Partial Class frmAgentes
         ' 
         ' txtCelular
         ' 
-        txtCelular.Location = New Point(758, 108)
+        txtCelular.Location = New Point(758, 106)
         txtCelular.Margin = New Padding(4, 3, 4, 3)
         txtCelular.Name = "txtCelular"
         txtCelular.Size = New Size(143, 23)
@@ -404,7 +404,7 @@ Partial Class frmAgentes
         ' Label22
         ' 
         Label22.AutoSize = True
-        Label22.Location = New Point(642, 111)
+        Label22.Location = New Point(641, 109)
         Label22.Margin = New Padding(4, 0, 4, 0)
         Label22.Name = "Label22"
         Label22.Size = New Size(47, 15)
@@ -431,7 +431,7 @@ Partial Class frmAgentes
         ' 
         ' txtTelefono
         ' 
-        txtTelefono.Location = New Point(408, 105)
+        txtTelefono.Location = New Point(418, 105)
         txtTelefono.Margin = New Padding(4, 3, 4, 3)
         txtTelefono.Name = "txtTelefono"
         txtTelefono.Size = New Size(139, 23)
@@ -440,7 +440,7 @@ Partial Class frmAgentes
         ' Label20
         ' 
         Label20.AutoSize = True
-        Label20.Location = New Point(310, 106)
+        Label20.Location = New Point(322, 106)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
         Label20.Size = New Size(56, 15)
@@ -450,7 +450,7 @@ Partial Class frmAgentes
         ' cmbCategoria
         ' 
         cmbCategoria.FormattingEnabled = True
-        cmbCategoria.Location = New Point(758, 168)
+        cmbCategoria.Location = New Point(758, 166)
         cmbCategoria.Margin = New Padding(4, 3, 4, 3)
         cmbCategoria.Name = "cmbCategoria"
         cmbCategoria.Size = New Size(143, 23)
@@ -459,7 +459,7 @@ Partial Class frmAgentes
         ' Label19
         ' 
         Label19.AutoSize = True
-        Label19.Location = New Point(642, 172)
+        Label19.Location = New Point(641, 170)
         Label19.Margin = New Padding(4, 0, 4, 0)
         Label19.Name = "Label19"
         Label19.Size = New Size(61, 15)
@@ -469,7 +469,7 @@ Partial Class frmAgentes
         ' chkNomarca
         ' 
         chkNomarca.AutoSize = True
-        chkNomarca.Location = New Point(408, 349)
+        chkNomarca.Location = New Point(418, 349)
         chkNomarca.Margin = New Padding(4, 3, 4, 3)
         chkNomarca.Name = "chkNomarca"
         chkNomarca.Size = New Size(78, 19)
@@ -500,7 +500,7 @@ Partial Class frmAgentes
         ' cmbCaracter
         ' 
         cmbCaracter.FormattingEnabled = True
-        cmbCaracter.Location = New Point(408, 252)
+        cmbCaracter.Location = New Point(418, 252)
         cmbCaracter.Margin = New Padding(4, 3, 4, 3)
         cmbCaracter.Name = "cmbCaracter"
         cmbCaracter.Size = New Size(209, 23)
@@ -509,7 +509,7 @@ Partial Class frmAgentes
         ' Label17
         ' 
         Label17.AutoSize = True
-        Label17.Location = New Point(313, 255)
+        Label17.Location = New Point(322, 255)
         Label17.Margin = New Padding(4, 0, 4, 0)
         Label17.Name = "Label17"
         Label17.Size = New Size(54, 15)
@@ -518,7 +518,7 @@ Partial Class frmAgentes
         ' 
         ' txtLicAnual
         ' 
-        txtLicAnual.Location = New Point(408, 223)
+        txtLicAnual.Location = New Point(418, 223)
         txtLicAnual.Margin = New Padding(4, 3, 4, 3)
         txtLicAnual.Name = "txtLicAnual"
         txtLicAnual.Size = New Size(209, 23)
@@ -527,7 +527,7 @@ Partial Class frmAgentes
         ' Label16
         ' 
         Label16.AutoSize = True
-        Label16.Location = New Point(313, 226)
+        Label16.Location = New Point(322, 226)
         Label16.Margin = New Padding(4, 0, 4, 0)
         Label16.Name = "Label16"
         Label16.Size = New Size(62, 15)
@@ -537,7 +537,7 @@ Partial Class frmAgentes
         ' cmbJefe
         ' 
         cmbJefe.FormattingEnabled = True
-        cmbJefe.Location = New Point(408, 194)
+        cmbJefe.Location = New Point(418, 194)
         cmbJefe.Margin = New Padding(4, 3, 4, 3)
         cmbJefe.Name = "cmbJefe"
         cmbJefe.Size = New Size(209, 23)
@@ -546,7 +546,7 @@ Partial Class frmAgentes
         ' Label15
         ' 
         Label15.AutoSize = True
-        Label15.Location = New Point(313, 197)
+        Label15.Location = New Point(322, 197)
         Label15.Margin = New Padding(4, 0, 4, 0)
         Label15.Name = "Label15"
         Label15.Size = New Size(30, 15)
@@ -556,7 +556,7 @@ Partial Class frmAgentes
         ' cmbEscalafon
         ' 
         cmbEscalafon.FormattingEnabled = True
-        cmbEscalafon.Location = New Point(408, 165)
+        cmbEscalafon.Location = New Point(418, 165)
         cmbEscalafon.Margin = New Padding(4, 3, 4, 3)
         cmbEscalafon.Name = "cmbEscalafon"
         cmbEscalafon.Size = New Size(209, 23)
@@ -565,7 +565,7 @@ Partial Class frmAgentes
         ' Label14
         ' 
         Label14.AutoSize = True
-        Label14.Location = New Point(313, 168)
+        Label14.Location = New Point(322, 168)
         Label14.Margin = New Padding(4, 0, 4, 0)
         Label14.Name = "Label14"
         Label14.Size = New Size(60, 15)
@@ -575,7 +575,7 @@ Partial Class frmAgentes
         ' cmbHorasDiarias
         ' 
         cmbHorasDiarias.FormattingEnabled = True
-        cmbHorasDiarias.Location = New Point(408, 310)
+        cmbHorasDiarias.Location = New Point(418, 310)
         cmbHorasDiarias.Margin = New Padding(4, 3, 4, 3)
         cmbHorasDiarias.Name = "cmbHorasDiarias"
         cmbHorasDiarias.Size = New Size(209, 23)
@@ -584,7 +584,7 @@ Partial Class frmAgentes
         ' Label13
         ' 
         Label13.AutoSize = True
-        Label13.Location = New Point(314, 313)
+        Label13.Location = New Point(322, 313)
         Label13.Margin = New Padding(4, 0, 4, 0)
         Label13.Name = "Label13"
         Label13.Size = New Size(79, 15)
@@ -647,7 +647,7 @@ Partial Class frmAgentes
         ' 
         ' txtNro
         ' 
-        txtNro.Location = New Point(758, 79)
+        txtNro.Location = New Point(758, 77)
         txtNro.Margin = New Padding(4, 3, 4, 3)
         txtNro.Name = "txtNro"
         txtNro.Size = New Size(143, 23)
@@ -656,7 +656,7 @@ Partial Class frmAgentes
         ' Label8
         ' 
         Label8.AutoSize = True
-        Label8.Location = New Point(641, 82)
+        Label8.Location = New Point(641, 80)
         Label8.Margin = New Padding(4, 0, 4, 0)
         Label8.Name = "Label8"
         Label8.Size = New Size(30, 15)
@@ -665,7 +665,7 @@ Partial Class frmAgentes
         ' 
         ' txtCalle
         ' 
-        txtCalle.Location = New Point(408, 76)
+        txtCalle.Location = New Point(418, 76)
         txtCalle.Margin = New Padding(4, 3, 4, 3)
         txtCalle.Name = "txtCalle"
         txtCalle.Size = New Size(209, 23)
@@ -674,7 +674,7 @@ Partial Class frmAgentes
         ' Label7
         ' 
         Label7.AutoSize = True
-        Label7.Location = New Point(312, 78)
+        Label7.Location = New Point(322, 78)
         Label7.Margin = New Padding(4, 0, 4, 0)
         Label7.Name = "Label7"
         Label7.Size = New Size(36, 15)
@@ -684,7 +684,7 @@ Partial Class frmAgentes
         ' dtpNacimiento
         ' 
         dtpNacimiento.Format = DateTimePickerFormat.Short
-        dtpNacimiento.Location = New Point(762, 20)
+        dtpNacimiento.Location = New Point(762, 18)
         dtpNacimiento.Margin = New Padding(4, 3, 4, 3)
         dtpNacimiento.Name = "dtpNacimiento"
         dtpNacimiento.Size = New Size(135, 23)
@@ -693,7 +693,7 @@ Partial Class frmAgentes
         ' Label6
         ' 
         Label6.AutoSize = True
-        Label6.Location = New Point(641, 24)
+        Label6.Location = New Point(641, 22)
         Label6.Margin = New Padding(4, 0, 4, 0)
         Label6.Name = "Label6"
         Label6.Size = New Size(72, 15)
@@ -731,7 +731,7 @@ Partial Class frmAgentes
         ' Label4
         ' 
         Label4.AutoSize = True
-        Label4.Location = New Point(11, 164)
+        Label4.Location = New Point(12, 164)
         Label4.Margin = New Padding(4, 0, 4, 0)
         Label4.Name = "Label4"
         Label4.Size = New Size(57, 15)
@@ -758,7 +758,7 @@ Partial Class frmAgentes
         ' 
         ' txtNroDto
         ' 
-        txtNroDto.Location = New Point(408, 47)
+        txtNroDto.Location = New Point(418, 47)
         txtNroDto.Margin = New Padding(4, 3, 4, 3)
         txtNroDto.Name = "txtNroDto"
         txtNroDto.Size = New Size(209, 23)
@@ -767,7 +767,7 @@ Partial Class frmAgentes
         ' Label33
         ' 
         Label33.AutoSize = True
-        Label33.Location = New Point(312, 49)
+        Label33.Location = New Point(322, 49)
         Label33.Margin = New Padding(4, 0, 4, 0)
         Label33.Name = "Label33"
         Label33.Size = New Size(52, 15)
@@ -797,7 +797,7 @@ Partial Class frmAgentes
         ' cmbInstituto
         ' 
         cmbInstituto.FormattingEnabled = True
-        cmbInstituto.Location = New Point(758, 197)
+        cmbInstituto.Location = New Point(758, 195)
         cmbInstituto.Margin = New Padding(4, 3, 4, 3)
         cmbInstituto.Name = "cmbInstituto"
         cmbInstituto.Size = New Size(143, 23)
@@ -806,7 +806,7 @@ Partial Class frmAgentes
         ' Label3
         ' 
         Label3.AutoSize = True
-        Label3.Location = New Point(645, 201)
+        Label3.Location = New Point(641, 199)
         Label3.Margin = New Padding(4, 0, 4, 0)
         Label3.Name = "Label3"
         Label3.Size = New Size(54, 15)
@@ -815,7 +815,7 @@ Partial Class frmAgentes
         ' 
         ' txtNombre
         ' 
-        txtNombre.Location = New Point(408, 16)
+        txtNombre.Location = New Point(418, 16)
         txtNombre.Margin = New Padding(4, 3, 4, 3)
         txtNombre.Name = "txtNombre"
         txtNombre.Size = New Size(209, 23)
@@ -824,7 +824,7 @@ Partial Class frmAgentes
         ' Label2
         ' 
         Label2.AutoSize = True
-        Label2.Location = New Point(312, 17)
+        Label2.Location = New Point(322, 17)
         Label2.Margin = New Padding(4, 0, 4, 0)
         Label2.Name = "Label2"
         Label2.Size = New Size(54, 15)

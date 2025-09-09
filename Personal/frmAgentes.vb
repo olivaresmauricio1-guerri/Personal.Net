@@ -321,7 +321,6 @@ Public Class frmAgentes
             {"@Legajo", If(String.IsNullOrEmpty(txtLegajo.Text.Trim), DBNull.Value, Convert.ToInt32(txtLegajo.Text.Trim))},
             {"@TipoDto", If(String.IsNullOrEmpty(cmbTipoDto.Text.Trim), DBNull.Value, cmbTipoDto.Text.Trim)},
             {"@NroDto", If(String.IsNullOrEmpty(txtNroDto.Text.Trim), DBNull.Value, If(Integer.TryParse(txtNroDto.Text.Trim, 0), Convert.ToInt32(txtNroDto.Text.Trim), DBNull.Value))},
-            {"@CargoPampa", If(String.IsNullOrEmpty(txtCargoPampa.Text.Trim), DBNull.Value, If(Integer.TryParse(txtCargoPampa.Text.Trim, 0), Convert.ToInt32(txtCargoPampa.Text.Trim), DBNull.Value))},
             {"@Cargo", If(String.IsNullOrEmpty(txtCargo.Text.Trim), DBNull.Value, txtCargo.Text.Trim)},
             {"@Instituto", If(String.IsNullOrEmpty(cmbInstituto.Text.Trim), DBNull.Value, cmbInstituto.Text.Trim)},
             {"@Nombre", If(String.IsNullOrEmpty(txtNombre.Text.Trim), DBNull.Value, txtNombre.Text.Trim)},
@@ -332,10 +331,7 @@ Public Class frmAgentes
             {"@Nro", If(String.IsNullOrEmpty(txtNro.Text.Trim), DBNull.Value, txtNro.Text.Trim)},
             {"@Localidad", If(String.IsNullOrEmpty(txtLocalidad.Text.Trim), DBNull.Value, txtLocalidad.Text.Trim)},
             {"@Oficina", If(String.IsNullOrEmpty(txtOficina.Text.Trim), DBNull.Value, txtOficina.Text.Trim)},
-            {"@Critico", chkCritico.Checked},
-            {"@MayorDedicacion", chkMayorDedicacion.Checked},
             {"@HorasDedicacion", If(String.IsNullOrEmpty(txtUrgencias.Text.Trim), DBNull.Value, txtUrgencias.Text.Trim)},
-            {"@HorasSemanales", If(String.IsNullOrEmpty(txtHorasSemanales.Text.Trim), DBNull.Value, txtHorasSemanales.Text.Trim)},
             {"@HorasDiarias", If(String.IsNullOrEmpty(cmbHorasDiarias.Text.Trim), DBNull.Value, cmbHorasDiarias.Text.Trim)},
             {"@Escalafon", If(String.IsNullOrEmpty(cmbEscalafon.Text.Trim), DBNull.Value, cmbEscalafon.Text.Trim)},
             {"@Jefe", If(String.IsNullOrEmpty(cmbJefe.Text.Trim), DBNull.Value, cmbJefe.Text.Trim)},
@@ -353,10 +349,8 @@ Public Class frmAgentes
             {"@CUIL", If(String.IsNullOrEmpty(txtCUIL.Text.Trim), DBNull.Value, txtCUIL.Text.Trim)},
             {"@TITULO", If(String.IsNullOrEmpty(txtTitulo.Text.Trim), DBNull.Value, txtTitulo.Text.Trim)},
             {"@UltimaActualizacion", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},
-            {"@Motivo", If(String.IsNullOrEmpty(txtMotivo.Text.Trim), DBNull.Value, txtMotivo.Text.Trim)},
             {"@EstadoParental", If(String.IsNullOrEmpty(cmbEstadoParental.Text.Trim), DBNull.Value, cmbEstadoParental.Text.Trim)},
-            {"@FechaJubilacion", If(String.IsNullOrEmpty(txtFechaJubilacion.Text.Trim), DBNull.Value, txtFechaJubilacion.Text.Trim)},
-            {"@MarcaAqui", chkMarcaAqui.Checked}
+            {"@FechaJubilacion", If(String.IsNullOrEmpty(txtFechaJubilacion.Text.Trim), DBNull.Value, txtFechaJubilacion.Text.Trim)}
         }
     End Function
 
@@ -404,7 +398,7 @@ Public Class frmAgentes
         txtLocalidad.Clear()
         txtOficina.Clear()
         txtUrgencias.Clear()
-        txtHorasSemanales.Clear()
+
         txtLicAnual.Clear()
         txtComentario.Clear()
         txtTelefono.Clear()
@@ -415,10 +409,8 @@ Public Class frmAgentes
         txtBaja.Clear()
         txtCUIL.Clear()
         txtTitulo.Clear()
-        txtMotivo.Clear()
         txtFechaJubilacion.Clear()
         txtNroDto.Clear()
-        txtCargoPampa.Clear()
         txtCargo.Clear()
 
         ' Limpiar ComboBoxes
@@ -433,10 +425,7 @@ Public Class frmAgentes
         cmbTipoDto.SelectedIndex = -1
 
         ' Limpiar CheckBoxes
-        chkCritico.Checked = False
-        chkMayorDedicacion.Checked = False
         chkNomarca.Checked = False
-        chkMarcaAqui.Checked = False
 
         ' Resetear DateTimePicker
         dtpNacimiento.Value = DateTime.Now
@@ -459,11 +448,10 @@ Public Class frmAgentes
             txtLocalidad.Text = If(IsDBNull(row("Localidad")), "", row("Localidad").ToString())
             txtOficina.Text = If(IsDBNull(row("Oficina")), "", row("Oficina").ToString())
 
-            chkCritico.Checked = If(IsDBNull(row("Critico")), False, Convert.ToBoolean(row("Critico")))
-            chkMayorDedicacion.Checked = If(IsDBNull(row("MayorDedicacion")), False, Convert.ToBoolean(row("MayorDedicacion")))
+
 
             txtUrgencias.Text = If(IsDBNull(row("HorasDedicacion")), "", row("HorasDedicacion").ToString())
-            txtHorasSemanales.Text = If(IsDBNull(row("HorasSemanales")), "", row("HorasSemanales").ToString())
+
             cmbHorasDiarias.Text = If(IsDBNull(row("HorasDiarias")), "", row("HorasDiarias").ToString())
             cmbEscalafon.Text = If(IsDBNull(row("Escalafon")), "", row("Escalafon").ToString())
             cmbJefe.Text = If(IsDBNull(row("Jefe")), "", row("Jefe").ToString())
@@ -481,14 +469,14 @@ Public Class frmAgentes
             txtBaja.Text = If(IsDBNull(row("Baja")), "", row("Baja").ToString())
             txtCUIL.Text = If(IsDBNull(row("CUIL")), "", row("CUIL").ToString())
             txtTitulo.Text = If(IsDBNull(row("TITULO")), "", row("TITULO").ToString())
-            txtMotivo.Text = If(IsDBNull(row("Motivo")), "", row("Motivo").ToString())
+
             cmbEstadoParental.Text = If(IsDBNull(row("EstadoParental")), "", row("EstadoParental").ToString())
             txtFechaJubilacion.Text = If(IsDBNull(row("FechaJubilacion")), "", row("FechaJubilacion").ToString())
 
-            chkMarcaAqui.Checked = If(IsDBNull(row("MarcaAqui")), False, Convert.ToBoolean(row("MarcaAqui")))
+
             cmbTipoDto.Text = If(IsDBNull(row("TipoDto")), "", row("TipoDto").ToString())
             txtNroDto.Text = If(IsDBNull(row("NroDto")), "", row("NroDto").ToString())
-            txtCargoPampa.Text = If(IsDBNull(row("CargoPampa")), "", row("CargoPampa").ToString())
+
             txtCargo.Text = If(IsDBNull(row("Cargo")), "", row("Cargo").ToString())
         End If
     End Sub
@@ -522,11 +510,11 @@ Public Class frmAgentes
     Private Sub HabilitarControles(habilitar As Boolean)
         ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
         SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
-                           txtCalle, txtNro, txtLocalidad, txtOficina, chkCritico, chkMayorDedicacion,
-                           txtUrgencias, txtHorasSemanales, cmbHorasDiarias, cmbEscalafon, cmbJefe,
+                           txtCalle, txtNro, txtLocalidad, txtOficina,
+                           txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
                            txtInterno, txtCelular, txtUltimaActualizacion, txtIngreso, txtBaja, txtCUIL, txtTitulo,
-                           txtMotivo, cmbEstadoParental, txtFechaJubilacion, chkMarcaAqui, cmbTipoDto,
+                            cmbEstadoParental, txtFechaJubilacion, cmbTipoDto,
                            txtNroDto, CmbMotivo, txtCargo)
     End Sub
 
