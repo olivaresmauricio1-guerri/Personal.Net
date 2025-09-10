@@ -88,13 +88,13 @@ Public Class frmAgentes
 
     End Sub
 
-    Private Sub TxtBuscar_TextChanged(sender As Object, e As EventArgs) Handles TxtBuscar.TextChanged
+    Private Sub TxtBuscar_TextChanged(sender As Object, e As EventArgs)
         Try
             If TxtBuscar.Text.Trim = "" Then
-                GridBuscar()
+                GridBuscar
             Else
-                Dim filtro As String = TxtBuscar.Text.Trim.ToUpper()
-                Dim sql As String = "SELECT Legajo, Nombre, Instituto, Secretaria, Escalafon, Jefe, Caracter " &
+                Dim filtro = TxtBuscar.Text.Trim.ToUpper
+                Dim sql = "SELECT Legajo, Nombre, Instituto, Secretaria, Escalafon, Jefe, Caracter " &
                                   "FROM Agentes " &
                                   "WHERE UPPER(Nombre) LIKE '%" & filtro & "%' " &
                                   "OR UPPER(Instituto) LIKE '%" & filtro & "%' " &
@@ -104,45 +104,45 @@ Public Class frmAgentes
                                   "OR UPPER(Caracter) LIKE '%" & filtro & "%' " &
                                   "OR CAST(Legajo AS VARCHAR) LIKE '%" & filtro & "%' " &
                                   "ORDER BY Nombre"
-                
+
                 tabla = DSM.ExecuteQuery(DSM.Personal, sql)
                 DgvListado.DataSource = tabla
-                
+
                 If tabla.Rows.Count = 0 Then
-                    FormLimpiarSeleccionado()
+                    FormLimpiarSeleccionado
                 End If
             End If
-            FormModoConsulta()
+            FormModoConsulta
         Catch ex As Exception
             MessageBox.Show("Error en la búsqueda: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
-    Private Sub DgvListado_KeyDown(sender As Object, e As KeyEventArgs) Handles DgvListado.KeyDown
+    Private Sub DgvListado_KeyDown(sender As Object, e As KeyEventArgs)
         If e.Control AndAlso e.KeyCode = Keys.C Then
             CopiarDataGrid(DgvListado, chkEncabezados.Checked)
             e.Handled = True
         End If
     End Sub
 
-    Private Sub DgvListado_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvListado.CellClick
+    Private Sub DgvListado_CellClick(sender As Object, e As DataGridViewCellEventArgs)
         If e.RowIndex < 0 Then
             filaActualIndice = -1
             filaActual = Nothing
-            FormLimpiarSeleccionado()
+            FormLimpiarSeleccionado
             Return
         End If
-        AplicarSeleccionActual()
+        AplicarSeleccionActual
     End Sub
 
-    Private Sub DgvListado_SelectionChanged(sender As Object, e As EventArgs) Handles DgvListado.SelectionChanged
-        AplicarSeleccionActual()
+    Private Sub DgvListado_SelectionChanged(sender As Object, e As EventArgs)
+        AplicarSeleccionActual
     End Sub
 
-    Private Sub chkEncabezados_CheckedChanged(sender As Object, e As EventArgs) Handles chkEncabezados.CheckedChanged
+    Private Sub chkEncabezados_CheckedChanged(sender As Object, e As EventArgs)
         Try
             DgvListado.ColumnHeadersVisible = chkEncabezados.Checked
-            DgvListado.Focus()
+            DgvListado.Focus
         Catch ex As Exception
             MessageBox.Show("Error al cambiar encabezados: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -217,14 +217,14 @@ Public Class frmAgentes
         Close
     End Sub
 
-    Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkCopiar.LinkClicked
+    Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
         Try
             If DgvListado.SelectedRows.Count > 0 Then
-                Dim texto As String = ""
+                Dim texto = ""
 
                 ' Agregar encabezados si están habilitados
                 If chkEncabezados.Checked Then
-                    For i As Integer = 0 To DgvListado.Columns.Count - 1
+                    For i = 0 To DgvListado.Columns.Count - 1
                         If i > 0 Then texto += vbTab
                         texto += DgvListado.Columns(i).HeaderText
                     Next
@@ -233,9 +233,9 @@ Public Class frmAgentes
 
                 ' Agregar filas seleccionadas
                 For Each row As DataGridViewRow In DgvListado.SelectedRows
-                    For i As Integer = 0 To row.Cells.Count - 1
+                    For i = 0 To row.Cells.Count - 1
                         If i > 0 Then texto += vbTab
-                        texto += If(row.Cells(i).Value IsNot Nothing, row.Cells(i).Value.ToString(), "")
+                        texto += If(row.Cells(i).Value IsNot Nothing, row.Cells(i).Value.ToString, "")
                     Next
                     texto += vbCrLf
                 Next
@@ -329,7 +329,6 @@ Public Class frmAgentes
             {"@Calle", If(String.IsNullOrEmpty(txtCalle.Text.Trim), DBNull.Value, txtCalle.Text.Trim)},
             {"@Nro", If(String.IsNullOrEmpty(txtNro.Text.Trim), DBNull.Value, txtNro.Text.Trim)},
             {"@Localidad", If(String.IsNullOrEmpty(txtLocalidad.Text.Trim), DBNull.Value, txtLocalidad.Text.Trim)},
-            {"@Oficina", If(String.IsNullOrEmpty(txtOficina.Text.Trim), DBNull.Value, txtOficina.Text.Trim)},
             {"@HorasDedicacion", If(String.IsNullOrEmpty(txtUrgencias.Text.Trim), DBNull.Value, txtUrgencias.Text.Trim)},
             {"@HorasDiarias", If(String.IsNullOrEmpty(cmbHorasDiarias.Text.Trim), DBNull.Value, cmbHorasDiarias.Text.Trim)},
             {"@Escalafon", If(String.IsNullOrEmpty(cmbEscalafon.Text.Trim), DBNull.Value, cmbEscalafon.Text.Trim)},
@@ -395,7 +394,7 @@ Public Class frmAgentes
         txtCalle.Clear()
         txtNro.Clear()
         txtLocalidad.Clear()
-        txtOficina.Clear()
+
         txtUrgencias.Clear()
 
         txtLicAnual.Clear()
@@ -444,7 +443,7 @@ Public Class frmAgentes
             txtCalle.Text = If(IsDBNull(row("Calle")), "", row("Calle").ToString())
             txtNro.Text = If(IsDBNull(row("Nro")), "", row("Nro").ToString())
             txtLocalidad.Text = If(IsDBNull(row("Localidad")), "", row("Localidad").ToString())
-            txtOficina.Text = If(IsDBNull(row("Oficina")), "", row("Oficina").ToString())
+
 
 
 
@@ -508,7 +507,7 @@ Public Class frmAgentes
     Private Sub HabilitarControles(habilitar As Boolean)
         ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
         SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
-                           txtCalle, txtNro, txtLocalidad, txtOficina,
+                           txtCalle, txtNro, txtLocalidad,
                            txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
                            txtInterno, txtCelular, txtUltimaActualizacion, txtIngreso, txtBaja, txtCUIL, txtTitulo,
@@ -519,7 +518,7 @@ Public Class frmAgentes
     ' Métodos auxiliares faltantes
     Private Sub GridBuscar()
         Try
-            Dim sql As String = "SELECT * FROM Agentes ORDER BY Nombre"
+            Dim sql As String = "SELECT * FROM Agentes WHERE Baja ='' OR Baja IS NULL ORDER BY Nombre "
             Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql)
             DgvListado.DataSource = dt
         Catch ex As Exception
@@ -570,27 +569,35 @@ Public Class frmAgentes
                 ' Configurar columnas del grid principal
                 DgvListado.Columns("Legajo").Visible = True
                 DgvListado.Columns("Legajo").HeaderText = "Legajo"
+                DgvListado.Columns("Legajo").Width = 50
 
                 DgvListado.Columns("Nombre").Visible = True
                 DgvListado.Columns("Nombre").HeaderText = "Nombre"
+                DgvListado.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
 
                 DgvListado.Columns("Instituto").Visible = True
                 DgvListado.Columns("Instituto").HeaderText = "Sucursal"
+                DgvListado.Columns("Instituto").Width = 80
 
                 DgvListado.Columns("Cuil").Visible = True
                 DgvListado.Columns("Cuil").HeaderText = "CUIL"
+                DgvListado.Columns("Cuil").Width = 80
 
                 DgvListado.Columns("Telefono").Visible = True
                 DgvListado.Columns("Telefono").HeaderText = "Teléfono"
+                DgvListado.Columns("Telefono").Width = 80
 
                 DgvListado.Columns("Celular").Visible = True
                 DgvListado.Columns("Celular").HeaderText = "Celular"
+                DgvListado.Columns("Celular").Width = 80
 
                 DgvListado.Columns("Interno").Visible = True
                 DgvListado.Columns("Interno").HeaderText = "Interno"
+                DgvListado.Columns("Interno").Width = 60
 
                 DgvListado.Columns("CorreoE").Visible = True
                 DgvListado.Columns("CorreoE").HeaderText = "E-Mail"
+                DgvListado.Columns("CorreoE").Width = 150
 
                 ConfigurarEstiloGrid(DgvListado)
 
@@ -599,5 +606,6 @@ Public Class frmAgentes
             ' Ignorar errores de configuración de columnas
         End Try
     End Sub
+
 
 End Class
