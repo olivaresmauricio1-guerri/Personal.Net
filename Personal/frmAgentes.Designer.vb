@@ -22,18 +22,11 @@ Partial Class frmAgentes
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        TableLayoutPanel1 = New TableLayoutPanel()
         TabControl1 = New TabControl()
         TabPage1 = New TabPage()
         GroupBox1 = New GroupBox()
-        Panel2 = New Panel()
-        ChkTodos = New CheckBox()
-        ChkActivos = New CheckBox()
-        Label10 = New Label()
-        lnkCopiar = New LinkLabel()
-        chkEncabezados = New CheckBox()
-        TxtBuscar = New TextBox()
-        Label44 = New Label()
-        DgvListado = New DataGridView()
+        pctFoto = New PictureBox()
         Panel1Col = New Panel()
         txtBaja = New TextBox()
         Label25 = New Label()
@@ -128,6 +121,13 @@ Partial Class frmAgentes
         Label42 = New Label()
         dtpFechaComentario = New DateTimePicker()
         Label41 = New Label()
+        Panel2 = New Panel()
+        optActivos = New RadioButton()
+        opTodos = New RadioButton()
+        Label10 = New Label()
+        TxtBuscar = New TextBox()
+        Label44 = New Label()
+        DgvListado = New DataGridView()
         Panel1 = New Panel()
         btnSalir = New Button()
         btnCancelar = New Button()
@@ -135,12 +135,13 @@ Partial Class frmAgentes
         btnBorrar = New Button()
         btnModificar = New Button()
         btnAgregar = New Button()
-
+        lnkCopiar = New LinkLabel()
+        chkEncabezados = New CheckBox()
+        TableLayoutPanel1.SuspendLayout()
         TabControl1.SuspendLayout()
         TabPage1.SuspendLayout()
         GroupBox1.SuspendLayout()
-        Panel2.SuspendLayout()
-        CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
+        CType(pctFoto, ComponentModel.ISupportInitialize).BeginInit()
         Panel1Col.SuspendLayout()
         Panel2Col.SuspendLayout()
         Panel3Col.SuspendLayout()
@@ -150,20 +151,41 @@ Partial Class frmAgentes
         TabPage3.SuspendLayout()
         GroupBox3.SuspendLayout()
         CType(DgvComentarios, ComponentModel.ISupportInitialize).BeginInit()
+        Panel2.SuspendLayout()
+        CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
         Panel1.SuspendLayout()
         SuspendLayout()
+        ' 
+        ' TableLayoutPanel1
+        ' 
+        TableLayoutPanel1.ColumnCount = 1
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TableLayoutPanel1.Controls.Add(TabControl1, 0, 1)
+        TableLayoutPanel1.Controls.Add(Panel2, 0, 0)
+        TableLayoutPanel1.Controls.Add(Panel1, 0, 2)
+        TableLayoutPanel1.Dock = DockStyle.Fill
+        TableLayoutPanel1.Location = New Point(0, 0)
+        TableLayoutPanel1.Name = "TableLayoutPanel1"
+        TableLayoutPanel1.RowCount = 3
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 439F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 86F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
+        TableLayoutPanel1.Size = New Size(1069, 775)
+        TableLayoutPanel1.TabIndex = 2
         ' 
         ' TabControl1
         ' 
         TabControl1.Controls.Add(TabPage1)
         TabControl1.Controls.Add(TabPage2)
         TabControl1.Controls.Add(TabPage3)
-        TabControl1.Location = New Point(3, 2)
+        TabControl1.Dock = DockStyle.Fill
+        TabControl1.Location = New Point(4, 253)
         TabControl1.Margin = New Padding(4, 3, 4, 3)
         TabControl1.Name = "TabControl1"
         TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(933, 691)
-        TabControl1.TabIndex = 0
+        TabControl1.Size = New Size(1061, 433)
+        TabControl1.TabIndex = 8
         ' 
         ' TabPage1
         ' 
@@ -172,14 +194,14 @@ Partial Class frmAgentes
         TabPage1.Margin = New Padding(4, 3, 4, 3)
         TabPage1.Name = "TabPage1"
         TabPage1.Padding = New Padding(4, 3, 4, 3)
-        TabPage1.Size = New Size(925, 663)
+        TabPage1.Size = New Size(1053, 405)
         TabPage1.TabIndex = 0
         TabPage1.Text = "Datos del Agente"
         TabPage1.UseVisualStyleBackColor = True
         ' 
         ' GroupBox1
         ' 
-        GroupBox1.Controls.Add(Panel2)
+        GroupBox1.Controls.Add(pctFoto)
         GroupBox1.Controls.Add(Panel1Col)
         GroupBox1.Controls.Add(Panel2Col)
         GroupBox1.Controls.Add(Panel3Col)
@@ -188,109 +210,19 @@ Partial Class frmAgentes
         GroupBox1.Margin = New Padding(4, 3, 4, 3)
         GroupBox1.Name = "GroupBox1"
         GroupBox1.Padding = New Padding(4, 3, 4, 3)
-        GroupBox1.Size = New Size(917, 657)
+        GroupBox1.Size = New Size(1045, 399)
         GroupBox1.TabIndex = 0
         GroupBox1.TabStop = False
         ' 
-        ' Panel2
+        ' pctFoto
         ' 
-        Panel2.Controls.Add(ChkTodos)
-        Panel2.Controls.Add(ChkActivos)
-        Panel2.Controls.Add(Label10)
-        Panel2.Controls.Add(lnkCopiar)
-        Panel2.Controls.Add(chkEncabezados)
-        Panel2.Controls.Add(TxtBuscar)
-        Panel2.Controls.Add(Label44)
-        Panel2.Controls.Add(DgvListado)
-        Panel2.Location = New Point(1, 11)
-        Panel2.Margin = New Padding(4, 3, 4, 3)
-        Panel2.Name = "Panel2"
-        Panel2.Size = New Size(858, 266)
-        Panel2.TabIndex = 3
-        ' 
-        ' ChkTodos
-        ' 
-        ChkTodos.AutoSize = True
-        ChkTodos.Location = New Point(523, 9)
-        ChkTodos.Margin = New Padding(4, 3, 4, 3)
-        ChkTodos.Name = "ChkTodos"
-        ChkTodos.Size = New Size(58, 19)
-        ChkTodos.TabIndex = 7
-        ChkTodos.Text = "Todos"
-        ChkTodos.UseVisualStyleBackColor = True
-        ' 
-        ' ChkActivos
-        ' 
-        ChkActivos.AutoSize = True
-        ChkActivos.Checked = True
-        ChkActivos.CheckState = CheckState.Checked
-        ChkActivos.Location = New Point(600, 7)
-        ChkActivos.Margin = New Padding(4, 3, 4, 3)
-        ChkActivos.Name = "ChkActivos"
-        ChkActivos.Size = New Size(65, 19)
-        ChkActivos.TabIndex = 6
-        ChkActivos.Text = "Activos"
-        ChkActivos.UseVisualStyleBackColor = True
-        ' 
-        ' Label10
-        ' 
-        Label10.AutoSize = True
-        Label10.Location = New Point(694, 8)
-        Label10.Margin = New Padding(4, 0, 4, 0)
-        Label10.Name = "Label10"
-        Label10.Size = New Size(113, 15)
-        Label10.TabIndex = 5
-        Label10.Text = "Total de Empleados:"
-        ' 
-        ' lnkCopiar
-        ' 
-        lnkCopiar.AutoSize = True
-        lnkCopiar.LinkColor = Color.Black
-        lnkCopiar.Location = New Point(616, 245)
-        lnkCopiar.Margin = New Padding(4, 0, 4, 0)
-        lnkCopiar.Name = "lnkCopiar"
-        lnkCopiar.Size = New Size(94, 15)
-        lnkCopiar.TabIndex = 4
-        lnkCopiar.TabStop = True
-        lnkCopiar.Text = "Copiar selección"
-        ' 
-        ' chkEncabezados
-        ' 
-        chkEncabezados.AutoSize = True
-        chkEncabezados.Location = New Point(718, 244)
-        chkEncabezados.Margin = New Padding(4, 3, 4, 3)
-        chkEncabezados.Name = "chkEncabezados"
-        chkEncabezados.Size = New Size(119, 19)
-        chkEncabezados.TabIndex = 3
-        chkEncabezados.Text = "Con encabezados"
-        chkEncabezados.UseVisualStyleBackColor = True
-        ' 
-        ' TxtBuscar
-        ' 
-        TxtBuscar.Location = New Point(93, 5)
-        TxtBuscar.Margin = New Padding(4, 3, 4, 3)
-        TxtBuscar.Name = "TxtBuscar"
-        TxtBuscar.Size = New Size(349, 23)
-        TxtBuscar.TabIndex = 1
-        ' 
-        ' Label44
-        ' 
-        Label44.AutoSize = True
-        Label44.Location = New Point(12, 8)
-        Label44.Margin = New Padding(4, 0, 4, 0)
-        Label44.Name = "Label44"
-        Label44.Size = New Size(45, 15)
-        Label44.TabIndex = 0
-        Label44.Text = "Buscar:"
-        ' 
-        ' DgvListado
-        ' 
-        DgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvListado.Location = New Point(6, 34)
-        DgvListado.Margin = New Padding(4, 3, 4, 3)
-        DgvListado.Name = "DgvListado"
-        DgvListado.Size = New Size(848, 206)
-        DgvListado.TabIndex = 2
+        pctFoto.BorderStyle = BorderStyle.FixedSingle
+        pctFoto.Location = New Point(849, 14)
+        pctFoto.Name = "pctFoto"
+        pctFoto.Size = New Size(183, 234)
+        pctFoto.SizeMode = PictureBoxSizeMode.StretchImage
+        pctFoto.TabIndex = 4
+        pctFoto.TabStop = False
         ' 
         ' Panel1Col
         ' 
@@ -316,7 +248,7 @@ Partial Class frmAgentes
         Panel1Col.Controls.Add(Label34)
         Panel1Col.Controls.Add(txtUrgencias)
         Panel1Col.Controls.Add(Label11)
-        Panel1Col.Location = New Point(1, 283)
+        Panel1Col.Location = New Point(5, 14)
         Panel1Col.Name = "Panel1Col"
         Panel1Col.Size = New Size(294, 371)
         Panel1Col.TabIndex = 0
@@ -546,9 +478,9 @@ Partial Class frmAgentes
         Panel2Col.Controls.Add(txtNroDto)
         Panel2Col.Controls.Add(Label33)
         Panel2Col.Controls.Add(Label20)
-        Panel2Col.Location = New Point(296, 283)
+        Panel2Col.Location = New Point(305, 14)
         Panel2Col.Name = "Panel2Col"
-        Panel2Col.Size = New Size(248, 371)
+        Panel2Col.Size = New Size(233, 371)
         Panel2Col.TabIndex = 1
         ' 
         ' chkNomarca
@@ -750,7 +682,7 @@ Partial Class frmAgentes
         Panel3Col.Controls.Add(Label30)
         Panel3Col.Controls.Add(txtUltimaActualizacion)
         Panel3Col.Controls.Add(Label23)
-        Panel3Col.Location = New Point(547, 283)
+        Panel3Col.Location = New Point(544, 14)
         Panel3Col.Name = "Panel3Col"
         Panel3Col.Size = New Size(299, 370)
         Panel3Col.TabIndex = 2
@@ -947,7 +879,7 @@ Partial Class frmAgentes
         TabPage2.Margin = New Padding(4, 3, 4, 3)
         TabPage2.Name = "TabPage2"
         TabPage2.Padding = New Padding(4, 3, 4, 3)
-        TabPage2.Size = New Size(925, 663)
+        TabPage2.Size = New Size(1048, 400)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Grupo Familiar"
         TabPage2.UseVisualStyleBackColor = True
@@ -975,7 +907,7 @@ Partial Class frmAgentes
         GroupBox2.Margin = New Padding(4, 3, 4, 3)
         GroupBox2.Name = "GroupBox2"
         GroupBox2.Padding = New Padding(4, 3, 4, 3)
-        GroupBox2.Size = New Size(917, 657)
+        GroupBox2.Size = New Size(1040, 394)
         GroupBox2.TabIndex = 0
         GroupBox2.TabStop = False
         GroupBox2.Text = "Información del Grupo Familiar"
@@ -1020,7 +952,7 @@ Partial Class frmAgentes
         ' Label40
         ' 
         Label40.AutoSize = True
-        Label40.Location = New Point(560, 61)
+        Label40.Location = New Point(561, 61)
         Label40.Margin = New Padding(4, 0, 4, 0)
         Label40.Name = "Label40"
         Label40.Size = New Size(37, 15)
@@ -1038,7 +970,7 @@ Partial Class frmAgentes
         ' Label39
         ' 
         Label39.AutoSize = True
-        Label39.Location = New Point(560, 27)
+        Label39.Location = New Point(561, 27)
         Label39.Margin = New Padding(4, 0, 4, 0)
         Label39.Name = "Label39"
         Label39.Size = New Size(68, 15)
@@ -1056,7 +988,7 @@ Partial Class frmAgentes
         ' Label38
         ' 
         Label38.AutoSize = True
-        Label38.Location = New Point(245, 96)
+        Label38.Location = New Point(246, 96)
         Label38.Margin = New Padding(4, 0, 4, 0)
         Label38.Name = "Label38"
         Label38.Size = New Size(36, 15)
@@ -1075,7 +1007,7 @@ Partial Class frmAgentes
         ' Label37
         ' 
         Label37.AutoSize = True
-        Label37.Location = New Point(245, 61)
+        Label37.Location = New Point(246, 61)
         Label37.Margin = New Padding(4, 0, 4, 0)
         Label37.Name = "Label37"
         Label37.Size = New Size(72, 15)
@@ -1093,7 +1025,7 @@ Partial Class frmAgentes
         ' Label36
         ' 
         Label36.AutoSize = True
-        Label36.Location = New Point(245, 27)
+        Label36.Location = New Point(246, 27)
         Label36.Margin = New Padding(4, 0, 4, 0)
         Label36.Name = "Label36"
         Label36.Size = New Size(68, 15)
@@ -1111,7 +1043,7 @@ Partial Class frmAgentes
         ' Label35
         ' 
         Label35.AutoSize = True
-        Label35.Location = New Point(12, 27)
+        Label35.Location = New Point(13, 27)
         Label35.Margin = New Padding(4, 0, 4, 0)
         Label35.Name = "Label35"
         Label35.Size = New Size(54, 15)
@@ -1134,7 +1066,7 @@ Partial Class frmAgentes
         TabPage3.Margin = New Padding(4, 3, 4, 3)
         TabPage3.Name = "TabPage3"
         TabPage3.Padding = New Padding(4, 3, 4, 3)
-        TabPage3.Size = New Size(925, 663)
+        TabPage3.Size = New Size(1048, 400)
         TabPage3.TabIndex = 2
         TabPage3.Text = "Comentarios"
         TabPage3.UseVisualStyleBackColor = True
@@ -1156,7 +1088,7 @@ Partial Class frmAgentes
         GroupBox3.Margin = New Padding(4, 3, 4, 3)
         GroupBox3.Name = "GroupBox3"
         GroupBox3.Padding = New Padding(4, 3, 4, 3)
-        GroupBox3.Size = New Size(917, 657)
+        GroupBox3.Size = New Size(1040, 394)
         GroupBox3.TabIndex = 0
         GroupBox3.TabStop = False
         GroupBox3.Text = "Comentarios y Novedades"
@@ -1210,7 +1142,7 @@ Partial Class frmAgentes
         ' Label43
         ' 
         Label43.AutoSize = True
-        Label43.Location = New Point(327, 61)
+        Label43.Location = New Point(328, 61)
         Label43.Margin = New Padding(4, 0, 4, 0)
         Label43.Name = "Label43"
         Label43.Size = New Size(48, 15)
@@ -1229,7 +1161,7 @@ Partial Class frmAgentes
         ' Label42
         ' 
         Label42.AutoSize = True
-        Label42.Location = New Point(12, 61)
+        Label42.Location = New Point(13, 61)
         Label42.Margin = New Padding(4, 0, 4, 0)
         Label42.Name = "Label42"
         Label42.Size = New Size(73, 15)
@@ -1248,12 +1180,87 @@ Partial Class frmAgentes
         ' Label41
         ' 
         Label41.AutoSize = True
-        Label41.Location = New Point(12, 27)
+        Label41.Location = New Point(13, 27)
         Label41.Margin = New Padding(4, 0, 4, 0)
         Label41.Name = "Label41"
         Label41.Size = New Size(41, 15)
         Label41.TabIndex = 0
         Label41.Text = "Fecha:"
+        ' 
+        ' Panel2
+        ' 
+        Panel2.Controls.Add(chkEncabezados)
+        Panel2.Controls.Add(lnkCopiar)
+        Panel2.Controls.Add(optActivos)
+        Panel2.Controls.Add(opTodos)
+        Panel2.Controls.Add(Label10)
+        Panel2.Controls.Add(TxtBuscar)
+        Panel2.Controls.Add(Label44)
+        Panel2.Controls.Add(DgvListado)
+        Panel2.Location = New Point(4, 3)
+        Panel2.Margin = New Padding(4, 3, 4, 3)
+        Panel2.Name = "Panel2"
+        Panel2.Size = New Size(858, 244)
+        Panel2.TabIndex = 4
+        ' 
+        ' optActivos
+        ' 
+        optActivos.AutoSize = True
+        optActivos.Checked = True
+        optActivos.Location = New Point(454, 6)
+        optActivos.Name = "optActivos"
+        optActivos.Size = New Size(64, 19)
+        optActivos.TabIndex = 2
+        optActivos.TabStop = True
+        optActivos.Text = "Activos"
+        optActivos.UseVisualStyleBackColor = True
+        ' 
+        ' opTodos
+        ' 
+        opTodos.AutoSize = True
+        opTodos.Location = New Point(527, 6)
+        opTodos.Name = "opTodos"
+        opTodos.Size = New Size(57, 19)
+        opTodos.TabIndex = 3
+        opTodos.Text = "Todos"
+        opTodos.UseVisualStyleBackColor = True
+        ' 
+        ' Label10
+        ' 
+        Label10.AutoSize = True
+        Label10.Location = New Point(694, 8)
+        Label10.Margin = New Padding(4, 0, 4, 0)
+        Label10.Name = "Label10"
+        Label10.Size = New Size(113, 15)
+        Label10.TabIndex = 5
+        Label10.Text = "Total de Empleados:"
+        ' 
+        ' TxtBuscar
+        ' 
+        TxtBuscar.Location = New Point(93, 5)
+        TxtBuscar.Margin = New Padding(4, 3, 4, 3)
+        TxtBuscar.Name = "TxtBuscar"
+        TxtBuscar.Size = New Size(349, 23)
+        TxtBuscar.TabIndex = 1
+        ' 
+        ' Label44
+        ' 
+        Label44.AutoSize = True
+        Label44.Location = New Point(12, 8)
+        Label44.Margin = New Padding(4, 0, 4, 0)
+        Label44.Name = "Label44"
+        Label44.Size = New Size(45, 15)
+        Label44.TabIndex = 0
+        Label44.Text = "Buscar:"
+        ' 
+        ' DgvListado
+        ' 
+        DgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DgvListado.Location = New Point(6, 34)
+        DgvListado.Margin = New Padding(4, 3, 4, 3)
+        DgvListado.Name = "DgvListado"
+        DgvListado.Size = New Size(848, 182)
+        DgvListado.TabIndex = 2
         ' 
         ' Panel1
         ' 
@@ -1263,11 +1270,12 @@ Partial Class frmAgentes
         Panel1.Controls.Add(btnBorrar)
         Panel1.Controls.Add(btnModificar)
         Panel1.Controls.Add(btnAgregar)
-        Panel1.Location = New Point(6, 694)
+        Panel1.Dock = DockStyle.Fill
+        Panel1.Location = New Point(4, 692)
         Panel1.Margin = New Padding(4, 3, 4, 3)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(933, 58)
-        Panel1.TabIndex = 1
+        Panel1.Size = New Size(1061, 80)
+        Panel1.TabIndex = 7
         ' 
         ' btnSalir
         ' 
@@ -1329,22 +1337,43 @@ Partial Class frmAgentes
         btnAgregar.Text = "Agregar"
         btnAgregar.UseVisualStyleBackColor = True
         ' 
+        ' lnkCopiar
+        ' 
+        lnkCopiar.AutoSize = True
+        lnkCopiar.LinkColor = Color.Black
+        lnkCopiar.Location = New Point(626, 222)
+        lnkCopiar.Margin = New Padding(4, 0, 4, 0)
+        lnkCopiar.Name = "lnkCopiar"
+        lnkCopiar.Size = New Size(94, 15)
+        lnkCopiar.TabIndex = 6
+        lnkCopiar.TabStop = True
+        lnkCopiar.Text = "Copiar selección"
+        ' 
+        ' chkEncabezados
+        ' 
+        chkEncabezados.AutoSize = True
+        chkEncabezados.Location = New Point(728, 222)
+        chkEncabezados.Margin = New Padding(4, 3, 4, 3)
+        chkEncabezados.Name = "chkEncabezados"
+        chkEncabezados.Size = New Size(119, 19)
+        chkEncabezados.TabIndex = 7
+        chkEncabezados.Text = "Con encabezados"
+        chkEncabezados.UseVisualStyleBackColor = True
+        ' 
         ' frmAgentes
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1435, 752)
-        Controls.Add(Panel1)
-        Controls.Add(TabControl1)
+        ClientSize = New Size(1069, 775)
+        Controls.Add(TableLayoutPanel1)
         Margin = New Padding(4, 3, 4, 3)
         Name = "frmAgentes"
         Text = "Actualizaciones - Mantenimiento de Agentes"
+        TableLayoutPanel1.ResumeLayout(False)
         TabControl1.ResumeLayout(False)
         TabPage1.ResumeLayout(False)
         GroupBox1.ResumeLayout(False)
-        Panel2.ResumeLayout(False)
-        Panel2.PerformLayout()
-        CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
+        CType(pctFoto, ComponentModel.ISupportInitialize).EndInit()
         Panel1Col.ResumeLayout(False)
         Panel1Col.PerformLayout()
         Panel2Col.ResumeLayout(False)
@@ -1359,69 +1388,32 @@ Partial Class frmAgentes
         GroupBox3.ResumeLayout(False)
         GroupBox3.PerformLayout()
         CType(DgvComentarios, ComponentModel.ISupportInitialize).EndInit()
+        Panel2.ResumeLayout(False)
+        Panel2.PerformLayout()
+        CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
         Panel1.ResumeLayout(False)
         ResumeLayout(False)
 
     End Sub
-
+    Friend WithEvents ChkTodos As CheckBox
+    Friend WithEvents ChkActivos As CheckBox
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents optActivos As RadioButton
+    Friend WithEvents opTodos As RadioButton
+    Friend WithEvents Label10 As Label
+    Friend WithEvents TxtBuscar As TextBox
+    Friend WithEvents Label44 As Label
+    Friend WithEvents DgvListado As DataGridView
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents Panel2Col As Panel
-    Friend WithEvents cmbEscalafon As ComboBox
-    Friend WithEvents Label14 As Label
-    Friend WithEvents txtLicAnual As TextBox
-    Friend WithEvents Label16 As Label
-    Friend WithEvents cmbCategoria As ComboBox
-    Friend WithEvents Label19 As Label
-    Friend WithEvents txtTelefono As TextBox
-    Friend WithEvents Label20 As Label
-    Friend WithEvents txtUltimaActualizacion As TextBox
-    Friend WithEvents Label23 As Label
-    Friend WithEvents txtIngreso As TextBox
-    Friend WithEvents Label24 As Label
-    Friend WithEvents txtNroDto As TextBox
-    Friend WithEvents Label33 As Label
-    Friend WithEvents TabPage2 As TabPage
-    Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents txtNombreFamiliar As TextBox
-    Friend WithEvents Label35 As Label
-    Friend WithEvents txtParentescoFamiliar As TextBox
-    Friend WithEvents Label36 As Label
-    Friend WithEvents dtpNacimientoFamiliar As DateTimePicker
-    Friend WithEvents Label37 As Label
-    Friend WithEvents txtEdadFamiliar As TextBox
-    Friend WithEvents Label38 As Label
-    Friend WithEvents txtOcupacionFamiliar As TextBox
-    Friend WithEvents Label39 As Label
-    Friend WithEvents txtNivelFamiliar As TextBox
-    Friend WithEvents Label40 As Label
-    Friend WithEvents btnAgregarFamiliar As Button
-    Friend WithEvents btnEliminarFamiliar As Button
-    Friend WithEvents DgvGrupoFamiliar As DataGridView
-    Friend WithEvents TabPage3 As TabPage
-    Friend WithEvents GroupBox3 As GroupBox
-    Friend WithEvents dtpFechaComentario As DateTimePicker
-    Friend WithEvents Label41 As Label
-    Friend WithEvents txtComentaComentario As TextBox
-    Friend WithEvents Label42 As Label
-    Friend WithEvents txtMotivoComentario As TextBox
-    Friend WithEvents cmbMotivoComentario As ComboBox
-    Friend WithEvents cmbParentesco As ComboBox
-    Friend WithEvents Label43 As Label
-    Friend WithEvents btnAgregarComentario As Button
-    Friend WithEvents btnEliminarComentario As Button
-    Friend WithEvents DgvComentarios As DataGridView
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents btnAgregar As Button
-    Friend WithEvents btnModificar As Button
-    Friend WithEvents btnBorrar As Button
-    Friend WithEvents btnAceptar As Button
-    Friend WithEvents btnCancelar As Button
-    Friend WithEvents btnSalir As Button
-    Friend WithEvents dtpNacimiento As DateTimePicker
-    Friend WithEvents Label6 As Label
+    Friend WithEvents pctFoto As PictureBox
     Friend WithEvents Panel1Col As Panel
+    Friend WithEvents txtBaja As TextBox
+    Friend WithEvents Label25 As Label
+    Friend WithEvents cmbCaracter As ComboBox
+    Friend WithEvents Label17 As Label
     Friend WithEvents txtComentario As TextBox
     Friend WithEvents Label18 As Label
     Friend WithEvents txtLegajo As TextBox
@@ -1429,6 +1421,8 @@ Partial Class frmAgentes
     Friend WithEvents txtNombre As TextBox
     Friend WithEvents Label2 As Label
     Friend WithEvents cmbInstituto As ComboBox
+    Friend WithEvents txtIngreso As TextBox
+    Friend WithEvents Label24 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents txtCorreoE As TextBox
     Friend WithEvents Label4 As Label
@@ -1438,14 +1432,26 @@ Partial Class frmAgentes
     Friend WithEvents Label34 As Label
     Friend WithEvents txtUrgencias As TextBox
     Friend WithEvents Label11 As Label
+    Friend WithEvents Panel2Col As Panel
+    Friend WithEvents chkNomarca As CheckBox
+    Friend WithEvents Label12 As Label
+    Friend WithEvents CmbMotivo As ComboBox
     Friend WithEvents txtTitulo As TextBox
     Friend WithEvents Label27 As Label
     Friend WithEvents txtNro As TextBox
     Friend WithEvents Label8 As Label
-    Friend WithEvents cmbCaracter As ComboBox
-    Friend WithEvents Label17 As Label
-    Friend WithEvents txtBaja As TextBox
-    Friend WithEvents Label25 As Label
+    Friend WithEvents dtpNacimiento As DateTimePicker
+    Friend WithEvents Label6 As Label
+    Friend WithEvents cmbEscalafon As ComboBox
+    Friend WithEvents Label14 As Label
+    Friend WithEvents txtLicAnual As TextBox
+    Friend WithEvents Label16 As Label
+    Friend WithEvents cmbCategoria As ComboBox
+    Friend WithEvents Label19 As Label
+    Friend WithEvents txtTelefono As TextBox
+    Friend WithEvents txtNroDto As TextBox
+    Friend WithEvents Label33 As Label
+    Friend WithEvents Label20 As Label
     Friend WithEvents Panel3Col As Panel
     Friend WithEvents txtCelular As TextBox
     Friend WithEvents Label22 As Label
@@ -1465,17 +1471,46 @@ Partial Class frmAgentes
     Friend WithEvents txtFechaJubilacion As TextBox
     Friend WithEvents Label29 As Label
     Friend WithEvents Label30 As Label
-    Friend WithEvents chkNomarca As CheckBox
-    Friend WithEvents Label12 As Label
-    Friend WithEvents CmbMotivo As ComboBox
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents lnkCopiar As LinkLabel
+    Friend WithEvents txtUltimaActualizacion As TextBox
+    Friend WithEvents Label23 As Label
+    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents DgvGrupoFamiliar As DataGridView
+    Friend WithEvents btnEliminarFamiliar As Button
+    Friend WithEvents btnAgregarFamiliar As Button
+    Friend WithEvents txtNivelFamiliar As TextBox
+    Friend WithEvents Label40 As Label
+    Friend WithEvents txtOcupacionFamiliar As TextBox
+    Friend WithEvents Label39 As Label
+    Friend WithEvents txtEdadFamiliar As TextBox
+    Friend WithEvents Label38 As Label
+    Friend WithEvents dtpNacimientoFamiliar As DateTimePicker
+    Friend WithEvents Label37 As Label
+    Friend WithEvents txtParentescoFamiliar As TextBox
+    Friend WithEvents Label36 As Label
+    Friend WithEvents txtNombreFamiliar As TextBox
+    Friend WithEvents Label35 As Label
+    Friend WithEvents cmbParentesco As ComboBox
+    Friend WithEvents TabPage3 As TabPage
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents DgvComentarios As DataGridView
+    Friend WithEvents btnEliminarComentario As Button
+    Friend WithEvents btnAgregarComentario As Button
+    Friend WithEvents txtMotivoComentario As TextBox
+    Friend WithEvents cmbMotivoComentario As ComboBox
+    Friend WithEvents Label43 As Label
+    Friend WithEvents txtComentaComentario As TextBox
+    Friend WithEvents Label42 As Label
+    Friend WithEvents dtpFechaComentario As DateTimePicker
+    Friend WithEvents Label41 As Label
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents btnSalir As Button
+    Friend WithEvents btnCancelar As Button
+    Friend WithEvents btnAceptar As Button
+    Friend WithEvents btnBorrar As Button
+    Friend WithEvents btnModificar As Button
+    Friend WithEvents btnAgregar As Button
     Friend WithEvents chkEncabezados As CheckBox
-    Friend WithEvents TxtBuscar As TextBox
-    Friend WithEvents Label44 As Label
-    Friend WithEvents DgvListado As DataGridView
-    Friend WithEvents ChkTodos As CheckBox
-    Friend WithEvents ChkActivos As CheckBox
-    Friend WithEvents Label10 As Label
+    Friend WithEvents lnkCopiar As LinkLabel
 
 End Class
