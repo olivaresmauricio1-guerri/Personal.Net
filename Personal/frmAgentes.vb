@@ -321,7 +321,6 @@ Public Class frmAgentes
             {"@Legajo", If(String.IsNullOrEmpty(txtLegajo.Text.Trim), DBNull.Value, Convert.ToInt32(txtLegajo.Text.Trim))},
             {"@TipoDto", If(String.IsNullOrEmpty(cmbTipoDto.Text.Trim), DBNull.Value, cmbTipoDto.Text.Trim)},
             {"@NroDto", If(String.IsNullOrEmpty(txtNroDto.Text.Trim), DBNull.Value, If(Integer.TryParse(txtNroDto.Text.Trim, 0), Convert.ToInt32(txtNroDto.Text.Trim), DBNull.Value))},
-            {"@Cargo", If(String.IsNullOrEmpty(txtCargo.Text.Trim), DBNull.Value, txtCargo.Text.Trim)},
             {"@Instituto", If(String.IsNullOrEmpty(cmbInstituto.Text.Trim), DBNull.Value, cmbInstituto.Text.Trim)},
             {"@Nombre", If(String.IsNullOrEmpty(txtNombre.Text.Trim), DBNull.Value, txtNombre.Text.Trim)},
             {"@CorreroE", If(String.IsNullOrEmpty(txtCorreoE.Text.Trim), DBNull.Value, txtCorreoE.Text.Trim)},
@@ -411,7 +410,6 @@ Public Class frmAgentes
         txtTitulo.Clear()
         txtFechaJubilacion.Clear()
         txtNroDto.Clear()
-        txtCargo.Clear()
 
         ' Limpiar ComboBoxes
         cmbInstituto.SelectedIndex = -1
@@ -477,7 +475,7 @@ Public Class frmAgentes
             cmbTipoDto.Text = If(IsDBNull(row("TipoDto")), "", row("TipoDto").ToString())
             txtNroDto.Text = If(IsDBNull(row("NroDto")), "", row("NroDto").ToString())
 
-            txtCargo.Text = If(IsDBNull(row("Cargo")), "", row("Cargo").ToString())
+
         End If
     End Sub
 
@@ -515,7 +513,7 @@ Public Class frmAgentes
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
                            txtInterno, txtCelular, txtUltimaActualizacion, txtIngreso, txtBaja, txtCUIL, txtTitulo,
                             cmbEstadoParental, txtFechaJubilacion, cmbTipoDto,
-                           txtNroDto, CmbMotivo, txtCargo)
+                           txtNroDto, CmbMotivo)
     End Sub
 
     ' Métodos auxiliares faltantes
