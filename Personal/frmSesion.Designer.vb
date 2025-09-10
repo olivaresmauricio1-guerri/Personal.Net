@@ -50,7 +50,7 @@ Partial Class frmSesion
         ' Label2
         ' 
         Label2.BackColor = Color.Transparent
-        Label2.Font = New Font("Segoe UI", 9.0F)
+        Label2.Font = New Font("Segoe UI", 9F)
         Label2.ForeColor = SystemColors.ControlText
         Label2.Location = New Point(9, 64)
         Label2.Name = "Label2"
@@ -64,7 +64,7 @@ Partial Class frmSesion
         btnAceptar.Cursor = Cursors.Hand
         btnAceptar.FlatAppearance.BorderSize = 0
         btnAceptar.FlatStyle = FlatStyle.Flat
-        btnAceptar.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        btnAceptar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         btnAceptar.ForeColor = Color.White
         btnAceptar.Location = New Point(9, 101)
         btnAceptar.Name = "btnAceptar"
@@ -79,7 +79,7 @@ Partial Class frmSesion
         btnCancelar.Cursor = Cursors.Hand
         btnCancelar.FlatAppearance.BorderSize = 0
         btnCancelar.FlatStyle = FlatStyle.Flat
-        btnCancelar.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        btnCancelar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         btnCancelar.ForeColor = Color.White
         btnCancelar.Location = New Point(122, 101)
         btnCancelar.Name = "btnCancelar"
@@ -91,7 +91,7 @@ Partial Class frmSesion
         ' Label1
         ' 
         Label1.BackColor = Color.Transparent
-        Label1.Font = New Font("Segoe UI", 9.0F)
+        Label1.Font = New Font("Segoe UI", 9F)
         Label1.ForeColor = SystemColors.ControlText
         Label1.Location = New Point(27, 29)
         Label1.Name = "Label1"
@@ -103,7 +103,7 @@ Partial Class frmSesion
         ' 
         txtPassword.BackColor = Color.White
         txtPassword.BorderStyle = BorderStyle.FixedSingle
-        txtPassword.Font = New Font("Segoe UI", 9.0F)
+        txtPassword.Font = New Font("Segoe UI", 9F)
         txtPassword.ForeColor = Color.Black
         txtPassword.Location = New Point(83, 62)
         txtPassword.MaxLength = 20
@@ -116,18 +116,19 @@ Partial Class frmSesion
         ' 
         TxtUsuario.BackColor = Color.White
         TxtUsuario.BorderStyle = BorderStyle.FixedSingle
-        TxtUsuario.Font = New Font("Segoe UI", 9.0F)
+        TxtUsuario.Font = New Font("Segoe UI", 9F)
         TxtUsuario.ForeColor = Color.Black
         TxtUsuario.Location = New Point(83, 27)
         TxtUsuario.MaxLength = 10
         TxtUsuario.Name = "TxtUsuario"
+        TxtUsuario.ReadOnly = True
         TxtUsuario.Size = New Size(134, 23)
         TxtUsuario.TabIndex = 2
         ' 
         ' frmSesion
         ' 
         AcceptButton = btnAceptar
-        AutoScaleDimensions = New SizeF(7.0F, 13.0F)
+        AutoScaleDimensions = New SizeF(7F, 13F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(243, 145)
         Controls.Add(Frame1)
