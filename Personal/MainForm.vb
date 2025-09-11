@@ -84,7 +84,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuImportarAuto_Click(sender As Object, e As EventArgs) Handles MnuImportarAuto.Click
-        MessageBox.Show("Función de importar novedades AutoShop no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        MessageBox.Show("Función de importar novedades AutoShop en desuso", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
     ' Eventos del menú Actualizaciones
@@ -172,15 +172,15 @@ Public Class MainForm
 
     ' Eventos del menú Consultas
     Private Sub MnuListadoMensualSucursal_Click(sender As Object, e As EventArgs) Handles MnuListadoMensualSucursal.Click
-        MessageBox.Show("Función de listado mensual x sucursal no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmLstMensual.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuListadoMensualOficina_Click(sender As Object, e As EventArgs) Handles MnuListadoMensualOficina.Click
-        MessageBox.Show("Función de listado mensual x sucursal x oficina no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmLstMensual.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuListadoDiario_Click(sender As Object, e As EventArgs) Handles MnuListadoDiario.Click
-        MessageBox.Show("Función de listado diario control horario no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmHorario.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuConsultarAgentes_Click(sender As Object, e As EventArgs) Handles MnuConsultarAgentes.Click

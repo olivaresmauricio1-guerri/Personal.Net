@@ -3,8 +3,6 @@ Imports System.Runtime.InteropServices
 Imports System.Text.Json
 Imports System.Threading
 
-Imports DSM = DataSourceManager.Lib.DataSourceManager
-
 Partial Class frmBajaReloj
 
     Private _relojes As New List(Of Reloj)
