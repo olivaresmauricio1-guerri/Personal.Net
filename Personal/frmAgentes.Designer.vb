@@ -26,7 +26,6 @@ Partial Class frmAgentes
         TabControl1 = New TabControl()
         TabPage1 = New TabPage()
         GroupBox1 = New GroupBox()
-        pctFoto = New PictureBox()
         Panel1Col = New Panel()
         txtBaja = New TextBox()
         Label25 = New Label()
@@ -96,7 +95,7 @@ Partial Class frmAgentes
         DgvGrupoFamiliar = New DataGridView()
         btnEliminarFamiliar = New Button()
         btnAgregarFamiliar = New Button()
-        txtNivelFamiliar = New TextBox()
+        txtNivelEstudio = New TextBox()
         Label40 = New Label()
         txtOcupacionFamiliar = New TextBox()
         Label39 = New Label()
@@ -104,7 +103,6 @@ Partial Class frmAgentes
         Label38 = New Label()
         dtpNacimientoFamiliar = New DateTimePicker()
         Label37 = New Label()
-        txtParentescoFamiliar = New TextBox()
         Label36 = New Label()
         txtNombreFamiliar = New TextBox()
         Label35 = New Label()
@@ -114,7 +112,6 @@ Partial Class frmAgentes
         DgvComentarios = New DataGridView()
         btnEliminarComentario = New Button()
         btnAgregarComentario = New Button()
-        txtMotivoComentario = New TextBox()
         cmbMotivoComentario = New ComboBox()
         Label43 = New Label()
         txtComentaComentario = New TextBox()
@@ -122,6 +119,8 @@ Partial Class frmAgentes
         dtpFechaComentario = New DateTimePicker()
         Label41 = New Label()
         Panel2 = New Panel()
+        chkEncabezados = New CheckBox()
+        lnkCopiar = New LinkLabel()
         optActivos = New RadioButton()
         opTodos = New RadioButton()
         Label10 = New Label()
@@ -135,13 +134,11 @@ Partial Class frmAgentes
         btnBorrar = New Button()
         btnModificar = New Button()
         btnAgregar = New Button()
-        lnkCopiar = New LinkLabel()
-        chkEncabezados = New CheckBox()
+        pctFoto = New PictureBox()
         TableLayoutPanel1.SuspendLayout()
         TabControl1.SuspendLayout()
         TabPage1.SuspendLayout()
         GroupBox1.SuspendLayout()
-        CType(pctFoto, ComponentModel.ISupportInitialize).BeginInit()
         Panel1Col.SuspendLayout()
         Panel2Col.SuspendLayout()
         Panel3Col.SuspendLayout()
@@ -154,15 +151,18 @@ Partial Class frmAgentes
         Panel2.SuspendLayout()
         CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
         Panel1.SuspendLayout()
+        CType(pctFoto, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' TableLayoutPanel1
         ' 
-        TableLayoutPanel1.ColumnCount = 1
+        TableLayoutPanel1.ColumnCount = 2
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 205F))
         TableLayoutPanel1.Controls.Add(TabControl1, 0, 1)
         TableLayoutPanel1.Controls.Add(Panel2, 0, 0)
         TableLayoutPanel1.Controls.Add(Panel1, 0, 2)
+        TableLayoutPanel1.Controls.Add(pctFoto, 1, 1)
         TableLayoutPanel1.Dock = DockStyle.Fill
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -171,7 +171,7 @@ Partial Class frmAgentes
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 439F))
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 86F))
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
-        TableLayoutPanel1.Size = New Size(1069, 775)
+        TableLayoutPanel1.Size = New Size(1069, 772)
         TableLayoutPanel1.TabIndex = 2
         ' 
         ' TabControl1
@@ -180,11 +180,11 @@ Partial Class frmAgentes
         TabControl1.Controls.Add(TabPage2)
         TabControl1.Controls.Add(TabPage3)
         TabControl1.Dock = DockStyle.Fill
-        TabControl1.Location = New Point(4, 253)
+        TabControl1.Location = New Point(4, 250)
         TabControl1.Margin = New Padding(4, 3, 4, 3)
         TabControl1.Name = "TabControl1"
         TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(1061, 433)
+        TabControl1.Size = New Size(856, 433)
         TabControl1.TabIndex = 8
         ' 
         ' TabPage1
@@ -194,14 +194,13 @@ Partial Class frmAgentes
         TabPage1.Margin = New Padding(4, 3, 4, 3)
         TabPage1.Name = "TabPage1"
         TabPage1.Padding = New Padding(4, 3, 4, 3)
-        TabPage1.Size = New Size(1053, 405)
+        TabPage1.Size = New Size(848, 405)
         TabPage1.TabIndex = 0
         TabPage1.Text = "Datos del Agente"
         TabPage1.UseVisualStyleBackColor = True
         ' 
         ' GroupBox1
         ' 
-        GroupBox1.Controls.Add(pctFoto)
         GroupBox1.Controls.Add(Panel1Col)
         GroupBox1.Controls.Add(Panel2Col)
         GroupBox1.Controls.Add(Panel3Col)
@@ -210,19 +209,9 @@ Partial Class frmAgentes
         GroupBox1.Margin = New Padding(4, 3, 4, 3)
         GroupBox1.Name = "GroupBox1"
         GroupBox1.Padding = New Padding(4, 3, 4, 3)
-        GroupBox1.Size = New Size(1045, 399)
+        GroupBox1.Size = New Size(840, 399)
         GroupBox1.TabIndex = 0
         GroupBox1.TabStop = False
-        ' 
-        ' pctFoto
-        ' 
-        pctFoto.BorderStyle = BorderStyle.FixedSingle
-        pctFoto.Location = New Point(849, 14)
-        pctFoto.Name = "pctFoto"
-        pctFoto.Size = New Size(183, 234)
-        pctFoto.SizeMode = PictureBoxSizeMode.StretchImage
-        pctFoto.TabIndex = 4
-        pctFoto.TabStop = False
         ' 
         ' Panel1Col
         ' 
@@ -879,7 +868,7 @@ Partial Class frmAgentes
         TabPage2.Margin = New Padding(4, 3, 4, 3)
         TabPage2.Name = "TabPage2"
         TabPage2.Padding = New Padding(4, 3, 4, 3)
-        TabPage2.Size = New Size(1048, 400)
+        TabPage2.Size = New Size(848, 405)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Grupo Familiar"
         TabPage2.UseVisualStyleBackColor = True
@@ -889,7 +878,7 @@ Partial Class frmAgentes
         GroupBox2.Controls.Add(DgvGrupoFamiliar)
         GroupBox2.Controls.Add(btnEliminarFamiliar)
         GroupBox2.Controls.Add(btnAgregarFamiliar)
-        GroupBox2.Controls.Add(txtNivelFamiliar)
+        GroupBox2.Controls.Add(txtNivelEstudio)
         GroupBox2.Controls.Add(Label40)
         GroupBox2.Controls.Add(txtOcupacionFamiliar)
         GroupBox2.Controls.Add(Label39)
@@ -897,7 +886,6 @@ Partial Class frmAgentes
         GroupBox2.Controls.Add(Label38)
         GroupBox2.Controls.Add(dtpNacimientoFamiliar)
         GroupBox2.Controls.Add(Label37)
-        GroupBox2.Controls.Add(txtParentescoFamiliar)
         GroupBox2.Controls.Add(Label36)
         GroupBox2.Controls.Add(txtNombreFamiliar)
         GroupBox2.Controls.Add(Label35)
@@ -907,7 +895,7 @@ Partial Class frmAgentes
         GroupBox2.Margin = New Padding(4, 3, 4, 3)
         GroupBox2.Name = "GroupBox2"
         GroupBox2.Padding = New Padding(4, 3, 4, 3)
-        GroupBox2.Size = New Size(1040, 394)
+        GroupBox2.Size = New Size(840, 399)
         GroupBox2.TabIndex = 0
         GroupBox2.TabStop = False
         GroupBox2.Text = "Información del Grupo Familiar"
@@ -915,62 +903,66 @@ Partial Class frmAgentes
         ' DgvGrupoFamiliar
         ' 
         DgvGrupoFamiliar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvGrupoFamiliar.Location = New Point(12, 138)
+        DgvGrupoFamiliar.Location = New Point(11, 107)
         DgvGrupoFamiliar.Margin = New Padding(4, 3, 4, 3)
         DgvGrupoFamiliar.Name = "DgvGrupoFamiliar"
-        DgvGrupoFamiliar.Size = New Size(887, 277)
+        DgvGrupoFamiliar.Size = New Size(839, 286)
         DgvGrupoFamiliar.TabIndex = 14
         ' 
         ' btnEliminarFamiliar
         ' 
-        btnEliminarFamiliar.Location = New Point(758, 92)
+        btnEliminarFamiliar.FlatStyle = FlatStyle.Flat
+        btnEliminarFamiliar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnEliminarFamiliar.Location = New Point(757, 71)
         btnEliminarFamiliar.Margin = New Padding(4, 3, 4, 3)
         btnEliminarFamiliar.Name = "btnEliminarFamiliar"
-        btnEliminarFamiliar.Size = New Size(88, 27)
+        btnEliminarFamiliar.Size = New Size(75, 30)
         btnEliminarFamiliar.TabIndex = 13
         btnEliminarFamiliar.Text = "Eliminar"
         btnEliminarFamiliar.UseVisualStyleBackColor = True
         ' 
         ' btnAgregarFamiliar
         ' 
-        btnAgregarFamiliar.Location = New Point(642, 92)
+        btnAgregarFamiliar.FlatStyle = FlatStyle.Flat
+        btnAgregarFamiliar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnAgregarFamiliar.Location = New Point(674, 71)
         btnAgregarFamiliar.Margin = New Padding(4, 3, 4, 3)
         btnAgregarFamiliar.Name = "btnAgregarFamiliar"
-        btnAgregarFamiliar.Size = New Size(88, 27)
+        btnAgregarFamiliar.Size = New Size(75, 30)
         btnAgregarFamiliar.TabIndex = 12
         btnAgregarFamiliar.Text = "Agregar"
         btnAgregarFamiliar.UseVisualStyleBackColor = True
         ' 
-        ' txtNivelFamiliar
+        ' txtNivelEstudio
         ' 
-        txtNivelFamiliar.Location = New Point(642, 58)
-        txtNivelFamiliar.Margin = New Padding(4, 3, 4, 3)
-        txtNivelFamiliar.Name = "txtNivelFamiliar"
-        txtNivelFamiliar.Size = New Size(209, 23)
-        txtNivelFamiliar.TabIndex = 11
+        txtNivelEstudio.Location = New Point(364, 52)
+        txtNivelEstudio.Margin = New Padding(4, 3, 4, 3)
+        txtNivelEstudio.Name = "txtNivelEstudio"
+        txtNivelEstudio.Size = New Size(143, 23)
+        txtNivelEstudio.TabIndex = 11
         ' 
         ' Label40
         ' 
         Label40.AutoSize = True
-        Label40.Location = New Point(561, 61)
+        Label40.Location = New Point(261, 55)
         Label40.Margin = New Padding(4, 0, 4, 0)
         Label40.Name = "Label40"
-        Label40.Size = New Size(37, 15)
+        Label40.Size = New Size(95, 15)
         Label40.TabIndex = 10
-        Label40.Text = "Nivel:"
+        Label40.Text = "Nivel de Estudio:"
         ' 
         ' txtOcupacionFamiliar
         ' 
-        txtOcupacionFamiliar.Location = New Point(642, 23)
+        txtOcupacionFamiliar.Location = New Point(85, 52)
         txtOcupacionFamiliar.Margin = New Padding(4, 3, 4, 3)
         txtOcupacionFamiliar.Name = "txtOcupacionFamiliar"
-        txtOcupacionFamiliar.Size = New Size(209, 23)
+        txtOcupacionFamiliar.Size = New Size(162, 23)
         txtOcupacionFamiliar.TabIndex = 9
         ' 
         ' Label39
         ' 
         Label39.AutoSize = True
-        Label39.Location = New Point(561, 27)
+        Label39.Location = New Point(4, 55)
         Label39.Margin = New Padding(4, 0, 4, 0)
         Label39.Name = "Label39"
         Label39.Size = New Size(68, 15)
@@ -979,16 +971,16 @@ Partial Class frmAgentes
         ' 
         ' txtEdadFamiliar
         ' 
-        txtEdadFamiliar.Location = New Point(327, 92)
+        txtEdadFamiliar.Location = New Point(509, 23)
         txtEdadFamiliar.Margin = New Padding(4, 3, 4, 3)
         txtEdadFamiliar.Name = "txtEdadFamiliar"
-        txtEdadFamiliar.Size = New Size(209, 23)
+        txtEdadFamiliar.Size = New Size(42, 23)
         txtEdadFamiliar.TabIndex = 7
         ' 
         ' Label38
         ' 
         Label38.AutoSize = True
-        Label38.Location = New Point(246, 96)
+        Label38.Location = New Point(465, 27)
         Label38.Margin = New Padding(4, 0, 4, 0)
         Label38.Name = "Label38"
         Label38.Size = New Size(36, 15)
@@ -998,34 +990,26 @@ Partial Class frmAgentes
         ' dtpNacimientoFamiliar
         ' 
         dtpNacimientoFamiliar.Format = DateTimePickerFormat.Short
-        dtpNacimientoFamiliar.Location = New Point(327, 58)
+        dtpNacimientoFamiliar.Location = New Point(342, 23)
         dtpNacimientoFamiliar.Margin = New Padding(4, 3, 4, 3)
         dtpNacimientoFamiliar.Name = "dtpNacimientoFamiliar"
-        dtpNacimientoFamiliar.Size = New Size(209, 23)
+        dtpNacimientoFamiliar.Size = New Size(107, 23)
         dtpNacimientoFamiliar.TabIndex = 5
         ' 
         ' Label37
         ' 
         Label37.AutoSize = True
-        Label37.Location = New Point(246, 61)
+        Label37.Location = New Point(212, 27)
         Label37.Margin = New Padding(4, 0, 4, 0)
         Label37.Name = "Label37"
-        Label37.Size = New Size(72, 15)
+        Label37.Size = New Size(122, 15)
         Label37.TabIndex = 4
-        Label37.Text = "Nacimiento:"
-        ' 
-        ' txtParentescoFamiliar
-        ' 
-        txtParentescoFamiliar.Location = New Point(327, 23)
-        txtParentescoFamiliar.Margin = New Padding(4, 3, 4, 3)
-        txtParentescoFamiliar.Name = "txtParentescoFamiliar"
-        txtParentescoFamiliar.Size = New Size(209, 23)
-        txtParentescoFamiliar.TabIndex = 3
+        Label37.Text = "Fecha de Nacimiento:"
         ' 
         ' Label36
         ' 
         Label36.AutoSize = True
-        Label36.Location = New Point(246, 27)
+        Label36.Location = New Point(568, 28)
         Label36.Margin = New Padding(4, 0, 4, 0)
         Label36.Name = "Label36"
         Label36.Size = New Size(68, 15)
@@ -1034,16 +1018,16 @@ Partial Class frmAgentes
         ' 
         ' txtNombreFamiliar
         ' 
-        txtNombreFamiliar.Location = New Point(93, 23)
+        txtNombreFamiliar.Location = New Point(85, 23)
         txtNombreFamiliar.Margin = New Padding(4, 3, 4, 3)
         txtNombreFamiliar.Name = "txtNombreFamiliar"
-        txtNombreFamiliar.Size = New Size(139, 23)
+        txtNombreFamiliar.Size = New Size(121, 23)
         txtNombreFamiliar.TabIndex = 1
         ' 
         ' Label35
         ' 
         Label35.AutoSize = True
-        Label35.Location = New Point(13, 27)
+        Label35.Location = New Point(5, 27)
         Label35.Margin = New Padding(4, 0, 4, 0)
         Label35.Name = "Label35"
         Label35.Size = New Size(54, 15)
@@ -1053,10 +1037,10 @@ Partial Class frmAgentes
         ' cmbParentesco
         ' 
         cmbParentesco.DropDownStyle = ComboBoxStyle.DropDownList
-        cmbParentesco.Location = New Point(12, 58)
+        cmbParentesco.Location = New Point(644, 24)
         cmbParentesco.Margin = New Padding(4, 3, 4, 3)
         cmbParentesco.Name = "cmbParentesco"
-        cmbParentesco.Size = New Size(233, 23)
+        cmbParentesco.Size = New Size(155, 23)
         cmbParentesco.TabIndex = 2
         ' 
         ' TabPage3
@@ -1066,7 +1050,7 @@ Partial Class frmAgentes
         TabPage3.Margin = New Padding(4, 3, 4, 3)
         TabPage3.Name = "TabPage3"
         TabPage3.Padding = New Padding(4, 3, 4, 3)
-        TabPage3.Size = New Size(1048, 400)
+        TabPage3.Size = New Size(848, 405)
         TabPage3.TabIndex = 2
         TabPage3.Text = "Comentarios"
         TabPage3.UseVisualStyleBackColor = True
@@ -1076,7 +1060,6 @@ Partial Class frmAgentes
         GroupBox3.Controls.Add(DgvComentarios)
         GroupBox3.Controls.Add(btnEliminarComentario)
         GroupBox3.Controls.Add(btnAgregarComentario)
-        GroupBox3.Controls.Add(txtMotivoComentario)
         GroupBox3.Controls.Add(cmbMotivoComentario)
         GroupBox3.Controls.Add(Label43)
         GroupBox3.Controls.Add(txtComentaComentario)
@@ -1088,7 +1071,7 @@ Partial Class frmAgentes
         GroupBox3.Margin = New Padding(4, 3, 4, 3)
         GroupBox3.Name = "GroupBox3"
         GroupBox3.Padding = New Padding(4, 3, 4, 3)
-        GroupBox3.Size = New Size(1040, 394)
+        GroupBox3.Size = New Size(840, 399)
         GroupBox3.TabIndex = 0
         GroupBox3.TabStop = False
         GroupBox3.Text = "Comentarios y Novedades"
@@ -1099,50 +1082,46 @@ Partial Class frmAgentes
         DgvComentarios.Location = New Point(12, 138)
         DgvComentarios.Margin = New Padding(4, 3, 4, 3)
         DgvComentarios.Name = "DgvComentarios"
-        DgvComentarios.Size = New Size(887, 277)
+        DgvComentarios.Size = New Size(839, 255)
         DgvComentarios.TabIndex = 8
         ' 
         ' btnEliminarComentario
         ' 
-        btnEliminarComentario.Location = New Point(758, 92)
+        btnEliminarComentario.FlatStyle = FlatStyle.Flat
+        btnEliminarComentario.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnEliminarComentario.Location = New Point(757, 102)
         btnEliminarComentario.Margin = New Padding(4, 3, 4, 3)
         btnEliminarComentario.Name = "btnEliminarComentario"
-        btnEliminarComentario.Size = New Size(88, 27)
+        btnEliminarComentario.Size = New Size(75, 30)
         btnEliminarComentario.TabIndex = 7
         btnEliminarComentario.Text = "Eliminar"
         btnEliminarComentario.UseVisualStyleBackColor = True
         ' 
         ' btnAgregarComentario
         ' 
-        btnAgregarComentario.Location = New Point(642, 92)
+        btnAgregarComentario.FlatStyle = FlatStyle.Flat
+        btnAgregarComentario.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnAgregarComentario.Location = New Point(674, 102)
         btnAgregarComentario.Margin = New Padding(4, 3, 4, 3)
         btnAgregarComentario.Name = "btnAgregarComentario"
-        btnAgregarComentario.Size = New Size(88, 27)
+        btnAgregarComentario.Size = New Size(75, 30)
         btnAgregarComentario.TabIndex = 6
         btnAgregarComentario.Text = "Agregar"
         btnAgregarComentario.UseVisualStyleBackColor = True
         ' 
-        ' txtMotivoComentario
-        ' 
-        txtMotivoComentario.Location = New Point(408, 58)
-        txtMotivoComentario.Margin = New Padding(4, 3, 4, 3)
-        txtMotivoComentario.Name = "txtMotivoComentario"
-        txtMotivoComentario.Size = New Size(443, 23)
-        txtMotivoComentario.TabIndex = 5
-        ' 
         ' cmbMotivoComentario
         ' 
         cmbMotivoComentario.DropDownStyle = ComboBoxStyle.DropDownList
-        cmbMotivoComentario.Location = New Point(408, 92)
+        cmbMotivoComentario.Location = New Point(384, 22)
         cmbMotivoComentario.Margin = New Padding(4, 3, 4, 3)
         cmbMotivoComentario.Name = "cmbMotivoComentario"
-        cmbMotivoComentario.Size = New Size(443, 23)
+        cmbMotivoComentario.Size = New Size(250, 23)
         cmbMotivoComentario.TabIndex = 6
         ' 
         ' Label43
         ' 
         Label43.AutoSize = True
-        Label43.Location = New Point(328, 61)
+        Label43.Location = New Point(328, 27)
         Label43.Margin = New Padding(4, 0, 4, 0)
         Label43.Name = "Label43"
         Label43.Size = New Size(48, 15)
@@ -1200,8 +1179,31 @@ Partial Class frmAgentes
         Panel2.Location = New Point(4, 3)
         Panel2.Margin = New Padding(4, 3, 4, 3)
         Panel2.Name = "Panel2"
-        Panel2.Size = New Size(858, 244)
+        Panel2.Size = New Size(856, 241)
         Panel2.TabIndex = 4
+        ' 
+        ' chkEncabezados
+        ' 
+        chkEncabezados.AutoSize = True
+        chkEncabezados.Location = New Point(728, 222)
+        chkEncabezados.Margin = New Padding(4, 3, 4, 3)
+        chkEncabezados.Name = "chkEncabezados"
+        chkEncabezados.Size = New Size(119, 19)
+        chkEncabezados.TabIndex = 7
+        chkEncabezados.Text = "Con encabezados"
+        chkEncabezados.UseVisualStyleBackColor = True
+        ' 
+        ' lnkCopiar
+        ' 
+        lnkCopiar.AutoSize = True
+        lnkCopiar.LinkColor = Color.Black
+        lnkCopiar.Location = New Point(626, 222)
+        lnkCopiar.Margin = New Padding(4, 0, 4, 0)
+        lnkCopiar.Name = "lnkCopiar"
+        lnkCopiar.Size = New Size(94, 15)
+        lnkCopiar.TabIndex = 6
+        lnkCopiar.TabStop = True
+        lnkCopiar.Text = "Copiar selección"
         ' 
         ' optActivos
         ' 
@@ -1271,25 +1273,31 @@ Partial Class frmAgentes
         Panel1.Controls.Add(btnModificar)
         Panel1.Controls.Add(btnAgregar)
         Panel1.Dock = DockStyle.Fill
-        Panel1.Location = New Point(4, 692)
+        Panel1.Location = New Point(4, 689)
         Panel1.Margin = New Padding(4, 3, 4, 3)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(1061, 80)
+        Panel1.Size = New Size(856, 80)
         Panel1.TabIndex = 7
         ' 
         ' btnSalir
         ' 
-        btnSalir.Location = New Point(817, 12)
+        btnSalir.BackColor = Color.IndianRed
+        btnSalir.FlatStyle = FlatStyle.Flat
+        btnSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnSalir.ForeColor = Color.White
+        btnSalir.Location = New Point(770, 3)
         btnSalir.Margin = New Padding(4, 3, 4, 3)
         btnSalir.Name = "btnSalir"
         btnSalir.Size = New Size(88, 35)
         btnSalir.TabIndex = 5
         btnSalir.Text = "Salir"
-        btnSalir.UseVisualStyleBackColor = True
+        btnSalir.UseVisualStyleBackColor = False
         ' 
         ' btnCancelar
         ' 
-        btnCancelar.Location = New Point(700, 12)
+        btnCancelar.FlatStyle = FlatStyle.Flat
+        btnCancelar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnCancelar.Location = New Point(674, 3)
         btnCancelar.Margin = New Padding(4, 3, 4, 3)
         btnCancelar.Name = "btnCancelar"
         btnCancelar.Size = New Size(88, 35)
@@ -1299,7 +1307,9 @@ Partial Class frmAgentes
         ' 
         ' btnAceptar
         ' 
-        btnAceptar.Location = New Point(583, 12)
+        btnAceptar.FlatStyle = FlatStyle.Flat
+        btnAceptar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnAceptar.Location = New Point(578, 3)
         btnAceptar.Margin = New Padding(4, 3, 4, 3)
         btnAceptar.Name = "btnAceptar"
         btnAceptar.Size = New Size(88, 35)
@@ -1309,7 +1319,9 @@ Partial Class frmAgentes
         ' 
         ' btnBorrar
         ' 
-        btnBorrar.Location = New Point(233, 12)
+        btnBorrar.FlatStyle = FlatStyle.Flat
+        btnBorrar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnBorrar.Location = New Point(204, 12)
         btnBorrar.Margin = New Padding(4, 3, 4, 3)
         btnBorrar.Name = "btnBorrar"
         btnBorrar.Size = New Size(88, 35)
@@ -1319,7 +1331,9 @@ Partial Class frmAgentes
         ' 
         ' btnModificar
         ' 
-        btnModificar.Location = New Point(117, 12)
+        btnModificar.FlatStyle = FlatStyle.Flat
+        btnModificar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnModificar.Location = New Point(108, 12)
         btnModificar.Margin = New Padding(4, 3, 4, 3)
         btnModificar.Name = "btnModificar"
         btnModificar.Size = New Size(88, 35)
@@ -1329,6 +1343,8 @@ Partial Class frmAgentes
         ' 
         ' btnAgregar
         ' 
+        btnAgregar.FlatStyle = FlatStyle.Flat
+        btnAgregar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         btnAgregar.Location = New Point(12, 12)
         btnAgregar.Margin = New Padding(4, 3, 4, 3)
         btnAgregar.Name = "btnAgregar"
@@ -1337,34 +1353,21 @@ Partial Class frmAgentes
         btnAgregar.Text = "Agregar"
         btnAgregar.UseVisualStyleBackColor = True
         ' 
-        ' lnkCopiar
+        ' pctFoto
         ' 
-        lnkCopiar.AutoSize = True
-        lnkCopiar.LinkColor = Color.Black
-        lnkCopiar.Location = New Point(626, 222)
-        lnkCopiar.Margin = New Padding(4, 0, 4, 0)
-        lnkCopiar.Name = "lnkCopiar"
-        lnkCopiar.Size = New Size(94, 15)
-        lnkCopiar.TabIndex = 6
-        lnkCopiar.TabStop = True
-        lnkCopiar.Text = "Copiar selección"
-        ' 
-        ' chkEncabezados
-        ' 
-        chkEncabezados.AutoSize = True
-        chkEncabezados.Location = New Point(728, 222)
-        chkEncabezados.Margin = New Padding(4, 3, 4, 3)
-        chkEncabezados.Name = "chkEncabezados"
-        chkEncabezados.Size = New Size(119, 19)
-        chkEncabezados.TabIndex = 7
-        chkEncabezados.Text = "Con encabezados"
-        chkEncabezados.UseVisualStyleBackColor = True
+        pctFoto.BorderStyle = BorderStyle.FixedSingle
+        pctFoto.Location = New Point(867, 250)
+        pctFoto.Name = "pctFoto"
+        pctFoto.Size = New Size(183, 236)
+        pctFoto.SizeMode = PictureBoxSizeMode.StretchImage
+        pctFoto.TabIndex = 10
+        pctFoto.TabStop = False
         ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1069, 775)
+        ClientSize = New Size(1069, 772)
         Controls.Add(TableLayoutPanel1)
         Margin = New Padding(4, 3, 4, 3)
         Name = "frmAgentes"
@@ -1373,7 +1376,6 @@ Partial Class frmAgentes
         TabControl1.ResumeLayout(False)
         TabPage1.ResumeLayout(False)
         GroupBox1.ResumeLayout(False)
-        CType(pctFoto, ComponentModel.ISupportInitialize).EndInit()
         Panel1Col.ResumeLayout(False)
         Panel1Col.PerformLayout()
         Panel2Col.ResumeLayout(False)
@@ -1392,6 +1394,7 @@ Partial Class frmAgentes
         Panel2.PerformLayout()
         CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
         Panel1.ResumeLayout(False)
+        CType(pctFoto, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
 
     End Sub
@@ -1408,7 +1411,6 @@ Partial Class frmAgentes
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents pctFoto As PictureBox
     Friend WithEvents Panel1Col As Panel
     Friend WithEvents txtBaja As TextBox
     Friend WithEvents Label25 As Label
@@ -1478,7 +1480,7 @@ Partial Class frmAgentes
     Friend WithEvents DgvGrupoFamiliar As DataGridView
     Friend WithEvents btnEliminarFamiliar As Button
     Friend WithEvents btnAgregarFamiliar As Button
-    Friend WithEvents txtNivelFamiliar As TextBox
+    Friend WithEvents txtNivelEstudio As TextBox
     Friend WithEvents Label40 As Label
     Friend WithEvents txtOcupacionFamiliar As TextBox
     Friend WithEvents Label39 As Label
@@ -1486,7 +1488,6 @@ Partial Class frmAgentes
     Friend WithEvents Label38 As Label
     Friend WithEvents dtpNacimientoFamiliar As DateTimePicker
     Friend WithEvents Label37 As Label
-    Friend WithEvents txtParentescoFamiliar As TextBox
     Friend WithEvents Label36 As Label
     Friend WithEvents txtNombreFamiliar As TextBox
     Friend WithEvents Label35 As Label
@@ -1496,7 +1497,6 @@ Partial Class frmAgentes
     Friend WithEvents DgvComentarios As DataGridView
     Friend WithEvents btnEliminarComentario As Button
     Friend WithEvents btnAgregarComentario As Button
-    Friend WithEvents txtMotivoComentario As TextBox
     Friend WithEvents cmbMotivoComentario As ComboBox
     Friend WithEvents Label43 As Label
     Friend WithEvents txtComentaComentario As TextBox
@@ -1512,5 +1512,6 @@ Partial Class frmAgentes
     Friend WithEvents btnAgregar As Button
     Friend WithEvents chkEncabezados As CheckBox
     Friend WithEvents lnkCopiar As LinkLabel
+    Friend WithEvents pctFoto As PictureBox
 
 End Class

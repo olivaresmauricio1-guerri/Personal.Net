@@ -33,7 +33,9 @@ Public Class frmAgentes
     Public Sub FrmAgentes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         FormModoConsulta()
         GridBuscar()
-        GridConfigurarColumnas()
+        ConfiguraColListado()
+        ConfiguraColComentario()
+        ConfiguraColFamilia()
         CargarComboBoxes()
         Me.KeyPreview = True
     End Sub
@@ -184,6 +186,63 @@ Public Class frmAgentes
         Close()
     End Sub
 
+    Private Sub btnAgregarFamiliar_Click(sender As Object, e As EventArgs) Handles btnAgregarFamiliar.Click
+        Dim legajo As String = txtLegajo.Text.Trim()
+        Dim nombre As String = txtNombreFamiliar.Text.Trim()
+        Dim fechaNac As Date = dtpNacimientoFamiliar.Value
+        Dim edad As String = txtEdadFamiliar.Text.Trim()
+        Dim parentesco As String = cmbParentesco.Text.Trim()
+        Dim ocupacion As String = txtOcupacionFamiliar.Text.Trim()
+        Dim nivel As String = txtNivelEstudio.Text.Trim()
+
+        ' ===== VALIDACIONES OBLIGATORIAS =====
+        If Not ValidarDatos() Then Return
+
+        ' ===== INSERCIÓN O ACTUALIZACIÓN =====
+        If filaActual Is Nothing Then
+            ' INSERT
+            Dim sql As String = "INSERT INTO GrupoFamiliar (Legajo, Nombre, Parentesco, Nacimiento, Edad, Ocupacion, Nivel) 
+                         VALUES (@Legajo, @Nombre, @Parentesco, @Nacimiento, @Edad, @Ocupacion, @Nivel)"
+            Dim parametros = CmdParams(
+        "@Legajo", CInt(legajo),
+        "@Nombre", nombre,
+        "@Parentesco", parentesco,
+        "@Nacimiento", fechaNac,
+        "@Edad", CInt(edad),
+        "@Ocupacion", ocupacion,
+        "@Nivel", nivel
+    )
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+        Else
+            ' UPDATE - Usamos el Id del registro seleccionado en la grilla
+            Dim idFamiliar As Integer = CInt(filaActual.Cells("Id").Value)
+
+            Dim sql As String = "UPDATE GrupoFamiliar 
+                         SET Legajo = @Legajo,
+                             Nombre = @Nombre,
+                             Parentesco = @Parentesco, 
+                             Nacimiento = @Nacimiento, 
+                             Edad = @Edad, 
+                             Ocupacion = @Ocupacion, 
+                             Nivel = @Nivel
+                         WHERE Id = @Id"
+            Dim parametros = CmdParams(
+        "@Legajo", CInt(legajo),
+        "@Nombre", nombre,
+        "@Parentesco", parentesco,
+        "@Nacimiento", fechaNac,
+        "@Edad", CInt(edad),
+        "@Ocupacion", ocupacion,
+        "@Nivel", nivel,
+        "@Id", idFamiliar
+    )
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+        End If
+
+        FormModoConsulta()
+        GridBuscar()
+
+    End Sub
     Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
         CopiarDataGrid(DgvListado, chkEncabezados.Checked)
     End Sub
@@ -218,6 +277,30 @@ Public Class frmAgentes
         If String.IsNullOrEmpty(cmbInstituto.Text.Trim) Then
             MessageBox.Show("Debe seleccionar un Instituto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbInstituto.Focus()
+            Return False
+        End If
+
+        If String.IsNullOrEmpty(txtNombreFamiliar.Text.Trim()) Then
+            MessageBox.Show("Ingrese un valor para el campo Nombre.")
+            txtNombreFamiliar.Focus()
+            Return False
+        End If
+
+        If dtpNacimientoFamiliar.Value = Date.MinValue Then
+            MessageBox.Show("Seleccione una fecha de nacimiento válida.")
+            dtpNacimientoFamiliar.Focus()
+            Return False
+        End If
+
+        If Not IsNumeric(txtEdadFamiliar.Text.Trim()) Then
+            MessageBox.Show("Ingrese un valor numérico para la Edad.")
+            txtEdadFamiliar.Focus()
+            Return False
+        End If
+
+        If String.IsNullOrEmpty(cmbParentesco.Text.Trim()) Then
+            MessageBox.Show("Seleccione un valor para el campo Parentesco.")
+            cmbParentesco.Focus()
             Return False
         End If
 
@@ -479,7 +562,49 @@ Public Class frmAgentes
             MessageBox.Show("Error al cargar datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+    Private Sub CargaGrupoFamiliar(legajo As Integer)
+        Try
+            ' 1. Traer los registros del grupo familiar
+            Dim sql As String = "SELECT * FROM GrupoFamiliar WHERE Legajo = @Legajo"
+            Dim parametros As New List(Of Object) From {"@Legajo", txtLegajo.Text.Trim}
 
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
+            DgvGrupoFamiliar.DataSource = tabla
+
+            ' 2. Recorrer registros y actualizar edad
+            For Each fila As DataRow In tabla.Rows
+                Dim fecha1 As Date = Convert.ToDateTime(fila("Nacimiento"))
+                Dim fecha2 As Date = Date.Now
+                Dim diferencia As Integer = DateDiff(DateInterval.Year, fecha1, fecha2)
+
+                ' Ajuste para que no cuente el año si todavía no cumplió
+                If fecha1.AddYears(diferencia) > fecha2 Then
+                    diferencia -= 1
+                End If
+
+                ' 3. Actualizar el campo EDAD en BD
+                Dim sqlUpdate As String = "UPDATE GrupoFamiliar SET Edad = @Edad WHERE Id = @Id"
+                Dim parametrosUpdate As New List(Of Object) From {"@Edad", diferencia, "@Id", fila("Id")}
+                DSM.ExecuteQuery(DSM.Personal, sqlUpdate, CmdParams(parametrosUpdate.ToArray()))
+            Next
+
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar edades: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+    Private Sub CargaComentario(legajo As Integer)
+        Try
+            ' 1. Traer los registros del grupo familiar
+            Dim sql As String = "SELECT * FROM Comentarios WHERE Legajo = @Legajo"
+            Dim parametros As New List(Of Object) From {"@Legajo", txtLegajo.Text.Trim}
+
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
+            DgvComentarios.DataSource = tabla
+
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar edades: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
     Private Sub FormModoConsulta()
         HabilitarControles(False)
         ' Configurar botones para modo consulta usando SetControlesEnabled
@@ -497,6 +622,8 @@ Public Class frmAgentes
     Private Sub FormObtenerSeleccionado()
         If filaActual IsNot Nothing Then
             CargarDatosEnFormulario(CType(filaActual.DataBoundItem, DataRowView).Row)
+            CargaGrupoFamiliar(Convert.ToInt32(txtLegajo.Text.Trim))
+            CargaComentario(Convert.ToInt32(txtLegajo.Text.Trim))
         End If
     End Sub
 
@@ -528,7 +655,7 @@ Public Class frmAgentes
         FormObtenerSeleccionado()
     End Sub
 
-    Private Sub GridConfigurarColumnas()
+    Private Sub ConfiguraColListado()
         Try
             If DgvListado.Columns.Count > 0 Then
                 For Each col As DataGridViewColumn In DgvListado.Columns
@@ -574,7 +701,72 @@ Public Class frmAgentes
             ' Ignorar errores de configuración de columnas
         End Try
     End Sub
+    Private Sub ConfiguraColFamilia()
+        Try
+            If DgvGrupoFamiliar.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In DgvGrupoFamiliar.Columns
+                    col.Visible = False
+                Next
+                ' Configurar columnas del grid principal
 
+                DgvGrupoFamiliar.Columns("Nombre").Visible = True
+                DgvGrupoFamiliar.Columns("Nombre").HeaderText = "Nombre"
+                DgvGrupoFamiliar.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+                DgvGrupoFamiliar.Columns("Parentesco").Visible = True
+                DgvGrupoFamiliar.Columns("Parentesco").HeaderText = "Parentesco"
+                DgvGrupoFamiliar.Columns("Parentesco").Width = 80
+
+                DgvGrupoFamiliar.Columns("Nacimiento").Visible = True
+                DgvGrupoFamiliar.Columns("Nacimiento").HeaderText = "Fecha de Nacimiento"
+                DgvGrupoFamiliar.Columns("Nacimiento").Width = 80
+
+                DgvGrupoFamiliar.Columns("Edad").Visible = True
+                DgvGrupoFamiliar.Columns("Edad").HeaderText = "Edad"
+                DgvGrupoFamiliar.Columns("Edad").Width = 50
+
+                DgvGrupoFamiliar.Columns("Ocupacion").Visible = True
+                DgvGrupoFamiliar.Columns("Ocupacion").HeaderText = "Ocupación"
+                DgvGrupoFamiliar.Columns("Ocupacion").Width = 150
+
+                DgvGrupoFamiliar.Columns("Nivel").Visible = True
+                DgvGrupoFamiliar.Columns("Nivel").HeaderText = "Nivel"
+                DgvGrupoFamiliar.Columns("Nivel").Width = 150
+
+                ConfigurarEstiloGrid(DgvGrupoFamiliar)
+
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuración de columnas
+        End Try
+    End Sub
+    Private Sub ConfiguraColComentario()
+        Try
+            If DgvComentarios.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In DgvComentarios.Columns
+                    col.Visible = False
+                Next
+                ' Configurar columnas del grid principal
+
+                DgvComentarios.Columns("Fecha").Visible = True
+                DgvComentarios.Columns("Fecha").HeaderText = "Fecha"
+                DgvComentarios.Columns("Fecha").Width = 60
+
+                DgvComentarios.Columns("Comenta").Visible = True
+                DgvComentarios.Columns("Comenta").HeaderText = "Comentario"
+                DgvComentarios.Columns("Comenta").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+                DgvComentarios.Columns("Motivo").Visible = True
+                DgvComentarios.Columns("Motivo").HeaderText = "Motivo"
+                DgvComentarios.Columns("Motivo").Width = 400
+
+                ConfigurarEstiloGrid(DgvComentarios)
+
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuración de columnas
+        End Try
+    End Sub
     Private Sub opTodos_CheckedChanged(sender As Object, e As EventArgs)
 
         GridBuscar()
@@ -584,4 +776,7 @@ Public Class frmAgentes
         GridBuscar()
     End Sub
 
+    Private Sub DgvListado_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvListado.CellContentClick
+
+    End Sub
 End Class
