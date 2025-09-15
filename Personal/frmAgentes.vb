@@ -33,7 +33,9 @@ Public Class frmAgentes
     Public Sub FrmAgentes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         FormModoConsulta()
         GridBuscar()
-        GridConfigurarColumnas()
+        ConfiguraColListado()
+        ConfiguraColComentario()
+        ConfiguraColFamilia()
         CargarComboBoxes()
         Me.KeyPreview = True
     End Sub
@@ -89,33 +91,8 @@ Public Class frmAgentes
     End Sub
 
     Private Sub TxtBuscar_TextChanged(sender As Object, e As EventArgs) Handles TxtBuscar.TextChanged
-        Try
-            If TxtBuscar.Text.Trim = "" Then
-                GridBuscar()
-            Else
-                Dim filtro As String = TxtBuscar.Text.Trim.ToUpper()
-                Dim sql As String = "SELECT Legajo, Nombre, Instituto, Secretaria, Escalafon, Jefe, Caracter " &
-                                  "FROM Agentes " &
-                                  "WHERE UPPER(Nombre) LIKE '%" & filtro & "%' " &
-                                  "OR UPPER(Instituto) LIKE '%" & filtro & "%' " &
-                                  "OR UPPER(Secretaria) LIKE '%" & filtro & "%' " &
-                                  "OR UPPER(Escalafon) LIKE '%" & filtro & "%' " &
-                                  "OR UPPER(Jefe) LIKE '%" & filtro & "%' " &
-                                  "OR UPPER(Caracter) LIKE '%" & filtro & "%' " &
-                                  "OR CAST(Legajo AS VARCHAR) LIKE '%" & filtro & "%' " &
-                                  "ORDER BY Nombre"
-                
-                tabla = DSM.ExecuteQuery(DSM.Personal, sql)
-                DgvListado.DataSource = tabla
-                
-                If tabla.Rows.Count = 0 Then
-                    FormLimpiarSeleccionado()
-                End If
-            End If
-            FormModoConsulta()
-        Catch ex As Exception
-            MessageBox.Show("Error en la búsqueda: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        FormLimpiarSeleccionado()
+        GridBuscar()
     End Sub
 
     Private Sub DgvListado_KeyDown(sender As Object, e As KeyEventArgs) Handles DgvListado.KeyDown
@@ -137,15 +114,6 @@ Public Class frmAgentes
 
     Private Sub DgvListado_SelectionChanged(sender As Object, e As EventArgs) Handles DgvListado.SelectionChanged
         AplicarSeleccionActual()
-    End Sub
-
-    Private Sub chkEncabezados_CheckedChanged(sender As Object, e As EventArgs) Handles chkEncabezados.CheckedChanged
-        Try
-            DgvListado.ColumnHeadersVisible = chkEncabezados.Checked
-            DgvListado.Focus()
-        Catch ex As Exception
-            MessageBox.Show("Error al cambiar encabezados: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
     End Sub
 
     ' Eventos de botones principales
@@ -206,6 +174,7 @@ Public Class frmAgentes
 
     Public Sub CmdCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         FormModoConsulta()
+
         If filaActual IsNot Nothing Then
             FormObtenerSeleccionado()
         Else
@@ -217,41 +186,69 @@ Public Class frmAgentes
         Close()
     End Sub
 
-    Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkCopiar.LinkClicked
-        Try
-            If DgvListado.SelectedRows.Count > 0 Then
-                Dim texto As String = ""
+    Private Sub btnAgregarFamiliar_Click(sender As Object, e As EventArgs) Handles btnAgregarFamiliar.Click
+        Dim legajo As String = txtLegajo.Text.Trim()
+        Dim nombre As String = txtNombreFamiliar.Text.Trim()
+        Dim fechaNac As Date = dtpNacimientoFamiliar.Value
+        Dim edad As String = txtEdadFamiliar.Text.Trim()
+        Dim parentesco As String = cmbParentesco.Text.Trim()
+        Dim ocupacion As String = txtOcupacionFamiliar.Text.Trim()
+        Dim nivel As String = txtNivelEstudio.Text.Trim()
 
-                ' Agregar encabezados si están habilitados
-                If chkEncabezados.Checked Then
-                    For i As Integer = 0 To DgvListado.Columns.Count - 1
-                        If i > 0 Then texto += vbTab
-                        texto += DgvListado.Columns(i).HeaderText
-                    Next
-                    texto += vbCrLf
-                End If
+        ' ===== VALIDACIONES OBLIGATORIAS =====
+        If Not ValidarDatos() Then Return
 
-                ' Agregar filas seleccionadas
-                For Each row As DataGridViewRow In DgvListado.SelectedRows
-                    For i As Integer = 0 To row.Cells.Count - 1
-                        If i > 0 Then texto += vbTab
-                        texto += If(row.Cells(i).Value IsNot Nothing, row.Cells(i).Value.ToString(), "")
-                    Next
-                    texto += vbCrLf
-                Next
+        ' ===== INSERCIÓN O ACTUALIZACIÓN =====
+        If filaActual Is Nothing Then
+            ' INSERT
+            Dim sql As String = "INSERT INTO GrupoFamiliar (Legajo, Nombre, Parentesco, Nacimiento, Edad, Ocupacion, Nivel) 
+                         VALUES (@Legajo, @Nombre, @Parentesco, @Nacimiento, @Edad, @Ocupacion, @Nivel)"
+            Dim parametros = CmdParams(
+        "@Legajo", CInt(legajo),
+        "@Nombre", nombre,
+        "@Parentesco", parentesco,
+        "@Nacimiento", fechaNac,
+        "@Edad", CInt(edad),
+        "@Ocupacion", ocupacion,
+        "@Nivel", nivel
+    )
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+        Else
+            ' UPDATE - Usamos el Id del registro seleccionado en la grilla
+            Dim idFamiliar As Integer = CInt(filaActual.Cells("Id").Value)
 
-                If texto.Length > 0 Then
-                    Clipboard.SetText(texto)
-                    MessageBox.Show("Datos copiados al portapapeles", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End If
-            Else
-                MessageBox.Show("Seleccione al menos una fila para copiar", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Error al copiar datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+            Dim sql As String = "UPDATE GrupoFamiliar 
+                         SET Legajo = @Legajo,
+                             Nombre = @Nombre,
+                             Parentesco = @Parentesco, 
+                             Nacimiento = @Nacimiento, 
+                             Edad = @Edad, 
+                             Ocupacion = @Ocupacion, 
+                             Nivel = @Nivel
+                         WHERE Id = @Id"
+            Dim parametros = CmdParams(
+        "@Legajo", CInt(legajo),
+        "@Nombre", nombre,
+        "@Parentesco", parentesco,
+        "@Nacimiento", fechaNac,
+        "@Edad", CInt(edad),
+        "@Ocupacion", ocupacion,
+        "@Nivel", nivel,
+        "@Id", idFamiliar
+    )
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+        End If
+
+        FormModoConsulta()
+        GridBuscar()
+
     End Sub
-
+    Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
+        CopiarDataGrid(DgvListado, chkEncabezados.Checked)
+    End Sub
+    Private Sub chkEncabezados_CheckedChanged(sender As Object, e As EventArgs)
+        DgvListado.Focus()
+    End Sub
     ' Métodos de validación
     Private Function ValidarDatos() As Boolean
         ' Validar Legajo
@@ -283,6 +280,30 @@ Public Class frmAgentes
             Return False
         End If
 
+        If String.IsNullOrEmpty(txtNombreFamiliar.Text.Trim()) Then
+            MessageBox.Show("Ingrese un valor para el campo Nombre.")
+            txtNombreFamiliar.Focus()
+            Return False
+        End If
+
+        If dtpNacimientoFamiliar.Value = Date.MinValue Then
+            MessageBox.Show("Seleccione una fecha de nacimiento válida.")
+            dtpNacimientoFamiliar.Focus()
+            Return False
+        End If
+
+        If Not IsNumeric(txtEdadFamiliar.Text.Trim()) Then
+            MessageBox.Show("Ingrese un valor numérico para la Edad.")
+            txtEdadFamiliar.Focus()
+            Return False
+        End If
+
+        If String.IsNullOrEmpty(cmbParentesco.Text.Trim()) Then
+            MessageBox.Show("Seleccione un valor para el campo Parentesco.")
+            cmbParentesco.Focus()
+            Return False
+        End If
+
         Return True
     End Function
 
@@ -290,11 +311,11 @@ Public Class frmAgentes
     Private Sub InsertarNuevoAgente()
         Dim sql As String = "INSERT INTO Agentes (Legajo, TipoDto, NroDto, CargoPampa, Cargo, Instituto, Nombre, CorreroE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, Oficina, Critico, MayorDedicacion, HorasDedicacion, HorasSemanales, HorasDiarias, " &
-                           "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Secretaria, Telefono, Interno, Celular, Rpv, " &
+                           "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Secretaria, Telefono, Interno, Celular,  " &
                            "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion, Motivo, EstadoParental, FechaJubilacion, MarcaAqui) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto, @CargoPampa, @Cargo, @Instituto, @Nombre, @CorreroE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad, @Oficina, @Critico, @MayorDedicacion, @HorasDedicacion, @HorasSemanales, @HorasDiarias, " &
-                           "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Secretaria, @Telefono, @Interno, @Celular, @Rpv, " &
+                           "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Secretaria, @Telefono, @Interno, @Celular,  " &
                            "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @Motivo, @EstadoParental, @FechaJubilacion, @MarcaAqui)"
 
         Dim parametros = ObtenerParametrosAgente()
@@ -308,7 +329,7 @@ Public Class frmAgentes
                            "HorasDedicacion=@HorasDedicacion, HorasSemanales=@HorasSemanales, HorasDiarias=@HorasDiarias, " &
                            "Escalafon=@Escalafon, Jefe=@Jefe, LicAnual=@LicAnual, Caracter=@Caracter, Comentario=@Comentario, " &
                            "Nomarca=@Nomarca, Secretaria=@Secretaria, Telefono=@Telefono, Interno=@Interno, Celular=@Celular, " &
-                           "Rpv=@Rpv, iNGRESO=@iNGRESO, Baja=@Baja, CUIL=@CUIL, TITULO=@TITULO, UltimaActualizacion=@UltimaActualizacion, " &
+                           "iNGRESO=@iNGRESO, Baja=@Baja, CUIL=@CUIL, TITULO=@TITULO, UltimaActualizacion=@UltimaActualizacion, " &
                            "Motivo=@Motivo, EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion, MarcaAqui=@MarcaAqui " &
                            "WHERE Legajo=@Legajo"
 
@@ -321,8 +342,6 @@ Public Class frmAgentes
             {"@Legajo", If(String.IsNullOrEmpty(txtLegajo.Text.Trim), DBNull.Value, Convert.ToInt32(txtLegajo.Text.Trim))},
             {"@TipoDto", If(String.IsNullOrEmpty(cmbTipoDto.Text.Trim), DBNull.Value, cmbTipoDto.Text.Trim)},
             {"@NroDto", If(String.IsNullOrEmpty(txtNroDto.Text.Trim), DBNull.Value, If(Integer.TryParse(txtNroDto.Text.Trim, 0), Convert.ToInt32(txtNroDto.Text.Trim), DBNull.Value))},
-            {"@CargoPampa", If(String.IsNullOrEmpty(txtCargoPampa.Text.Trim), DBNull.Value, If(Integer.TryParse(txtCargoPampa.Text.Trim, 0), Convert.ToInt32(txtCargoPampa.Text.Trim), DBNull.Value))},
-            {"@Cargo", If(String.IsNullOrEmpty(txtCargo.Text.Trim), DBNull.Value, txtCargo.Text.Trim)},
             {"@Instituto", If(String.IsNullOrEmpty(cmbInstituto.Text.Trim), DBNull.Value, cmbInstituto.Text.Trim)},
             {"@Nombre", If(String.IsNullOrEmpty(txtNombre.Text.Trim), DBNull.Value, txtNombre.Text.Trim)},
             {"@CorreroE", If(String.IsNullOrEmpty(txtCorreoE.Text.Trim), DBNull.Value, txtCorreoE.Text.Trim)},
@@ -331,11 +350,7 @@ Public Class frmAgentes
             {"@Calle", If(String.IsNullOrEmpty(txtCalle.Text.Trim), DBNull.Value, txtCalle.Text.Trim)},
             {"@Nro", If(String.IsNullOrEmpty(txtNro.Text.Trim), DBNull.Value, txtNro.Text.Trim)},
             {"@Localidad", If(String.IsNullOrEmpty(txtLocalidad.Text.Trim), DBNull.Value, txtLocalidad.Text.Trim)},
-            {"@Oficina", If(String.IsNullOrEmpty(txtOficina.Text.Trim), DBNull.Value, txtOficina.Text.Trim)},
-            {"@Critico", chkCritico.Checked},
-            {"@MayorDedicacion", chkMayorDedicacion.Checked},
-            {"@HorasDedicacion", If(String.IsNullOrEmpty(txtHorasDedicacion.Text.Trim), DBNull.Value, txtHorasDedicacion.Text.Trim)},
-            {"@HorasSemanales", If(String.IsNullOrEmpty(txtHorasSemanales.Text.Trim), DBNull.Value, txtHorasSemanales.Text.Trim)},
+            {"@HorasDedicacion", If(String.IsNullOrEmpty(txtUrgencias.Text.Trim), DBNull.Value, txtUrgencias.Text.Trim)},
             {"@HorasDiarias", If(String.IsNullOrEmpty(cmbHorasDiarias.Text.Trim), DBNull.Value, cmbHorasDiarias.Text.Trim)},
             {"@Escalafon", If(String.IsNullOrEmpty(cmbEscalafon.Text.Trim), DBNull.Value, cmbEscalafon.Text.Trim)},
             {"@Jefe", If(String.IsNullOrEmpty(cmbJefe.Text.Trim), DBNull.Value, cmbJefe.Text.Trim)},
@@ -347,16 +362,13 @@ Public Class frmAgentes
             {"@Telefono", If(String.IsNullOrEmpty(txtTelefono.Text.Trim), DBNull.Value, txtTelefono.Text.Trim)},
             {"@Interno", If(String.IsNullOrEmpty(txtInterno.Text.Trim), DBNull.Value, txtInterno.Text.Trim)},
             {"@Celular", If(String.IsNullOrEmpty(txtCelular.Text.Trim), DBNull.Value, txtCelular.Text.Trim)},
-            {"@Rpv", If(String.IsNullOrEmpty(txtRpv.Text.Trim), DBNull.Value, txtRpv.Text.Trim)},
             {"@iNGRESO", If(String.IsNullOrEmpty(txtIngreso.Text.Trim), DBNull.Value, txtIngreso.Text.Trim)},
             {"@Baja", If(String.IsNullOrEmpty(txtBaja.Text.Trim), DBNull.Value, txtBaja.Text.Trim)},
             {"@CUIL", If(String.IsNullOrEmpty(txtCUIL.Text.Trim), DBNull.Value, txtCUIL.Text.Trim)},
             {"@TITULO", If(String.IsNullOrEmpty(txtTitulo.Text.Trim), DBNull.Value, txtTitulo.Text.Trim)},
             {"@UltimaActualizacion", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},
-            {"@Motivo", If(String.IsNullOrEmpty(txtMotivo.Text.Trim), DBNull.Value, txtMotivo.Text.Trim)},
             {"@EstadoParental", If(String.IsNullOrEmpty(cmbEstadoParental.Text.Trim), DBNull.Value, cmbEstadoParental.Text.Trim)},
-            {"@FechaJubilacion", If(String.IsNullOrEmpty(txtFechaJubilacion.Text.Trim), DBNull.Value, txtFechaJubilacion.Text.Trim)},
-            {"@MarcaAqui", chkMarcaAqui.Checked}
+            {"@FechaJubilacion", If(String.IsNullOrEmpty(txtFechaJubilacion.Text.Trim), DBNull.Value, txtFechaJubilacion.Text.Trim)}
         }
     End Function
 
@@ -402,24 +414,21 @@ Public Class frmAgentes
         txtCalle.Clear()
         txtNro.Clear()
         txtLocalidad.Clear()
-        txtOficina.Clear()
-        txtHorasDedicacion.Clear()
-        txtHorasSemanales.Clear()
+
+        txtUrgencias.Clear()
+
         txtLicAnual.Clear()
         txtComentario.Clear()
         txtTelefono.Clear()
         txtInterno.Clear()
         txtCelular.Clear()
-        txtRpv.Clear()
+        txtUltimaActualizacion.Clear()
         txtIngreso.Clear()
         txtBaja.Clear()
         txtCUIL.Clear()
         txtTitulo.Clear()
-        txtMotivo.Clear()
         txtFechaJubilacion.Clear()
         txtNroDto.Clear()
-        txtCargoPampa.Clear()
-        txtCargo.Clear()
 
         ' Limpiar ComboBoxes
         cmbInstituto.SelectedIndex = -1
@@ -433,10 +442,7 @@ Public Class frmAgentes
         cmbTipoDto.SelectedIndex = -1
 
         ' Limpiar CheckBoxes
-        chkCritico.Checked = False
-        chkMayorDedicacion.Checked = False
         chkNomarca.Checked = False
-        chkMarcaAqui.Checked = False
 
         ' Resetear DateTimePicker
         dtpNacimiento.Value = DateTime.Now
@@ -447,7 +453,7 @@ Public Class frmAgentes
             txtLegajo.Text = If(IsDBNull(row("Legajo")), "", row("Legajo").ToString())
             txtNombre.Text = If(IsDBNull(row("Nombre")), "", row("Nombre").ToString())
             cmbInstituto.Text = If(IsDBNull(row("Instituto")), "", row("Instituto").ToString())
-            txtCorreoE.Text = If(IsDBNull(row("CorreroE")), "", row("CorreroE").ToString())
+            txtCorreoE.Text = If(IsDBNull(row("CorreoE")), "", row("CorreoE").ToString())
             cmbSexo.Text = If(IsDBNull(row("Sexo")), "", row("Sexo").ToString())
 
             If Not IsDBNull(row("Nacimiento")) Then
@@ -457,13 +463,8 @@ Public Class frmAgentes
             txtCalle.Text = If(IsDBNull(row("Calle")), "", row("Calle").ToString())
             txtNro.Text = If(IsDBNull(row("Nro")), "", row("Nro").ToString())
             txtLocalidad.Text = If(IsDBNull(row("Localidad")), "", row("Localidad").ToString())
-            txtOficina.Text = If(IsDBNull(row("Oficina")), "", row("Oficina").ToString())
+            txtUrgencias.Text = If(IsDBNull(row("HorasDedicacion")), "", row("HorasDedicacion").ToString())
 
-            chkCritico.Checked = If(IsDBNull(row("Critico")), False, Convert.ToBoolean(row("Critico")))
-            chkMayorDedicacion.Checked = If(IsDBNull(row("MayorDedicacion")), False, Convert.ToBoolean(row("MayorDedicacion")))
-
-            txtHorasDedicacion.Text = If(IsDBNull(row("HorasDedicacion")), "", row("HorasDedicacion").ToString())
-            txtHorasSemanales.Text = If(IsDBNull(row("HorasSemanales")), "", row("HorasSemanales").ToString())
             cmbHorasDiarias.Text = If(IsDBNull(row("HorasDiarias")), "", row("HorasDiarias").ToString())
             cmbEscalafon.Text = If(IsDBNull(row("Escalafon")), "", row("Escalafon").ToString())
             cmbJefe.Text = If(IsDBNull(row("Jefe")), "", row("Jefe").ToString())
@@ -476,20 +477,20 @@ Public Class frmAgentes
             txtTelefono.Text = If(IsDBNull(row("Telefono")), "", row("Telefono").ToString())
             txtInterno.Text = If(IsDBNull(row("Interno")), "", row("Interno").ToString())
             txtCelular.Text = If(IsDBNull(row("Celular")), "", row("Celular").ToString())
-            txtRpv.Text = If(IsDBNull(row("Rpv")), "", row("Rpv").ToString())
+            txtUltimaActualizacion.Text = If(IsDBNull(row("UltimaActualizacion")), "", row("UltimaActualizacion").ToString())
             txtIngreso.Text = If(IsDBNull(row("iNGRESO")), "", row("iNGRESO").ToString())
             txtBaja.Text = If(IsDBNull(row("Baja")), "", row("Baja").ToString())
             txtCUIL.Text = If(IsDBNull(row("CUIL")), "", row("CUIL").ToString())
             txtTitulo.Text = If(IsDBNull(row("TITULO")), "", row("TITULO").ToString())
-            txtMotivo.Text = If(IsDBNull(row("Motivo")), "", row("Motivo").ToString())
+
             cmbEstadoParental.Text = If(IsDBNull(row("EstadoParental")), "", row("EstadoParental").ToString())
             txtFechaJubilacion.Text = If(IsDBNull(row("FechaJubilacion")), "", row("FechaJubilacion").ToString())
-
-            chkMarcaAqui.Checked = If(IsDBNull(row("MarcaAqui")), False, Convert.ToBoolean(row("MarcaAqui")))
             cmbTipoDto.Text = If(IsDBNull(row("TipoDto")), "", row("TipoDto").ToString())
             txtNroDto.Text = If(IsDBNull(row("NroDto")), "", row("NroDto").ToString())
-            txtCargoPampa.Text = If(IsDBNull(row("CargoPampa")), "", row("CargoPampa").ToString())
-            txtCargo.Text = If(IsDBNull(row("Cargo")), "", row("Cargo").ToString())
+
+            pctFoto.Image = Image.FromFile("F:\Imagenes\LEG_" & txtLegajo.Text.Trim & ".jpg")
+
+
         End If
     End Sub
 
@@ -522,25 +523,88 @@ Public Class frmAgentes
     Private Sub HabilitarControles(habilitar As Boolean)
         ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
         SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
-                           txtCalle, txtNro, txtLocalidad, txtOficina, chkCritico, chkMayorDedicacion,
-                           txtHorasDedicacion, txtHorasSemanales, cmbHorasDiarias, cmbEscalafon, cmbJefe,
+                           txtCalle, txtNro, txtLocalidad,
+                           txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
-                           txtInterno, txtCelular, txtRpv, txtIngreso, txtBaja, txtCUIL, txtTitulo,
-                           txtMotivo, cmbEstadoParental, txtFechaJubilacion, chkMarcaAqui, cmbTipoDto,
-                           txtNroDto, CmbMotivo, txtCargo)
+                           txtInterno, txtCelular, txtUltimaActualizacion, txtIngreso, txtBaja, txtCUIL, txtTitulo,
+                            cmbEstadoParental, txtFechaJubilacion, cmbTipoDto,
+                           txtNroDto, CmbMotivo)
     End Sub
 
     ' Métodos auxiliares faltantes
     Private Sub GridBuscar()
+
         Try
-            Dim sql As String = "SELECT * FROM Agentes ORDER BY Nombre"
-            Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql)
+            Dim texto As String = TxtBuscar.Text.Trim()
+            Dim sql As String = "SELECT * FROM Agentes WHERE 1=1"
+            Dim parametros As New List(Of Object)()
+
+            ' Filtrar activos si corresponde
+            If optActivos.Checked Then
+                sql &= " AND (Baja IS NULL OR Baja = '')"
+            End If
+
+            ' Filtro por búsqueda en varias columnas
+            If Not String.IsNullOrEmpty(texto) Then
+                sql &= " AND (Nombre LIKE @Nombre OR NroDto LIKE @DNI OR Legajo LIKE @Legajo)"
+                parametros.AddRange(New Object() {"@Nombre", $"%{texto}%", "@DNI", $"{texto.Trim()}%", "@Legajo", $"{texto.Trim()}%"})
+            End If
+
+            ' Orden
+            sql &= " ORDER BY Nombre"
+
+
+            Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
             DgvListado.DataSource = dt
+            Label10.Text = "Total de Empleados: " & dt.Rows.Count.ToString()
+
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+    Private Sub CargaGrupoFamiliar(legajo As Integer)
+        Try
+            ' 1. Traer los registros del grupo familiar
+            Dim sql As String = "SELECT * FROM GrupoFamiliar WHERE Legajo = @Legajo"
+            Dim parametros As New List(Of Object) From {"@Legajo", txtLegajo.Text.Trim}
 
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
+            DgvGrupoFamiliar.DataSource = tabla
+
+            ' 2. Recorrer registros y actualizar edad
+            For Each fila As DataRow In tabla.Rows
+                Dim fecha1 As Date = Convert.ToDateTime(fila("Nacimiento"))
+                Dim fecha2 As Date = Date.Now
+                Dim diferencia As Integer = DateDiff(DateInterval.Year, fecha1, fecha2)
+
+                ' Ajuste para que no cuente el año si todavía no cumplió
+                If fecha1.AddYears(diferencia) > fecha2 Then
+                    diferencia -= 1
+                End If
+
+                ' 3. Actualizar el campo EDAD en BD
+                Dim sqlUpdate As String = "UPDATE GrupoFamiliar SET Edad = @Edad WHERE Id = @Id"
+                Dim parametrosUpdate As New List(Of Object) From {"@Edad", diferencia, "@Id", fila("Id")}
+                DSM.ExecuteQuery(DSM.Personal, sqlUpdate, CmdParams(parametrosUpdate.ToArray()))
+            Next
+
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar edades: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+    Private Sub CargaComentario(legajo As Integer)
+        Try
+            ' 1. Traer los registros del grupo familiar
+            Dim sql As String = "SELECT * FROM Comentarios WHERE Legajo = @Legajo"
+            Dim parametros As New List(Of Object) From {"@Legajo", txtLegajo.Text.Trim}
+
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
+            DgvComentarios.DataSource = tabla
+
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar edades: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
     Private Sub FormModoConsulta()
         HabilitarControles(False)
         ' Configurar botones para modo consulta usando SetControlesEnabled
@@ -558,6 +622,8 @@ Public Class frmAgentes
     Private Sub FormObtenerSeleccionado()
         If filaActual IsNot Nothing Then
             CargarDatosEnFormulario(CType(filaActual.DataBoundItem, DataRowView).Row)
+            CargaGrupoFamiliar(Convert.ToInt32(txtLegajo.Text.Trim))
+            CargaComentario(Convert.ToInt32(txtLegajo.Text.Trim))
         End If
     End Sub
 
@@ -568,14 +634,28 @@ Public Class frmAgentes
     End Sub
 
     Private Sub AplicarSeleccionActual()
-        If DgvListado.CurrentRow IsNot Nothing Then
-            Dim dataRowView As DataRowView = CType(DgvListado.CurrentRow.DataBoundItem, DataRowView)
-            filaActual = DgvListado.CurrentRow
-            filaActualIndice = DgvListado.CurrentRow.Index
+
+        If DgvListado Is Nothing OrElse DgvListado.CurrentRow Is Nothing Then Return
+
+        If DgvListado.SelectedRows.Count > 1 Then
+            filaActualIndice = -1
+            filaActual = Nothing
+            FormLimpiarSeleccionado()
+            Return
         End If
+
+        Dim idx = DgvListado.CurrentRow.Index
+        If idx < 0 OrElse idx = filaActualIndice Then Return
+
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+
+        filaActualIndice = idx
+        filaActual = DgvListado.CurrentRow
+        FormObtenerSeleccionado()
     End Sub
 
-    Private Sub GridConfigurarColumnas()
+    Private Sub ConfiguraColListado()
         Try
             If DgvListado.Columns.Count > 0 Then
                 For Each col As DataGridViewColumn In DgvListado.Columns
@@ -584,27 +664,35 @@ Public Class frmAgentes
                 ' Configurar columnas del grid principal
                 DgvListado.Columns("Legajo").Visible = True
                 DgvListado.Columns("Legajo").HeaderText = "Legajo"
+                DgvListado.Columns("Legajo").Width = 50
 
                 DgvListado.Columns("Nombre").Visible = True
                 DgvListado.Columns("Nombre").HeaderText = "Nombre"
+                DgvListado.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
 
                 DgvListado.Columns("Instituto").Visible = True
                 DgvListado.Columns("Instituto").HeaderText = "Sucursal"
+                DgvListado.Columns("Instituto").Width = 80
 
                 DgvListado.Columns("Cuil").Visible = True
                 DgvListado.Columns("Cuil").HeaderText = "CUIL"
+                DgvListado.Columns("Cuil").Width = 80
 
                 DgvListado.Columns("Telefono").Visible = True
                 DgvListado.Columns("Telefono").HeaderText = "Teléfono"
+                DgvListado.Columns("Telefono").Width = 80
 
                 DgvListado.Columns("Celular").Visible = True
                 DgvListado.Columns("Celular").HeaderText = "Celular"
+                DgvListado.Columns("Celular").Width = 80
 
                 DgvListado.Columns("Interno").Visible = True
                 DgvListado.Columns("Interno").HeaderText = "Interno"
+                DgvListado.Columns("Interno").Width = 60
 
                 DgvListado.Columns("CorreoE").Visible = True
                 DgvListado.Columns("CorreoE").HeaderText = "E-Mail"
+                DgvListado.Columns("CorreoE").Width = 150
 
                 ConfigurarEstiloGrid(DgvListado)
 
@@ -613,5 +701,82 @@ Public Class frmAgentes
             ' Ignorar errores de configuración de columnas
         End Try
     End Sub
+    Private Sub ConfiguraColFamilia()
+        Try
+            If DgvGrupoFamiliar.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In DgvGrupoFamiliar.Columns
+                    col.Visible = False
+                Next
+                ' Configurar columnas del grid principal
 
+                DgvGrupoFamiliar.Columns("Nombre").Visible = True
+                DgvGrupoFamiliar.Columns("Nombre").HeaderText = "Nombre"
+                DgvGrupoFamiliar.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+                DgvGrupoFamiliar.Columns("Parentesco").Visible = True
+                DgvGrupoFamiliar.Columns("Parentesco").HeaderText = "Parentesco"
+                DgvGrupoFamiliar.Columns("Parentesco").Width = 80
+
+                DgvGrupoFamiliar.Columns("Nacimiento").Visible = True
+                DgvGrupoFamiliar.Columns("Nacimiento").HeaderText = "Fecha de Nacimiento"
+                DgvGrupoFamiliar.Columns("Nacimiento").Width = 80
+
+                DgvGrupoFamiliar.Columns("Edad").Visible = True
+                DgvGrupoFamiliar.Columns("Edad").HeaderText = "Edad"
+                DgvGrupoFamiliar.Columns("Edad").Width = 50
+
+                DgvGrupoFamiliar.Columns("Ocupacion").Visible = True
+                DgvGrupoFamiliar.Columns("Ocupacion").HeaderText = "Ocupación"
+                DgvGrupoFamiliar.Columns("Ocupacion").Width = 150
+
+                DgvGrupoFamiliar.Columns("Nivel").Visible = True
+                DgvGrupoFamiliar.Columns("Nivel").HeaderText = "Nivel"
+                DgvGrupoFamiliar.Columns("Nivel").Width = 150
+
+                ConfigurarEstiloGrid(DgvGrupoFamiliar)
+
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuración de columnas
+        End Try
+    End Sub
+    Private Sub ConfiguraColComentario()
+        Try
+            If DgvComentarios.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In DgvComentarios.Columns
+                    col.Visible = False
+                Next
+                ' Configurar columnas del grid principal
+
+                DgvComentarios.Columns("Fecha").Visible = True
+                DgvComentarios.Columns("Fecha").HeaderText = "Fecha"
+                DgvComentarios.Columns("Fecha").Width = 60
+
+                DgvComentarios.Columns("Comenta").Visible = True
+                DgvComentarios.Columns("Comenta").HeaderText = "Comentario"
+                DgvComentarios.Columns("Comenta").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+                DgvComentarios.Columns("Motivo").Visible = True
+                DgvComentarios.Columns("Motivo").HeaderText = "Motivo"
+                DgvComentarios.Columns("Motivo").Width = 400
+
+                ConfigurarEstiloGrid(DgvComentarios)
+
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuración de columnas
+        End Try
+    End Sub
+    Private Sub opTodos_CheckedChanged(sender As Object, e As EventArgs)
+
+        GridBuscar()
+    End Sub
+
+    Private Sub optActivos_CheckedChanged(sender As Object, e As EventArgs)
+        GridBuscar()
+    End Sub
+
+    Private Sub DgvListado_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvListado.CellContentClick
+
+    End Sub
 End Class
