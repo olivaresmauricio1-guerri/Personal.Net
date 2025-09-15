@@ -69,6 +69,7 @@ Partial Class frmLstMensual
         ' 
         ' cmbSucursal
         ' 
+        cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList
         cmbSucursal.FormattingEnabled = True
         cmbSucursal.Location = New Point(252, 30)
         cmbSucursal.Name = "cmbSucursal"

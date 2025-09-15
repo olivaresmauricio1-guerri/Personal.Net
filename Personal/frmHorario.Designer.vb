@@ -72,6 +72,7 @@ Partial Class frmHorario
         ' 
         ' cmbSucursal
         ' 
+        cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList
         cmbSucursal.FormattingEnabled = True
         cmbSucursal.Location = New Point(252, 30)
         cmbSucursal.Name = "cmbSucursal"
@@ -102,7 +103,7 @@ Partial Class frmHorario
         btnSalir.BackColor = Color.IndianRed
         btnSalir.Cursor = Cursors.Hand
         btnSalir.FlatStyle = FlatStyle.Flat
-        btnSalir.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        btnSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         btnSalir.ForeColor = Color.White
         btnSalir.Location = New Point(388, 96)
         btnSalir.Name = "btnSalir"
@@ -116,7 +117,7 @@ Partial Class frmHorario
         cmdVer.BackColor = SystemColors.Control
         cmdVer.Cursor = Cursors.Hand
         cmdVer.FlatStyle = FlatStyle.Flat
-        cmdVer.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        cmdVer.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         cmdVer.ForeColor = SystemColors.ControlText
         cmdVer.Location = New Point(297, 96)
         cmdVer.Name = "cmdVer"
@@ -160,7 +161,7 @@ Partial Class frmHorario
         ' 
         ' frmHorario
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(482, 139)
         Controls.Add(radSemana)

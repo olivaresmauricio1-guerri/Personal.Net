@@ -22,10 +22,50 @@ Partial Class frmAgentes
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        TableLayoutPanel1 = New TableLayoutPanel()
-        TabControl1 = New TabControl()
-        TabPage1 = New TabPage()
-        GroupBox1 = New GroupBox()
+        tabDatos = New TabControl()
+        tabDatosAgente = New TabPage()
+        tlpDatosAgente = New TableLayoutPanel()
+        Panel3Col = New Panel()
+        txtCelular = New TextBox()
+        Label22 = New Label()
+        txtCUIL = New TextBox()
+        Label26 = New Label()
+        cmbSexo = New ComboBox()
+        Label5 = New Label()
+        cmbHorasDiarias = New ComboBox()
+        Label13 = New Label()
+        cmbJefe = New ComboBox()
+        Label15 = New Label()
+        cmbEstadoParental = New ComboBox()
+        txtLocalidad = New TextBox()
+        Label9 = New Label()
+        txtInterno = New TextBox()
+        Label21 = New Label()
+        txtFechaJubilacion = New TextBox()
+        Label29 = New Label()
+        Label30 = New Label()
+        txtUltimaActualizacion = New TextBox()
+        Label23 = New Label()
+        Panel2Col = New Panel()
+        chkNomarca = New CheckBox()
+        Label12 = New Label()
+        CmbMotivo = New ComboBox()
+        txtTitulo = New TextBox()
+        Label27 = New Label()
+        txtNro = New TextBox()
+        Label8 = New Label()
+        dtpNacimiento = New DateTimePicker()
+        Label6 = New Label()
+        cmbEscalafon = New ComboBox()
+        Label14 = New Label()
+        txtLicAnual = New TextBox()
+        Label16 = New Label()
+        cmbCategoria = New ComboBox()
+        Label19 = New Label()
+        txtTelefono = New TextBox()
+        txtNroDto = New TextBox()
+        Label33 = New Label()
+        Label20 = New Label()
         Panel1Col = New Panel()
         txtBaja = New TextBox()
         Label25 = New Label()
@@ -49,48 +89,9 @@ Partial Class frmAgentes
         Label34 = New Label()
         txtUrgencias = New TextBox()
         Label11 = New Label()
-        Panel2Col = New Panel()
-        chkNomarca = New CheckBox()
-        Label12 = New Label()
-        CmbMotivo = New ComboBox()
-        txtTitulo = New TextBox()
-        Label27 = New Label()
-        txtNro = New TextBox()
-        Label8 = New Label()
-        dtpNacimiento = New DateTimePicker()
-        Label6 = New Label()
-        cmbEscalafon = New ComboBox()
-        Label14 = New Label()
-        txtLicAnual = New TextBox()
-        Label16 = New Label()
-        cmbCategoria = New ComboBox()
-        Label19 = New Label()
-        txtTelefono = New TextBox()
-        txtNroDto = New TextBox()
-        Label33 = New Label()
-        Label20 = New Label()
-        Panel3Col = New Panel()
-        txtCelular = New TextBox()
-        Label22 = New Label()
-        txtCUIL = New TextBox()
-        Label26 = New Label()
-        cmbSexo = New ComboBox()
-        Label5 = New Label()
-        cmbHorasDiarias = New ComboBox()
-        Label13 = New Label()
-        cmbJefe = New ComboBox()
-        Label15 = New Label()
-        cmbEstadoParental = New ComboBox()
-        txtLocalidad = New TextBox()
-        Label9 = New Label()
-        txtInterno = New TextBox()
-        Label21 = New Label()
-        txtFechaJubilacion = New TextBox()
-        Label29 = New Label()
-        Label30 = New Label()
-        txtUltimaActualizacion = New TextBox()
-        Label23 = New Label()
-        TabPage2 = New TabPage()
+        Panel1 = New Panel()
+        pctFoto = New PictureBox()
+        tabGrupoFamiliar = New TabPage()
         GroupBox2 = New GroupBox()
         DgvGrupoFamiliar = New DataGridView()
         btnEliminarFamiliar = New Button()
@@ -107,7 +108,7 @@ Partial Class frmAgentes
         txtNombreFamiliar = New TextBox()
         Label35 = New Label()
         cmbParentesco = New ComboBox()
-        TabPage3 = New TabPage()
+        tabComentarios = New TabPage()
         GroupBox3 = New GroupBox()
         DgvComentarios = New DataGridView()
         btnEliminarComentario = New Button()
@@ -118,333 +119,296 @@ Partial Class frmAgentes
         Label42 = New Label()
         dtpFechaComentario = New DateTimePicker()
         Label41 = New Label()
-        Panel2 = New Panel()
         chkEncabezados = New CheckBox()
         lnkCopiar = New LinkLabel()
-        optActivos = New RadioButton()
-        opTodos = New RadioButton()
-        Label10 = New Label()
-        TxtBuscar = New TextBox()
-        Label44 = New Label()
-        DgvListado = New DataGridView()
-        Panel1 = New Panel()
+        radActivos = New RadioButton()
+        radTodos = New RadioButton()
+        lblTotalAgentes = New Label()
+        txtBuscar = New TextBox()
+        lblBuscar = New Label()
+        dgvListado = New DataGridView()
         btnSalir = New Button()
         btnCancelar = New Button()
         btnAceptar = New Button()
         btnBorrar = New Button()
         btnModificar = New Button()
         btnAgregar = New Button()
-        pctFoto = New PictureBox()
-        TableLayoutPanel1.SuspendLayout()
-        TabControl1.SuspendLayout()
-        TabPage1.SuspendLayout()
-        GroupBox1.SuspendLayout()
-        Panel1Col.SuspendLayout()
-        Panel2Col.SuspendLayout()
+        lblSucursal = New Label()
+        cmbSucursal = New ComboBox()
+        tabDatos.SuspendLayout()
+        tabDatosAgente.SuspendLayout()
+        tlpDatosAgente.SuspendLayout()
         Panel3Col.SuspendLayout()
-        TabPage2.SuspendLayout()
-        GroupBox2.SuspendLayout()
-        CType(DgvGrupoFamiliar, ComponentModel.ISupportInitialize).BeginInit()
-        TabPage3.SuspendLayout()
-        GroupBox3.SuspendLayout()
-        CType(DgvComentarios, ComponentModel.ISupportInitialize).BeginInit()
-        Panel2.SuspendLayout()
-        CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
+        Panel2Col.SuspendLayout()
+        Panel1Col.SuspendLayout()
         Panel1.SuspendLayout()
         CType(pctFoto, ComponentModel.ISupportInitialize).BeginInit()
+        tabGrupoFamiliar.SuspendLayout()
+        GroupBox2.SuspendLayout()
+        CType(DgvGrupoFamiliar, ComponentModel.ISupportInitialize).BeginInit()
+        tabComentarios.SuspendLayout()
+        GroupBox3.SuspendLayout()
+        CType(DgvComentarios, ComponentModel.ISupportInitialize).BeginInit()
+        CType(dgvListado, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
-        ' TableLayoutPanel1
+        ' tabDatos
         ' 
-        TableLayoutPanel1.ColumnCount = 2
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 205F))
-        TableLayoutPanel1.Controls.Add(TabControl1, 0, 1)
-        TableLayoutPanel1.Controls.Add(Panel2, 0, 0)
-        TableLayoutPanel1.Controls.Add(Panel1, 0, 2)
-        TableLayoutPanel1.Controls.Add(pctFoto, 1, 1)
-        TableLayoutPanel1.Dock = DockStyle.Fill
-        TableLayoutPanel1.Location = New Point(0, 0)
-        TableLayoutPanel1.Name = "TableLayoutPanel1"
-        TableLayoutPanel1.RowCount = 3
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 439F))
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 86F))
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
-        TableLayoutPanel1.Size = New Size(1069, 772)
-        TableLayoutPanel1.TabIndex = 2
+        tabDatos.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        tabDatos.Controls.Add(tabDatosAgente)
+        tabDatos.Controls.Add(tabGrupoFamiliar)
+        tabDatos.Controls.Add(tabComentarios)
+        tabDatos.Location = New Point(10, 245)
+        tabDatos.Margin = New Padding(4, 3, 4, 3)
+        tabDatos.Name = "tabDatos"
+        tabDatos.SelectedIndex = 0
+        tabDatos.Size = New Size(1197, 433)
+        tabDatos.TabIndex = 8
         ' 
-        ' TabControl1
+        ' tabDatosAgente
         ' 
-        TabControl1.Controls.Add(TabPage1)
-        TabControl1.Controls.Add(TabPage2)
-        TabControl1.Controls.Add(TabPage3)
-        TabControl1.Dock = DockStyle.Fill
-        TabControl1.Location = New Point(4, 250)
-        TabControl1.Margin = New Padding(4, 3, 4, 3)
-        TabControl1.Name = "TabControl1"
-        TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(856, 433)
-        TabControl1.TabIndex = 8
+        tabDatosAgente.Controls.Add(tlpDatosAgente)
+        tabDatosAgente.Location = New Point(4, 24)
+        tabDatosAgente.Margin = New Padding(4, 3, 4, 3)
+        tabDatosAgente.Name = "tabDatosAgente"
+        tabDatosAgente.Padding = New Padding(4, 3, 4, 3)
+        tabDatosAgente.Size = New Size(1189, 405)
+        tabDatosAgente.TabIndex = 0
+        tabDatosAgente.Text = "Datos del Agente"
+        tabDatosAgente.UseVisualStyleBackColor = True
         ' 
-        ' TabPage1
+        ' tlpDatosAgente
         ' 
-        TabPage1.Controls.Add(GroupBox1)
-        TabPage1.Location = New Point(4, 24)
-        TabPage1.Margin = New Padding(4, 3, 4, 3)
-        TabPage1.Name = "TabPage1"
-        TabPage1.Padding = New Padding(4, 3, 4, 3)
-        TabPage1.Size = New Size(848, 405)
-        TabPage1.TabIndex = 0
-        TabPage1.Text = "Datos del Agente"
-        TabPage1.UseVisualStyleBackColor = True
+        tlpDatosAgente.ColumnCount = 4
+        tlpDatosAgente.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 40F))
+        tlpDatosAgente.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
+        tlpDatosAgente.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
+        tlpDatosAgente.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 185F))
+        tlpDatosAgente.Controls.Add(Panel3Col, 2, 0)
+        tlpDatosAgente.Controls.Add(Panel2Col, 1, 0)
+        tlpDatosAgente.Controls.Add(Panel1Col, 0, 0)
+        tlpDatosAgente.Controls.Add(Panel1, 3, 0)
+        tlpDatosAgente.Dock = DockStyle.Fill
+        tlpDatosAgente.Location = New Point(4, 3)
+        tlpDatosAgente.Name = "tlpDatosAgente"
+        tlpDatosAgente.RowCount = 1
+        tlpDatosAgente.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        tlpDatosAgente.Size = New Size(1181, 399)
+        tlpDatosAgente.TabIndex = 0
         ' 
-        ' GroupBox1
+        ' Panel3Col
         ' 
-        GroupBox1.Controls.Add(Panel1Col)
-        GroupBox1.Controls.Add(Panel2Col)
-        GroupBox1.Controls.Add(Panel3Col)
-        GroupBox1.Dock = DockStyle.Fill
-        GroupBox1.Location = New Point(4, 3)
-        GroupBox1.Margin = New Padding(4, 3, 4, 3)
-        GroupBox1.Name = "GroupBox1"
-        GroupBox1.Padding = New Padding(4, 3, 4, 3)
-        GroupBox1.Size = New Size(840, 399)
-        GroupBox1.TabIndex = 0
-        GroupBox1.TabStop = False
+        Panel3Col.Controls.Add(txtCelular)
+        Panel3Col.Controls.Add(Label22)
+        Panel3Col.Controls.Add(txtCUIL)
+        Panel3Col.Controls.Add(Label26)
+        Panel3Col.Controls.Add(cmbSexo)
+        Panel3Col.Controls.Add(Label5)
+        Panel3Col.Controls.Add(cmbHorasDiarias)
+        Panel3Col.Controls.Add(Label13)
+        Panel3Col.Controls.Add(cmbJefe)
+        Panel3Col.Controls.Add(Label15)
+        Panel3Col.Controls.Add(cmbEstadoParental)
+        Panel3Col.Controls.Add(txtLocalidad)
+        Panel3Col.Controls.Add(Label9)
+        Panel3Col.Controls.Add(txtInterno)
+        Panel3Col.Controls.Add(Label21)
+        Panel3Col.Controls.Add(txtFechaJubilacion)
+        Panel3Col.Controls.Add(Label29)
+        Panel3Col.Controls.Add(Label30)
+        Panel3Col.Controls.Add(txtUltimaActualizacion)
+        Panel3Col.Controls.Add(Label23)
+        Panel3Col.Dock = DockStyle.Fill
+        Panel3Col.Location = New Point(699, 3)
+        Panel3Col.Name = "Panel3Col"
+        Panel3Col.Size = New Size(292, 393)
+        Panel3Col.TabIndex = 2
         ' 
-        ' Panel1Col
+        ' txtCelular
         ' 
-        Panel1Col.Controls.Add(txtBaja)
-        Panel1Col.Controls.Add(Label25)
-        Panel1Col.Controls.Add(cmbCaracter)
-        Panel1Col.Controls.Add(Label17)
-        Panel1Col.Controls.Add(txtComentario)
-        Panel1Col.Controls.Add(Label18)
-        Panel1Col.Controls.Add(txtLegajo)
-        Panel1Col.Controls.Add(Label1)
-        Panel1Col.Controls.Add(txtNombre)
-        Panel1Col.Controls.Add(Label2)
-        Panel1Col.Controls.Add(cmbInstituto)
-        Panel1Col.Controls.Add(txtIngreso)
-        Panel1Col.Controls.Add(Label24)
-        Panel1Col.Controls.Add(Label3)
-        Panel1Col.Controls.Add(txtCorreoE)
-        Panel1Col.Controls.Add(Label4)
-        Panel1Col.Controls.Add(txtCalle)
-        Panel1Col.Controls.Add(Label7)
-        Panel1Col.Controls.Add(cmbTipoDto)
-        Panel1Col.Controls.Add(Label34)
-        Panel1Col.Controls.Add(txtUrgencias)
-        Panel1Col.Controls.Add(Label11)
-        Panel1Col.Location = New Point(5, 14)
-        Panel1Col.Name = "Panel1Col"
-        Panel1Col.Size = New Size(294, 371)
-        Panel1Col.TabIndex = 0
+        txtCelular.Location = New Point(86, 91)
+        txtCelular.Margin = New Padding(4, 3, 4, 3)
+        txtCelular.Name = "txtCelular"
+        txtCelular.Size = New Size(136, 23)
+        txtCelular.TabIndex = 76
         ' 
-        ' txtBaja
+        ' Label22
         ' 
-        txtBaja.Location = New Point(81, 269)
-        txtBaja.Margin = New Padding(4, 3, 4, 3)
-        txtBaja.Name = "txtBaja"
-        txtBaja.Size = New Size(143, 23)
-        txtBaja.TabIndex = 58
+        Label22.AutoSize = True
+        Label22.Location = New Point(3, 99)
+        Label22.Margin = New Padding(4, 0, 4, 0)
+        Label22.Name = "Label22"
+        Label22.Size = New Size(47, 15)
+        Label22.TabIndex = 75
+        Label22.Text = "Celular:"
         ' 
-        ' Label25
+        ' txtCUIL
         ' 
-        Label25.AutoSize = True
-        Label25.Location = New Point(4, 272)
-        Label25.Margin = New Padding(4, 0, 4, 0)
-        Label25.Name = "Label25"
-        Label25.Size = New Size(32, 15)
-        Label25.TabIndex = 57
-        Label25.Text = "Baja:"
+        txtCUIL.Location = New Point(86, 62)
+        txtCUIL.Margin = New Padding(4, 3, 4, 3)
+        txtCUIL.Name = "txtCUIL"
+        txtCUIL.Size = New Size(136, 23)
+        txtCUIL.TabIndex = 74
         ' 
-        ' cmbCaracter
+        ' Label26
         ' 
-        cmbCaracter.FormattingEnabled = True
-        cmbCaracter.Location = New Point(81, 177)
-        cmbCaracter.Margin = New Padding(4, 3, 4, 3)
-        cmbCaracter.Name = "cmbCaracter"
-        cmbCaracter.Size = New Size(136, 23)
-        cmbCaracter.TabIndex = 45
+        Label26.AutoSize = True
+        Label26.Location = New Point(3, 64)
+        Label26.Margin = New Padding(4, 0, 4, 0)
+        Label26.Name = "Label26"
+        Label26.Size = New Size(35, 15)
+        Label26.TabIndex = 73
+        Label26.Text = "CUIL:"
         ' 
-        ' Label17
+        ' cmbSexo
         ' 
-        Label17.AutoSize = True
-        Label17.Location = New Point(4, 180)
-        Label17.Margin = New Padding(4, 0, 4, 0)
-        Label17.Name = "Label17"
-        Label17.Size = New Size(54, 15)
-        Label17.TabIndex = 44
-        Label17.Text = "Carácter:"
+        cmbSexo.FormattingEnabled = True
+        cmbSexo.Items.AddRange(New Object() {"M", "F"})
+        cmbSexo.Location = New Point(86, 33)
+        cmbSexo.Margin = New Padding(4, 3, 4, 3)
+        cmbSexo.Name = "cmbSexo"
+        cmbSexo.Size = New Size(57, 23)
+        cmbSexo.TabIndex = 72
         ' 
-        ' txtComentario
+        ' Label5
         ' 
-        txtComentario.Location = New Point(81, 300)
-        txtComentario.Margin = New Padding(4, 3, 4, 3)
-        txtComentario.Multiline = True
-        txtComentario.Name = "txtComentario"
-        txtComentario.ScrollBars = ScrollBars.Both
-        txtComentario.Size = New Size(209, 66)
-        txtComentario.TabIndex = 43
+        Label5.AutoSize = True
+        Label5.Location = New Point(3, 36)
+        Label5.Margin = New Padding(4, 0, 4, 0)
+        Label5.Name = "Label5"
+        Label5.Size = New Size(35, 15)
+        Label5.TabIndex = 71
+        Label5.Text = "Sexo:"
         ' 
-        ' Label18
+        ' cmbHorasDiarias
         ' 
-        Label18.AutoSize = True
-        Label18.Location = New Point(4, 303)
-        Label18.Margin = New Padding(4, 0, 4, 0)
-        Label18.Name = "Label18"
-        Label18.Size = New Size(73, 15)
-        Label18.TabIndex = 42
-        Label18.Text = "Comentario:"
+        cmbHorasDiarias.FormattingEnabled = True
+        cmbHorasDiarias.Location = New Point(88, 207)
+        cmbHorasDiarias.Margin = New Padding(4, 3, 4, 3)
+        cmbHorasDiarias.Name = "cmbHorasDiarias"
+        cmbHorasDiarias.Size = New Size(134, 23)
+        cmbHorasDiarias.TabIndex = 31
         ' 
-        ' txtLegajo
+        ' Label13
         ' 
-        txtLegajo.Location = New Point(81, 0)
-        txtLegajo.Margin = New Padding(4, 3, 4, 3)
-        txtLegajo.Name = "txtLegajo"
-        txtLegajo.Size = New Size(96, 23)
-        txtLegajo.TabIndex = 0
+        Label13.AutoSize = True
+        Label13.Location = New Point(3, 211)
+        Label13.Margin = New Padding(4, 0, 4, 0)
+        Label13.Name = "Label13"
+        Label13.Size = New Size(79, 15)
+        Label13.TabIndex = 30
+        Label13.Text = "Horas Diarias:"
         ' 
-        ' Label1
+        ' cmbJefe
         ' 
-        Label1.AutoSize = True
-        Label1.Location = New Point(3, 3)
-        Label1.Margin = New Padding(4, 0, 4, 0)
-        Label1.Name = "Label1"
-        Label1.Size = New Size(45, 15)
-        Label1.TabIndex = 0
-        Label1.Text = "Legajo:"
+        cmbJefe.FormattingEnabled = True
+        cmbJefe.Location = New Point(86, 178)
+        cmbJefe.Margin = New Padding(4, 3, 4, 3)
+        cmbJefe.Name = "cmbJefe"
+        cmbJefe.Size = New Size(136, 23)
+        cmbJefe.TabIndex = 35
         ' 
-        ' txtNombre
+        ' Label15
         ' 
-        txtNombre.Location = New Point(81, 29)
-        txtNombre.Margin = New Padding(4, 3, 4, 3)
-        txtNombre.Name = "txtNombre"
-        txtNombre.Size = New Size(209, 23)
-        txtNombre.TabIndex = 1
+        Label15.AutoSize = True
+        Label15.Location = New Point(3, 181)
+        Label15.Margin = New Padding(4, 0, 4, 0)
+        Label15.Name = "Label15"
+        Label15.Size = New Size(69, 15)
+        Label15.TabIndex = 34
+        Label15.Text = "A Cargo de:"
         ' 
-        ' Label2
+        ' cmbEstadoParental
         ' 
-        Label2.AutoSize = True
-        Label2.Location = New Point(3, 32)
-        Label2.Margin = New Padding(4, 0, 4, 0)
-        Label2.Name = "Label2"
-        Label2.Size = New Size(54, 15)
-        Label2.TabIndex = 0
-        Label2.Text = "Nombre:"
+        cmbEstadoParental.FormattingEnabled = True
+        cmbEstadoParental.Location = New Point(107, 149)
+        cmbEstadoParental.Margin = New Padding(4, 3, 4, 3)
+        cmbEstadoParental.Name = "cmbEstadoParental"
+        cmbEstadoParental.Size = New Size(115, 23)
+        cmbEstadoParental.TabIndex = 64
         ' 
-        ' cmbInstituto
+        ' txtLocalidad
         ' 
-        cmbInstituto.FormattingEnabled = True
-        cmbInstituto.Location = New Point(81, 211)
-        cmbInstituto.Margin = New Padding(4, 3, 4, 3)
-        cmbInstituto.Name = "cmbInstituto"
-        cmbInstituto.Size = New Size(143, 23)
-        cmbInstituto.TabIndex = 1
+        txtLocalidad.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        txtLocalidad.Location = New Point(86, 120)
+        txtLocalidad.Margin = New Padding(4, 3, 4, 3)
+        txtLocalidad.Name = "txtLocalidad"
+        txtLocalidad.Size = New Size(185, 23)
+        txtLocalidad.TabIndex = 21
         ' 
-        ' txtIngreso
+        ' Label9
         ' 
-        txtIngreso.Location = New Point(81, 240)
-        txtIngreso.Margin = New Padding(4, 3, 4, 3)
-        txtIngreso.Name = "txtIngreso"
-        txtIngreso.Size = New Size(143, 23)
-        txtIngreso.TabIndex = 54
+        Label9.AutoSize = True
+        Label9.Location = New Point(3, 123)
+        Label9.Margin = New Padding(4, 0, 4, 0)
+        Label9.Name = "Label9"
+        Label9.Size = New Size(61, 15)
+        Label9.TabIndex = 20
+        Label9.Text = "Localidad:"
         ' 
-        ' Label24
+        ' txtInterno
         ' 
-        Label24.AutoSize = True
-        Label24.Location = New Point(3, 243)
-        Label24.Margin = New Padding(4, 0, 4, 0)
-        Label24.Name = "Label24"
-        Label24.Size = New Size(49, 15)
-        Label24.TabIndex = 53
-        Label24.Text = "Ingreso:"
+        txtInterno.Location = New Point(88, 236)
+        txtInterno.Margin = New Padding(4, 3, 4, 3)
+        txtInterno.Name = "txtInterno"
+        txtInterno.Size = New Size(136, 23)
+        txtInterno.TabIndex = 48
         ' 
-        ' Label3
+        ' Label21
         ' 
-        Label3.AutoSize = True
-        Label3.Location = New Point(3, 214)
-        Label3.Margin = New Padding(4, 0, 4, 0)
-        Label3.Name = "Label3"
-        Label3.Size = New Size(54, 15)
-        Label3.TabIndex = 0
-        Label3.Text = "Sucursal:"
+        Label21.AutoSize = True
+        Label21.Location = New Point(3, 240)
+        Label21.Margin = New Padding(4, 0, 4, 0)
+        Label21.Name = "Label21"
+        Label21.Size = New Size(48, 15)
+        Label21.TabIndex = 47
+        Label21.Text = "Interno:"
         ' 
-        ' txtCorreoE
+        ' txtFechaJubilacion
         ' 
-        txtCorreoE.Location = New Point(81, 87)
-        txtCorreoE.Margin = New Padding(4, 3, 4, 3)
-        txtCorreoE.Name = "txtCorreoE"
-        txtCorreoE.Size = New Size(209, 23)
-        txtCorreoE.TabIndex = 11
+        txtFechaJubilacion.Location = New Point(108, 265)
+        txtFechaJubilacion.Margin = New Padding(4, 3, 4, 3)
+        txtFechaJubilacion.Name = "txtFechaJubilacion"
+        txtFechaJubilacion.Size = New Size(116, 23)
+        txtFechaJubilacion.TabIndex = 66
         ' 
-        ' Label4
+        ' Label29
         ' 
-        Label4.AutoSize = True
-        Label4.Location = New Point(3, 90)
-        Label4.Margin = New Padding(4, 0, 4, 0)
-        Label4.Name = "Label4"
-        Label4.Size = New Size(44, 15)
-        Label4.TabIndex = 10
-        Label4.Text = "E-Mail:"
+        Label29.AutoSize = True
+        Label29.Location = New Point(3, 152)
+        Label29.Margin = New Padding(4, 0, 4, 0)
+        Label29.Name = "Label29"
+        Label29.Size = New Size(91, 15)
+        Label29.TabIndex = 63
+        Label29.Text = "Estado Parental:"
         ' 
-        ' txtCalle
+        ' Label30
         ' 
-        txtCalle.Location = New Point(81, 116)
-        txtCalle.Margin = New Padding(4, 3, 4, 3)
-        txtCalle.Name = "txtCalle"
-        txtCalle.Size = New Size(209, 23)
-        txtCalle.TabIndex = 17
+        Label30.AutoSize = True
+        Label30.Location = New Point(3, 268)
+        Label30.Margin = New Padding(4, 0, 4, 0)
+        Label30.Name = "Label30"
+        Label30.Size = New Size(97, 15)
+        Label30.TabIndex = 65
+        Label30.Text = "Fecha Jubilación:"
         ' 
-        ' Label7
+        ' txtUltimaActualizacion
         ' 
-        Label7.AutoSize = True
-        Label7.Location = New Point(3, 119)
-        Label7.Margin = New Padding(4, 0, 4, 0)
-        Label7.Name = "Label7"
-        Label7.Size = New Size(36, 15)
-        Label7.TabIndex = 16
-        Label7.Text = "Calle:"
+        txtUltimaActualizacion.Location = New Point(130, 294)
+        txtUltimaActualizacion.Margin = New Padding(4, 3, 4, 3)
+        txtUltimaActualizacion.Name = "txtUltimaActualizacion"
+        txtUltimaActualizacion.Size = New Size(94, 23)
+        txtUltimaActualizacion.TabIndex = 52
         ' 
-        ' cmbTipoDto
+        ' Label23
         ' 
-        cmbTipoDto.FormattingEnabled = True
-        cmbTipoDto.Items.AddRange(New Object() {"DNI", "LC", "LE", "CI", "Pasaporte"})
-        cmbTipoDto.Location = New Point(81, 58)
-        cmbTipoDto.Margin = New Padding(4, 3, 4, 3)
-        cmbTipoDto.Name = "cmbTipoDto"
-        cmbTipoDto.Size = New Size(57, 23)
-        cmbTipoDto.TabIndex = 3
-        ' 
-        ' Label34
-        ' 
-        Label34.AutoSize = True
-        Label34.Location = New Point(4, 64)
-        Label34.Margin = New Padding(4, 0, 4, 0)
-        Label34.Name = "Label34"
-        Label34.Size = New Size(56, 15)
-        Label34.TabIndex = 2
-        Label34.Text = "Tipo Dto:"
-        ' 
-        ' txtUrgencias
-        ' 
-        txtUrgencias.Location = New Point(81, 145)
-        txtUrgencias.Margin = New Padding(4, 3, 4, 3)
-        txtUrgencias.Name = "txtUrgencias"
-        txtUrgencias.Size = New Size(143, 23)
-        txtUrgencias.TabIndex = 27
-        ' 
-        ' Label11
-        ' 
-        Label11.AutoSize = True
-        Label11.Location = New Point(3, 148)
-        Label11.Margin = New Padding(4, 0, 4, 0)
-        Label11.Name = "Label11"
-        Label11.Size = New Size(59, 15)
-        Label11.TabIndex = 26
-        Label11.Text = "Urgencias"
+        Label23.AutoSize = True
+        Label23.Location = New Point(3, 298)
+        Label23.Margin = New Padding(4, 0, 4, 0)
+        Label23.Name = "Label23"
+        Label23.Size = New Size(119, 15)
+        Label23.TabIndex = 51
+        Label23.Text = "Última Actualización:"
         ' 
         ' Panel2Col
         ' 
@@ -467,9 +431,10 @@ Partial Class frmAgentes
         Panel2Col.Controls.Add(txtNroDto)
         Panel2Col.Controls.Add(Label33)
         Panel2Col.Controls.Add(Label20)
-        Panel2Col.Location = New Point(305, 14)
+        Panel2Col.Dock = DockStyle.Fill
+        Panel2Col.Location = New Point(401, 3)
         Panel2Col.Name = "Panel2Col"
-        Panel2Col.Size = New Size(233, 371)
+        Panel2Col.Size = New Size(292, 393)
         Panel2Col.TabIndex = 1
         ' 
         ' chkNomarca
@@ -645,233 +610,278 @@ Partial Class frmAgentes
         Label20.Location = New Point(4, 94)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
-        Label20.Size = New Size(56, 15)
+        Label20.Size = New Size(55, 15)
         Label20.TabIndex = 45
         Label20.Text = "Teléfono:"
         ' 
-        ' Panel3Col
+        ' Panel1Col
         ' 
-        Panel3Col.Controls.Add(txtCelular)
-        Panel3Col.Controls.Add(Label22)
-        Panel3Col.Controls.Add(txtCUIL)
-        Panel3Col.Controls.Add(Label26)
-        Panel3Col.Controls.Add(cmbSexo)
-        Panel3Col.Controls.Add(Label5)
-        Panel3Col.Controls.Add(cmbHorasDiarias)
-        Panel3Col.Controls.Add(Label13)
-        Panel3Col.Controls.Add(cmbJefe)
-        Panel3Col.Controls.Add(Label15)
-        Panel3Col.Controls.Add(cmbEstadoParental)
-        Panel3Col.Controls.Add(txtLocalidad)
-        Panel3Col.Controls.Add(Label9)
-        Panel3Col.Controls.Add(txtInterno)
-        Panel3Col.Controls.Add(Label21)
-        Panel3Col.Controls.Add(txtFechaJubilacion)
-        Panel3Col.Controls.Add(Label29)
-        Panel3Col.Controls.Add(Label30)
-        Panel3Col.Controls.Add(txtUltimaActualizacion)
-        Panel3Col.Controls.Add(Label23)
-        Panel3Col.Location = New Point(544, 14)
-        Panel3Col.Name = "Panel3Col"
-        Panel3Col.Size = New Size(299, 370)
-        Panel3Col.TabIndex = 2
+        Panel1Col.Controls.Add(txtBaja)
+        Panel1Col.Controls.Add(Label25)
+        Panel1Col.Controls.Add(cmbCaracter)
+        Panel1Col.Controls.Add(Label17)
+        Panel1Col.Controls.Add(txtComentario)
+        Panel1Col.Controls.Add(Label18)
+        Panel1Col.Controls.Add(txtLegajo)
+        Panel1Col.Controls.Add(Label1)
+        Panel1Col.Controls.Add(txtNombre)
+        Panel1Col.Controls.Add(Label2)
+        Panel1Col.Controls.Add(cmbInstituto)
+        Panel1Col.Controls.Add(txtIngreso)
+        Panel1Col.Controls.Add(Label24)
+        Panel1Col.Controls.Add(Label3)
+        Panel1Col.Controls.Add(txtCorreoE)
+        Panel1Col.Controls.Add(Label4)
+        Panel1Col.Controls.Add(txtCalle)
+        Panel1Col.Controls.Add(Label7)
+        Panel1Col.Controls.Add(cmbTipoDto)
+        Panel1Col.Controls.Add(Label34)
+        Panel1Col.Controls.Add(txtUrgencias)
+        Panel1Col.Controls.Add(Label11)
+        Panel1Col.Dock = DockStyle.Fill
+        Panel1Col.Location = New Point(3, 3)
+        Panel1Col.Name = "Panel1Col"
+        Panel1Col.Size = New Size(392, 393)
+        Panel1Col.TabIndex = 0
         ' 
-        ' txtCelular
+        ' txtBaja
         ' 
-        txtCelular.Location = New Point(86, 91)
-        txtCelular.Margin = New Padding(4, 3, 4, 3)
-        txtCelular.Name = "txtCelular"
-        txtCelular.Size = New Size(136, 23)
-        txtCelular.TabIndex = 76
+        txtBaja.Location = New Point(81, 269)
+        txtBaja.Margin = New Padding(4, 3, 4, 3)
+        txtBaja.Name = "txtBaja"
+        txtBaja.Size = New Size(143, 23)
+        txtBaja.TabIndex = 58
         ' 
-        ' Label22
+        ' Label25
         ' 
-        Label22.AutoSize = True
-        Label22.Location = New Point(3, 99)
-        Label22.Margin = New Padding(4, 0, 4, 0)
-        Label22.Name = "Label22"
-        Label22.Size = New Size(47, 15)
-        Label22.TabIndex = 75
-        Label22.Text = "Celular:"
+        Label25.AutoSize = True
+        Label25.Location = New Point(4, 272)
+        Label25.Margin = New Padding(4, 0, 4, 0)
+        Label25.Name = "Label25"
+        Label25.Size = New Size(32, 15)
+        Label25.TabIndex = 57
+        Label25.Text = "Baja:"
         ' 
-        ' txtCUIL
+        ' cmbCaracter
         ' 
-        txtCUIL.Location = New Point(86, 62)
-        txtCUIL.Margin = New Padding(4, 3, 4, 3)
-        txtCUIL.Name = "txtCUIL"
-        txtCUIL.Size = New Size(136, 23)
-        txtCUIL.TabIndex = 74
+        cmbCaracter.FormattingEnabled = True
+        cmbCaracter.Location = New Point(81, 177)
+        cmbCaracter.Margin = New Padding(4, 3, 4, 3)
+        cmbCaracter.Name = "cmbCaracter"
+        cmbCaracter.Size = New Size(136, 23)
+        cmbCaracter.TabIndex = 45
         ' 
-        ' Label26
+        ' Label17
         ' 
-        Label26.AutoSize = True
-        Label26.Location = New Point(3, 64)
-        Label26.Margin = New Padding(4, 0, 4, 0)
-        Label26.Name = "Label26"
-        Label26.Size = New Size(35, 15)
-        Label26.TabIndex = 73
-        Label26.Text = "CUIL:"
+        Label17.AutoSize = True
+        Label17.Location = New Point(4, 180)
+        Label17.Margin = New Padding(4, 0, 4, 0)
+        Label17.Name = "Label17"
+        Label17.Size = New Size(54, 15)
+        Label17.TabIndex = 44
+        Label17.Text = "Carácter:"
         ' 
-        ' cmbSexo
+        ' txtComentario
         ' 
-        cmbSexo.FormattingEnabled = True
-        cmbSexo.Items.AddRange(New Object() {"M", "F"})
-        cmbSexo.Location = New Point(86, 33)
-        cmbSexo.Margin = New Padding(4, 3, 4, 3)
-        cmbSexo.Name = "cmbSexo"
-        cmbSexo.Size = New Size(57, 23)
-        cmbSexo.TabIndex = 72
+        txtComentario.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        txtComentario.Location = New Point(81, 300)
+        txtComentario.Margin = New Padding(4, 3, 4, 3)
+        txtComentario.Multiline = True
+        txtComentario.Name = "txtComentario"
+        txtComentario.ScrollBars = ScrollBars.Both
+        txtComentario.Size = New Size(290, 66)
+        txtComentario.TabIndex = 43
         ' 
-        ' Label5
+        ' Label18
         ' 
-        Label5.AutoSize = True
-        Label5.Location = New Point(3, 36)
-        Label5.Margin = New Padding(4, 0, 4, 0)
-        Label5.Name = "Label5"
-        Label5.Size = New Size(34, 15)
-        Label5.TabIndex = 71
-        Label5.Text = "Sexo:"
+        Label18.AutoSize = True
+        Label18.Location = New Point(4, 303)
+        Label18.Margin = New Padding(4, 0, 4, 0)
+        Label18.Name = "Label18"
+        Label18.Size = New Size(73, 15)
+        Label18.TabIndex = 42
+        Label18.Text = "Comentario:"
         ' 
-        ' cmbHorasDiarias
+        ' txtLegajo
         ' 
-        cmbHorasDiarias.FormattingEnabled = True
-        cmbHorasDiarias.Location = New Point(88, 207)
-        cmbHorasDiarias.Margin = New Padding(4, 3, 4, 3)
-        cmbHorasDiarias.Name = "cmbHorasDiarias"
-        cmbHorasDiarias.Size = New Size(134, 23)
-        cmbHorasDiarias.TabIndex = 31
+        txtLegajo.Location = New Point(81, 0)
+        txtLegajo.Margin = New Padding(4, 3, 4, 3)
+        txtLegajo.Name = "txtLegajo"
+        txtLegajo.Size = New Size(96, 23)
+        txtLegajo.TabIndex = 0
         ' 
-        ' Label13
+        ' Label1
         ' 
-        Label13.AutoSize = True
-        Label13.Location = New Point(3, 211)
-        Label13.Margin = New Padding(4, 0, 4, 0)
-        Label13.Name = "Label13"
-        Label13.Size = New Size(79, 15)
-        Label13.TabIndex = 30
-        Label13.Text = "Horas Diarias:"
+        Label1.AutoSize = True
+        Label1.Location = New Point(3, 3)
+        Label1.Margin = New Padding(4, 0, 4, 0)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(45, 15)
+        Label1.TabIndex = 0
+        Label1.Text = "Legajo:"
         ' 
-        ' cmbJefe
+        ' txtNombre
         ' 
-        cmbJefe.FormattingEnabled = True
-        cmbJefe.Location = New Point(86, 178)
-        cmbJefe.Margin = New Padding(4, 3, 4, 3)
-        cmbJefe.Name = "cmbJefe"
-        cmbJefe.Size = New Size(136, 23)
-        cmbJefe.TabIndex = 35
+        txtNombre.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        txtNombre.Location = New Point(81, 29)
+        txtNombre.Margin = New Padding(4, 3, 4, 3)
+        txtNombre.Name = "txtNombre"
+        txtNombre.Size = New Size(290, 23)
+        txtNombre.TabIndex = 1
         ' 
-        ' Label15
+        ' Label2
         ' 
-        Label15.AutoSize = True
-        Label15.Location = New Point(3, 181)
-        Label15.Margin = New Padding(4, 0, 4, 0)
-        Label15.Name = "Label15"
-        Label15.Size = New Size(69, 15)
-        Label15.TabIndex = 34
-        Label15.Text = "A Cargo de:"
+        Label2.AutoSize = True
+        Label2.Location = New Point(3, 32)
+        Label2.Margin = New Padding(4, 0, 4, 0)
+        Label2.Name = "Label2"
+        Label2.Size = New Size(54, 15)
+        Label2.TabIndex = 0
+        Label2.Text = "Nombre:"
         ' 
-        ' cmbEstadoParental
+        ' cmbInstituto
         ' 
-        cmbEstadoParental.FormattingEnabled = True
-        cmbEstadoParental.Location = New Point(107, 149)
-        cmbEstadoParental.Margin = New Padding(4, 3, 4, 3)
-        cmbEstadoParental.Name = "cmbEstadoParental"
-        cmbEstadoParental.Size = New Size(115, 23)
-        cmbEstadoParental.TabIndex = 64
+        cmbInstituto.FormattingEnabled = True
+        cmbInstituto.Location = New Point(81, 211)
+        cmbInstituto.Margin = New Padding(4, 3, 4, 3)
+        cmbInstituto.Name = "cmbInstituto"
+        cmbInstituto.Size = New Size(143, 23)
+        cmbInstituto.TabIndex = 1
         ' 
-        ' txtLocalidad
+        ' txtIngreso
         ' 
-        txtLocalidad.Location = New Point(86, 120)
-        txtLocalidad.Margin = New Padding(4, 3, 4, 3)
-        txtLocalidad.Name = "txtLocalidad"
-        txtLocalidad.Size = New Size(209, 23)
-        txtLocalidad.TabIndex = 21
+        txtIngreso.Location = New Point(81, 240)
+        txtIngreso.Margin = New Padding(4, 3, 4, 3)
+        txtIngreso.Name = "txtIngreso"
+        txtIngreso.Size = New Size(143, 23)
+        txtIngreso.TabIndex = 54
         ' 
-        ' Label9
+        ' Label24
         ' 
-        Label9.AutoSize = True
-        Label9.Location = New Point(3, 123)
-        Label9.Margin = New Padding(4, 0, 4, 0)
-        Label9.Name = "Label9"
-        Label9.Size = New Size(61, 15)
-        Label9.TabIndex = 20
-        Label9.Text = "Localidad:"
+        Label24.AutoSize = True
+        Label24.Location = New Point(3, 243)
+        Label24.Margin = New Padding(4, 0, 4, 0)
+        Label24.Name = "Label24"
+        Label24.Size = New Size(49, 15)
+        Label24.TabIndex = 53
+        Label24.Text = "Ingreso:"
         ' 
-        ' txtInterno
+        ' Label3
         ' 
-        txtInterno.Location = New Point(88, 236)
-        txtInterno.Margin = New Padding(4, 3, 4, 3)
-        txtInterno.Name = "txtInterno"
-        txtInterno.Size = New Size(136, 23)
-        txtInterno.TabIndex = 48
+        Label3.AutoSize = True
+        Label3.Location = New Point(3, 214)
+        Label3.Margin = New Padding(4, 0, 4, 0)
+        Label3.Name = "Label3"
+        Label3.Size = New Size(54, 15)
+        Label3.TabIndex = 0
+        Label3.Text = "Sucursal:"
         ' 
-        ' Label21
+        ' txtCorreoE
         ' 
-        Label21.AutoSize = True
-        Label21.Location = New Point(3, 240)
-        Label21.Margin = New Padding(4, 0, 4, 0)
-        Label21.Name = "Label21"
-        Label21.Size = New Size(48, 15)
-        Label21.TabIndex = 47
-        Label21.Text = "Interno:"
+        txtCorreoE.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        txtCorreoE.Location = New Point(81, 87)
+        txtCorreoE.Margin = New Padding(4, 3, 4, 3)
+        txtCorreoE.Name = "txtCorreoE"
+        txtCorreoE.Size = New Size(290, 23)
+        txtCorreoE.TabIndex = 11
         ' 
-        ' txtFechaJubilacion
+        ' Label4
         ' 
-        txtFechaJubilacion.Location = New Point(108, 265)
-        txtFechaJubilacion.Margin = New Padding(4, 3, 4, 3)
-        txtFechaJubilacion.Name = "txtFechaJubilacion"
-        txtFechaJubilacion.Size = New Size(116, 23)
-        txtFechaJubilacion.TabIndex = 66
+        Label4.AutoSize = True
+        Label4.Location = New Point(3, 90)
+        Label4.Margin = New Padding(4, 0, 4, 0)
+        Label4.Name = "Label4"
+        Label4.Size = New Size(44, 15)
+        Label4.TabIndex = 10
+        Label4.Text = "E-Mail:"
         ' 
-        ' Label29
+        ' txtCalle
         ' 
-        Label29.AutoSize = True
-        Label29.Location = New Point(3, 152)
-        Label29.Margin = New Padding(4, 0, 4, 0)
-        Label29.Name = "Label29"
-        Label29.Size = New Size(91, 15)
-        Label29.TabIndex = 63
-        Label29.Text = "Estado Parental:"
+        txtCalle.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        txtCalle.Location = New Point(81, 116)
+        txtCalle.Margin = New Padding(4, 3, 4, 3)
+        txtCalle.Name = "txtCalle"
+        txtCalle.Size = New Size(290, 23)
+        txtCalle.TabIndex = 17
         ' 
-        ' Label30
+        ' Label7
         ' 
-        Label30.AutoSize = True
-        Label30.Location = New Point(3, 268)
-        Label30.Margin = New Padding(4, 0, 4, 0)
-        Label30.Name = "Label30"
-        Label30.Size = New Size(97, 15)
-        Label30.TabIndex = 65
-        Label30.Text = "Fecha Jubilación:"
+        Label7.AutoSize = True
+        Label7.Location = New Point(3, 119)
+        Label7.Margin = New Padding(4, 0, 4, 0)
+        Label7.Name = "Label7"
+        Label7.Size = New Size(36, 15)
+        Label7.TabIndex = 16
+        Label7.Text = "Calle:"
         ' 
-        ' txtUltimaActualizacion
+        ' cmbTipoDto
         ' 
-        txtUltimaActualizacion.Location = New Point(130, 294)
-        txtUltimaActualizacion.Margin = New Padding(4, 3, 4, 3)
-        txtUltimaActualizacion.Name = "txtUltimaActualizacion"
-        txtUltimaActualizacion.Size = New Size(94, 23)
-        txtUltimaActualizacion.TabIndex = 52
+        cmbTipoDto.FormattingEnabled = True
+        cmbTipoDto.Items.AddRange(New Object() {"DNI", "LC", "LE", "CI", "Pasaporte"})
+        cmbTipoDto.Location = New Point(81, 58)
+        cmbTipoDto.Margin = New Padding(4, 3, 4, 3)
+        cmbTipoDto.Name = "cmbTipoDto"
+        cmbTipoDto.Size = New Size(57, 23)
+        cmbTipoDto.TabIndex = 3
         ' 
-        ' Label23
+        ' Label34
         ' 
-        Label23.AutoSize = True
-        Label23.Location = New Point(3, 298)
-        Label23.Margin = New Padding(4, 0, 4, 0)
-        Label23.Name = "Label23"
-        Label23.Size = New Size(119, 15)
-        Label23.TabIndex = 51
-        Label23.Text = "Última Actualización:"
+        Label34.AutoSize = True
+        Label34.Location = New Point(4, 64)
+        Label34.Margin = New Padding(4, 0, 4, 0)
+        Label34.Name = "Label34"
+        Label34.Size = New Size(55, 15)
+        Label34.TabIndex = 2
+        Label34.Text = "Tipo Dto:"
         ' 
-        ' TabPage2
+        ' txtUrgencias
         ' 
-        TabPage2.Controls.Add(GroupBox2)
-        TabPage2.Location = New Point(4, 24)
-        TabPage2.Margin = New Padding(4, 3, 4, 3)
-        TabPage2.Name = "TabPage2"
-        TabPage2.Padding = New Padding(4, 3, 4, 3)
-        TabPage2.Size = New Size(848, 405)
-        TabPage2.TabIndex = 1
-        TabPage2.Text = "Grupo Familiar"
-        TabPage2.UseVisualStyleBackColor = True
+        txtUrgencias.Location = New Point(81, 145)
+        txtUrgencias.Margin = New Padding(4, 3, 4, 3)
+        txtUrgencias.Name = "txtUrgencias"
+        txtUrgencias.Size = New Size(143, 23)
+        txtUrgencias.TabIndex = 27
+        ' 
+        ' Label11
+        ' 
+        Label11.AutoSize = True
+        Label11.Location = New Point(3, 148)
+        Label11.Margin = New Padding(4, 0, 4, 0)
+        Label11.Name = "Label11"
+        Label11.Size = New Size(59, 15)
+        Label11.TabIndex = 26
+        Label11.Text = "Urgencias"
+        ' 
+        ' Panel1
+        ' 
+        Panel1.Controls.Add(pctFoto)
+        Panel1.Dock = DockStyle.Fill
+        Panel1.Location = New Point(997, 3)
+        Panel1.Name = "Panel1"
+        Panel1.Size = New Size(181, 393)
+        Panel1.TabIndex = 3
+        ' 
+        ' pctFoto
+        ' 
+        pctFoto.BorderStyle = BorderStyle.FixedSingle
+        pctFoto.Location = New Point(0, 3)
+        pctFoto.Name = "pctFoto"
+        pctFoto.Size = New Size(185, 236)
+        pctFoto.SizeMode = PictureBoxSizeMode.StretchImage
+        pctFoto.TabIndex = 10
+        pctFoto.TabStop = False
+        ' 
+        ' tabGrupoFamiliar
+        ' 
+        tabGrupoFamiliar.Controls.Add(GroupBox2)
+        tabGrupoFamiliar.Location = New Point(4, 24)
+        tabGrupoFamiliar.Margin = New Padding(4, 3, 4, 3)
+        tabGrupoFamiliar.Name = "tabGrupoFamiliar"
+        tabGrupoFamiliar.Padding = New Padding(4, 3, 4, 3)
+        tabGrupoFamiliar.Size = New Size(1189, 405)
+        tabGrupoFamiliar.TabIndex = 1
+        tabGrupoFamiliar.Text = "Grupo Familiar"
+        tabGrupoFamiliar.UseVisualStyleBackColor = True
         ' 
         ' GroupBox2
         ' 
@@ -895,7 +905,7 @@ Partial Class frmAgentes
         GroupBox2.Margin = New Padding(4, 3, 4, 3)
         GroupBox2.Name = "GroupBox2"
         GroupBox2.Padding = New Padding(4, 3, 4, 3)
-        GroupBox2.Size = New Size(840, 399)
+        GroupBox2.Size = New Size(1181, 399)
         GroupBox2.TabIndex = 0
         GroupBox2.TabStop = False
         GroupBox2.Text = "Información del Grupo Familiar"
@@ -1043,17 +1053,17 @@ Partial Class frmAgentes
         cmbParentesco.Size = New Size(155, 23)
         cmbParentesco.TabIndex = 2
         ' 
-        ' TabPage3
+        ' tabComentarios
         ' 
-        TabPage3.Controls.Add(GroupBox3)
-        TabPage3.Location = New Point(4, 24)
-        TabPage3.Margin = New Padding(4, 3, 4, 3)
-        TabPage3.Name = "TabPage3"
-        TabPage3.Padding = New Padding(4, 3, 4, 3)
-        TabPage3.Size = New Size(848, 405)
-        TabPage3.TabIndex = 2
-        TabPage3.Text = "Comentarios"
-        TabPage3.UseVisualStyleBackColor = True
+        tabComentarios.Controls.Add(GroupBox3)
+        tabComentarios.Location = New Point(4, 24)
+        tabComentarios.Margin = New Padding(4, 3, 4, 3)
+        tabComentarios.Name = "tabComentarios"
+        tabComentarios.Padding = New Padding(4, 3, 4, 3)
+        tabComentarios.Size = New Size(1189, 405)
+        tabComentarios.TabIndex = 2
+        tabComentarios.Text = "Comentarios"
+        tabComentarios.UseVisualStyleBackColor = True
         ' 
         ' GroupBox3
         ' 
@@ -1071,7 +1081,7 @@ Partial Class frmAgentes
         GroupBox3.Margin = New Padding(4, 3, 4, 3)
         GroupBox3.Name = "GroupBox3"
         GroupBox3.Padding = New Padding(4, 3, 4, 3)
-        GroupBox3.Size = New Size(840, 399)
+        GroupBox3.Size = New Size(1181, 399)
         GroupBox3.TabIndex = 0
         GroupBox3.TabStop = False
         GroupBox3.Text = "Comentarios y Novedades"
@@ -1166,26 +1176,11 @@ Partial Class frmAgentes
         Label41.TabIndex = 0
         Label41.Text = "Fecha:"
         ' 
-        ' Panel2
-        ' 
-        Panel2.Controls.Add(chkEncabezados)
-        Panel2.Controls.Add(lnkCopiar)
-        Panel2.Controls.Add(optActivos)
-        Panel2.Controls.Add(opTodos)
-        Panel2.Controls.Add(Label10)
-        Panel2.Controls.Add(TxtBuscar)
-        Panel2.Controls.Add(Label44)
-        Panel2.Controls.Add(DgvListado)
-        Panel2.Location = New Point(4, 3)
-        Panel2.Margin = New Padding(4, 3, 4, 3)
-        Panel2.Name = "Panel2"
-        Panel2.Size = New Size(856, 241)
-        Panel2.TabIndex = 4
-        ' 
         ' chkEncabezados
         ' 
+        chkEncabezados.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         chkEncabezados.AutoSize = True
-        chkEncabezados.Location = New Point(728, 222)
+        chkEncabezados.Location = New Point(1084, 234)
         chkEncabezados.Margin = New Padding(4, 3, 4, 3)
         chkEncabezados.Name = "chkEncabezados"
         chkEncabezados.Size = New Size(119, 19)
@@ -1195,9 +1190,10 @@ Partial Class frmAgentes
         ' 
         ' lnkCopiar
         ' 
+        lnkCopiar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         lnkCopiar.AutoSize = True
         lnkCopiar.LinkColor = Color.Black
-        lnkCopiar.Location = New Point(626, 222)
+        lnkCopiar.Location = New Point(982, 234)
         lnkCopiar.Margin = New Padding(4, 0, 4, 0)
         lnkCopiar.Name = "lnkCopiar"
         lnkCopiar.Size = New Size(94, 15)
@@ -1205,212 +1201,271 @@ Partial Class frmAgentes
         lnkCopiar.TabStop = True
         lnkCopiar.Text = "Copiar selección"
         ' 
-        ' optActivos
+        ' radActivos
         ' 
-        optActivos.AutoSize = True
-        optActivos.Checked = True
-        optActivos.Location = New Point(454, 6)
-        optActivos.Name = "optActivos"
-        optActivos.Size = New Size(64, 19)
-        optActivos.TabIndex = 2
-        optActivos.TabStop = True
-        optActivos.Text = "Activos"
-        optActivos.UseVisualStyleBackColor = True
+        radActivos.AutoSize = True
+        radActivos.Checked = True
+        radActivos.Location = New Point(836, 7)
+        radActivos.Name = "radActivos"
+        radActivos.Size = New Size(64, 19)
+        radActivos.TabIndex = 2
+        radActivos.TabStop = True
+        radActivos.Text = "Activos"
+        radActivos.UseVisualStyleBackColor = True
         ' 
-        ' opTodos
+        ' radTodos
         ' 
-        opTodos.AutoSize = True
-        opTodos.Location = New Point(527, 6)
-        opTodos.Name = "opTodos"
-        opTodos.Size = New Size(57, 19)
-        opTodos.TabIndex = 3
-        opTodos.Text = "Todos"
-        opTodos.UseVisualStyleBackColor = True
+        radTodos.AutoSize = True
+        radTodos.Location = New Point(906, 7)
+        radTodos.Name = "radTodos"
+        radTodos.Size = New Size(56, 19)
+        radTodos.TabIndex = 3
+        radTodos.Text = "Todos"
+        radTodos.UseVisualStyleBackColor = True
         ' 
-        ' Label10
+        ' lblTotalAgentes
         ' 
-        Label10.AutoSize = True
-        Label10.Location = New Point(694, 8)
-        Label10.Margin = New Padding(4, 0, 4, 0)
-        Label10.Name = "Label10"
-        Label10.Size = New Size(113, 15)
-        Label10.TabIndex = 5
-        Label10.Text = "Total de Empleados:"
+        lblTotalAgentes.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        lblTotalAgentes.AutoSize = True
+        lblTotalAgentes.Location = New Point(1054, 9)
+        lblTotalAgentes.Margin = New Padding(4, 0, 4, 0)
+        lblTotalAgentes.Name = "lblTotalAgentes"
+        lblTotalAgentes.Size = New Size(97, 15)
+        lblTotalAgentes.TabIndex = 5
+        lblTotalAgentes.Text = "Total de Agentes:"
         ' 
-        ' TxtBuscar
+        ' txtBuscar
         ' 
-        TxtBuscar.Location = New Point(93, 5)
-        TxtBuscar.Margin = New Padding(4, 3, 4, 3)
-        TxtBuscar.Name = "TxtBuscar"
-        TxtBuscar.Size = New Size(349, 23)
-        TxtBuscar.TabIndex = 1
+        txtBuscar.Location = New Point(63, 5)
+        txtBuscar.Margin = New Padding(4, 3, 4, 3)
+        txtBuscar.Name = "txtBuscar"
+        txtBuscar.Size = New Size(329, 23)
+        txtBuscar.TabIndex = 1
         ' 
-        ' Label44
+        ' lblBuscar
         ' 
-        Label44.AutoSize = True
-        Label44.Location = New Point(12, 8)
-        Label44.Margin = New Padding(4, 0, 4, 0)
-        Label44.Name = "Label44"
-        Label44.Size = New Size(45, 15)
-        Label44.TabIndex = 0
-        Label44.Text = "Buscar:"
+        lblBuscar.AutoSize = True
+        lblBuscar.Location = New Point(10, 9)
+        lblBuscar.Margin = New Padding(4, 0, 4, 0)
+        lblBuscar.Name = "lblBuscar"
+        lblBuscar.Size = New Size(45, 15)
+        lblBuscar.TabIndex = 0
+        lblBuscar.Text = "Buscar:"
         ' 
-        ' DgvListado
+        ' dgvListado
         ' 
-        DgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvListado.Location = New Point(6, 34)
-        DgvListado.Margin = New Padding(4, 3, 4, 3)
-        DgvListado.Name = "DgvListado"
-        DgvListado.Size = New Size(848, 182)
-        DgvListado.TabIndex = 2
-        ' 
-        ' Panel1
-        ' 
-        Panel1.Controls.Add(btnSalir)
-        Panel1.Controls.Add(btnCancelar)
-        Panel1.Controls.Add(btnAceptar)
-        Panel1.Controls.Add(btnBorrar)
-        Panel1.Controls.Add(btnModificar)
-        Panel1.Controls.Add(btnAgregar)
-        Panel1.Dock = DockStyle.Fill
-        Panel1.Location = New Point(4, 689)
-        Panel1.Margin = New Padding(4, 3, 4, 3)
-        Panel1.Name = "Panel1"
-        Panel1.Size = New Size(856, 80)
-        Panel1.TabIndex = 7
+        dgvListado.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        dgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvListado.Location = New Point(10, 35)
+        dgvListado.Margin = New Padding(4, 3, 4, 3)
+        dgvListado.Name = "dgvListado"
+        dgvListado.Size = New Size(1197, 193)
+        dgvListado.TabIndex = 2
         ' 
         ' btnSalir
         ' 
+        btnSalir.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         btnSalir.BackColor = Color.IndianRed
+        btnSalir.Cursor = Cursors.Hand
         btnSalir.FlatStyle = FlatStyle.Flat
         btnSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         btnSalir.ForeColor = Color.White
-        btnSalir.Location = New Point(770, 3)
+        btnSalir.Location = New Point(1119, 684)
         btnSalir.Margin = New Padding(4, 3, 4, 3)
         btnSalir.Name = "btnSalir"
-        btnSalir.Size = New Size(88, 35)
+        btnSalir.Size = New Size(88, 30)
         btnSalir.TabIndex = 5
         btnSalir.Text = "Salir"
         btnSalir.UseVisualStyleBackColor = False
         ' 
         ' btnCancelar
         ' 
+        btnCancelar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        btnCancelar.Cursor = Cursors.Hand
         btnCancelar.FlatStyle = FlatStyle.Flat
         btnCancelar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnCancelar.Location = New Point(674, 3)
+        btnCancelar.Location = New Point(1023, 684)
         btnCancelar.Margin = New Padding(4, 3, 4, 3)
         btnCancelar.Name = "btnCancelar"
-        btnCancelar.Size = New Size(88, 35)
+        btnCancelar.Size = New Size(88, 30)
         btnCancelar.TabIndex = 4
         btnCancelar.Text = "Cancelar"
         btnCancelar.UseVisualStyleBackColor = True
         ' 
         ' btnAceptar
         ' 
+        btnAceptar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        btnAceptar.Cursor = Cursors.Hand
         btnAceptar.FlatStyle = FlatStyle.Flat
         btnAceptar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnAceptar.Location = New Point(578, 3)
+        btnAceptar.Location = New Point(927, 684)
         btnAceptar.Margin = New Padding(4, 3, 4, 3)
         btnAceptar.Name = "btnAceptar"
-        btnAceptar.Size = New Size(88, 35)
+        btnAceptar.Size = New Size(88, 30)
         btnAceptar.TabIndex = 3
         btnAceptar.Text = "Aceptar"
         btnAceptar.UseVisualStyleBackColor = True
         ' 
         ' btnBorrar
         ' 
+        btnBorrar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        btnBorrar.Cursor = Cursors.Hand
         btnBorrar.FlatStyle = FlatStyle.Flat
         btnBorrar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnBorrar.Location = New Point(204, 12)
+        btnBorrar.Location = New Point(202, 684)
         btnBorrar.Margin = New Padding(4, 3, 4, 3)
         btnBorrar.Name = "btnBorrar"
-        btnBorrar.Size = New Size(88, 35)
+        btnBorrar.Size = New Size(88, 30)
         btnBorrar.TabIndex = 2
         btnBorrar.Text = "Borrar"
         btnBorrar.UseVisualStyleBackColor = True
         ' 
         ' btnModificar
         ' 
+        btnModificar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        btnModificar.Cursor = Cursors.Hand
         btnModificar.FlatStyle = FlatStyle.Flat
         btnModificar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnModificar.Location = New Point(108, 12)
+        btnModificar.Location = New Point(106, 684)
         btnModificar.Margin = New Padding(4, 3, 4, 3)
         btnModificar.Name = "btnModificar"
-        btnModificar.Size = New Size(88, 35)
+        btnModificar.Size = New Size(88, 30)
         btnModificar.TabIndex = 1
         btnModificar.Text = "Modificar"
         btnModificar.UseVisualStyleBackColor = True
         ' 
         ' btnAgregar
         ' 
+        btnAgregar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        btnAgregar.Cursor = Cursors.Hand
         btnAgregar.FlatStyle = FlatStyle.Flat
         btnAgregar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnAgregar.Location = New Point(12, 12)
+        btnAgregar.Location = New Point(10, 684)
         btnAgregar.Margin = New Padding(4, 3, 4, 3)
         btnAgregar.Name = "btnAgregar"
-        btnAgregar.Size = New Size(88, 35)
+        btnAgregar.Size = New Size(88, 30)
         btnAgregar.TabIndex = 0
         btnAgregar.Text = "Agregar"
         btnAgregar.UseVisualStyleBackColor = True
         ' 
-        ' pctFoto
+        ' lblSucursal
         ' 
-        pctFoto.BorderStyle = BorderStyle.FixedSingle
-        pctFoto.Location = New Point(867, 250)
-        pctFoto.Name = "pctFoto"
-        pctFoto.Size = New Size(183, 236)
-        pctFoto.SizeMode = PictureBoxSizeMode.StretchImage
-        pctFoto.TabIndex = 10
-        pctFoto.TabStop = False
+        lblSucursal.AutoSize = True
+        lblSucursal.Location = New Point(412, 9)
+        lblSucursal.Margin = New Padding(4, 0, 4, 0)
+        lblSucursal.Name = "lblSucursal"
+        lblSucursal.Size = New Size(54, 15)
+        lblSucursal.TabIndex = 11
+        lblSucursal.Text = "Sucursal:"
+        ' 
+        ' cmbSucursal
+        ' 
+        cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList
+        cmbSucursal.FormattingEnabled = True
+        cmbSucursal.Location = New Point(473, 5)
+        cmbSucursal.Name = "cmbSucursal"
+        cmbSucursal.Size = New Size(221, 23)
+        cmbSucursal.TabIndex = 12
         ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1069, 772)
-        Controls.Add(TableLayoutPanel1)
+        ClientSize = New Size(1220, 726)
+        Controls.Add(chkEncabezados)
+        Controls.Add(lnkCopiar)
+        Controls.Add(cmbSucursal)
+        Controls.Add(lblSucursal)
+        Controls.Add(tabDatos)
+        Controls.Add(btnBorrar)
+        Controls.Add(btnAceptar)
+        Controls.Add(btnModificar)
+        Controls.Add(btnCancelar)
+        Controls.Add(btnAgregar)
+        Controls.Add(btnSalir)
+        Controls.Add(lblBuscar)
+        Controls.Add(dgvListado)
+        Controls.Add(lblTotalAgentes)
+        Controls.Add(radTodos)
+        Controls.Add(radActivos)
+        Controls.Add(txtBuscar)
         Margin = New Padding(4, 3, 4, 3)
+        MinimumSize = New Size(1200, 650)
         Name = "frmAgentes"
         Text = "Actualizaciones - Mantenimiento de Agentes"
-        TableLayoutPanel1.ResumeLayout(False)
-        TabControl1.ResumeLayout(False)
-        TabPage1.ResumeLayout(False)
-        GroupBox1.ResumeLayout(False)
-        Panel1Col.ResumeLayout(False)
-        Panel1Col.PerformLayout()
-        Panel2Col.ResumeLayout(False)
-        Panel2Col.PerformLayout()
+        tabDatos.ResumeLayout(False)
+        tabDatosAgente.ResumeLayout(False)
+        tlpDatosAgente.ResumeLayout(False)
         Panel3Col.ResumeLayout(False)
         Panel3Col.PerformLayout()
-        TabPage2.ResumeLayout(False)
+        Panel2Col.ResumeLayout(False)
+        Panel2Col.PerformLayout()
+        Panel1Col.ResumeLayout(False)
+        Panel1Col.PerformLayout()
+        Panel1.ResumeLayout(False)
+        CType(pctFoto, ComponentModel.ISupportInitialize).EndInit()
+        tabGrupoFamiliar.ResumeLayout(False)
         GroupBox2.ResumeLayout(False)
         GroupBox2.PerformLayout()
         CType(DgvGrupoFamiliar, ComponentModel.ISupportInitialize).EndInit()
-        TabPage3.ResumeLayout(False)
+        tabComentarios.ResumeLayout(False)
         GroupBox3.ResumeLayout(False)
         GroupBox3.PerformLayout()
         CType(DgvComentarios, ComponentModel.ISupportInitialize).EndInit()
-        Panel2.ResumeLayout(False)
-        Panel2.PerformLayout()
-        CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
-        Panel1.ResumeLayout(False)
-        CType(pctFoto, ComponentModel.ISupportInitialize).EndInit()
+        CType(dgvListado, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
+        PerformLayout()
 
     End Sub
     Friend WithEvents ChkTodos As CheckBox
     Friend WithEvents ChkActivos As CheckBox
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents optActivos As RadioButton
-    Friend WithEvents opTodos As RadioButton
-    Friend WithEvents Label10 As Label
-    Friend WithEvents TxtBuscar As TextBox
-    Friend WithEvents Label44 As Label
-    Friend WithEvents DgvListado As DataGridView
-    Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents radActivos As RadioButton
+    Friend WithEvents radTodos As RadioButton
+    Friend WithEvents lblTotalAgentes As Label
+    Friend WithEvents txtBuscar As TextBox
+    Friend WithEvents lblBuscar As Label
+    Friend WithEvents dgvListado As DataGridView
+    Friend WithEvents tabDatos As TabControl
+    Friend WithEvents tabDatosAgente As TabPage
+    Friend WithEvents tabGrupoFamiliar As TabPage
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents DgvGrupoFamiliar As DataGridView
+    Friend WithEvents btnEliminarFamiliar As Button
+    Friend WithEvents btnAgregarFamiliar As Button
+    Friend WithEvents txtNivelEstudio As TextBox
+    Friend WithEvents Label40 As Label
+    Friend WithEvents txtOcupacionFamiliar As TextBox
+    Friend WithEvents Label39 As Label
+    Friend WithEvents txtEdadFamiliar As TextBox
+    Friend WithEvents Label38 As Label
+    Friend WithEvents dtpNacimientoFamiliar As DateTimePicker
+    Friend WithEvents Label37 As Label
+    Friend WithEvents Label36 As Label
+    Friend WithEvents txtNombreFamiliar As TextBox
+    Friend WithEvents Label35 As Label
+    Friend WithEvents cmbParentesco As ComboBox
+    Friend WithEvents tabComentarios As TabPage
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents DgvComentarios As DataGridView
+    Friend WithEvents btnEliminarComentario As Button
+    Friend WithEvents btnAgregarComentario As Button
+    Friend WithEvents cmbMotivoComentario As ComboBox
+    Friend WithEvents Label43 As Label
+    Friend WithEvents txtComentaComentario As TextBox
+    Friend WithEvents Label42 As Label
+    Friend WithEvents dtpFechaComentario As DateTimePicker
+    Friend WithEvents Label41 As Label
+    Friend WithEvents btnSalir As Button
+    Friend WithEvents btnCancelar As Button
+    Friend WithEvents btnAceptar As Button
+    Friend WithEvents btnBorrar As Button
+    Friend WithEvents btnModificar As Button
+    Friend WithEvents btnAgregar As Button
+    Friend WithEvents chkEncabezados As CheckBox
+    Friend WithEvents lnkCopiar As LinkLabel
+    Friend WithEvents pctFoto As PictureBox
+    Friend WithEvents lblSucursal As Label
+    Friend WithEvents cmbSucursal As ComboBox
     Friend WithEvents Panel1Col As Panel
     Friend WithEvents txtBaja As TextBox
     Friend WithEvents Label25 As Label
@@ -1475,43 +1530,7 @@ Partial Class frmAgentes
     Friend WithEvents Label30 As Label
     Friend WithEvents txtUltimaActualizacion As TextBox
     Friend WithEvents Label23 As Label
-    Friend WithEvents TabPage2 As TabPage
-    Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents DgvGrupoFamiliar As DataGridView
-    Friend WithEvents btnEliminarFamiliar As Button
-    Friend WithEvents btnAgregarFamiliar As Button
-    Friend WithEvents txtNivelEstudio As TextBox
-    Friend WithEvents Label40 As Label
-    Friend WithEvents txtOcupacionFamiliar As TextBox
-    Friend WithEvents Label39 As Label
-    Friend WithEvents txtEdadFamiliar As TextBox
-    Friend WithEvents Label38 As Label
-    Friend WithEvents dtpNacimientoFamiliar As DateTimePicker
-    Friend WithEvents Label37 As Label
-    Friend WithEvents Label36 As Label
-    Friend WithEvents txtNombreFamiliar As TextBox
-    Friend WithEvents Label35 As Label
-    Friend WithEvents cmbParentesco As ComboBox
-    Friend WithEvents TabPage3 As TabPage
-    Friend WithEvents GroupBox3 As GroupBox
-    Friend WithEvents DgvComentarios As DataGridView
-    Friend WithEvents btnEliminarComentario As Button
-    Friend WithEvents btnAgregarComentario As Button
-    Friend WithEvents cmbMotivoComentario As ComboBox
-    Friend WithEvents Label43 As Label
-    Friend WithEvents txtComentaComentario As TextBox
-    Friend WithEvents Label42 As Label
-    Friend WithEvents dtpFechaComentario As DateTimePicker
-    Friend WithEvents Label41 As Label
+    Friend WithEvents tlpDatosAgente As TableLayoutPanel
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents btnSalir As Button
-    Friend WithEvents btnCancelar As Button
-    Friend WithEvents btnAceptar As Button
-    Friend WithEvents btnBorrar As Button
-    Friend WithEvents btnModificar As Button
-    Friend WithEvents btnAgregar As Button
-    Friend WithEvents chkEncabezados As CheckBox
-    Friend WithEvents lnkCopiar As LinkLabel
-    Friend WithEvents pctFoto As PictureBox
 
 End Class
