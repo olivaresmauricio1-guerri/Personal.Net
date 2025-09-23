@@ -42,10 +42,10 @@ Public Module Reportes
                     Agentes.CUIL, Agentes.NroDto, Agentes.TipoDto;"
 
             Dim parametros = CmdParams(
-            "@desde", desde,
-            "@hasta", hasta,
-            "@sucursal", If(txtSucursal = "(Todas)", DBNull.Value, txtSucursal)
-        )
+                "@desde", desde,
+                "@hasta", hasta,
+                "@sucursal", If(txtSucursal = "(Todas)", DBNull.Value, txtSucursal)
+            )
 
             DSM.Execute(DSM.Personal, sql, parametros)
 

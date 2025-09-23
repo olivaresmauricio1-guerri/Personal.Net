@@ -163,7 +163,6 @@ Public Module General
         DSM.Inicializar(conexiones, configuracionApi)
     End Sub
 
-
     Public Sub CargarCombos(combo As ComboBox, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "")
         Try
             Dim sql As String = "SELECT * FROM " & nombreTabla & " ORDER BY " & campoOrden

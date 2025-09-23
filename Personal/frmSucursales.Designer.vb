@@ -208,7 +208,7 @@ Partial Class frmSucursales
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(578, 441)
+        ClientSize = New Size(578, 432)
         Controls.Add(DgvListado)
         Controls.Add(Label1)
         Controls.Add(TxtBuscar)

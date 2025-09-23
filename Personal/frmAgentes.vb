@@ -1,6 +1,8 @@
 ﻿Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class frmAgentes
+    Private _suspenderAccionFiltros As Boolean = False
+
     Private tabla As New DataTable()
     Private tablaGrupoFamiliar As New DataTable()
     Private tablaComentarios As New DataTable()
@@ -31,66 +33,42 @@ Public Class frmAgentes
     End Sub
 
     Public Sub FrmAgentes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _suspenderAccionFiltros = True
         FormModoConsulta()
-        GridBuscar()
+        CargarComboBoxes()
+        cmbSucursal.Text = "(Todas)"
         ConfiguraColListado()
+        GridBuscar()
         ConfiguraColComentario()
         ConfiguraColFamilia()
-        CargarComboBoxes()
+        _suspenderAccionFiltros = False
         Me.KeyPreview = True
     End Sub
 
-    Private Sub CargarComboBoxes()
-        Try
-            ' Cargar Institutos/Sucursales
-            CargarCombos(cmbInstituto, "Institutos", "Descripcion", "Descripcion")
-
-            ' Cargar Encargados/Jefes
-            CargarCombos(cmbJefe, "Encargados", "Encargado", "Encargado")
-
-            ' Cargar Categorias
-            CargarCombos(cmbCategoria, "Categorias", "Descripcion", "Descripcion")
-
-            ' Cargar Escalafones
-            CargarCombos(cmbEscalafon, "Escalafon", "Descripcion", "Descripcion")
-
-            ' Cargar Estado Parental
-            CargarCombos(cmbEstadoParental, "EstadoParental", "Estado", "Estado")
-
-            ' Cargar Caracter
-            CargarCombos(cmbCaracter, "Caracter", "Descripcion", "Descripcion")
-
-            ' Cargar Motivos de Desvinculacion
-            CargarCombos(CmbMotivo, "Motivos", "Motivo", "Motivo")
-
-            ' Motivos para Comentarios
-            CargarCombos(cmbMotivoComentario, "Inasistencias", "Descripcion", "Descripcion")
-
-            ' Configurar ComboBoxes con valores fijos
-            ConfigurarComboBoxesFijos()
-
-        Catch ex As Exception
-            MessageBox.Show("Error al cargar datos de los ComboBoxes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
-
-
-    Private Sub ConfigurarComboBoxesFijos()
-        ' Sexo
-        cmbSexo.Items.Clear()
-        cmbSexo.Items.AddRange({"M", "F"})
-
-        ' Tipo de Documento
-        cmbTipoDto.Items.Clear()
-        cmbTipoDto.Items.AddRange({"DNI", "LC", "LE", "CI", "PAS"})
-
-        ' Horas Diarias
-        cmbHorasDiarias.Items.Clear()
-        cmbHorasDiarias.Items.AddRange({"4", "6", "8", "Tiempo Completo", "Dedicación Full Time"})
-
-    End Sub
-
     Private Sub TxtBuscar_TextChanged(sender As Object, e As EventArgs) Handles txtBuscar.TextChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+        GridBuscar()
+    End Sub
+
+    Private Sub cmbSucursal_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSucursal.SelectedIndexChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+        GridBuscar()
+    End Sub
+
+    Private Sub radActivos_CheckedChanged(sender As Object, e As EventArgs) Handles radActivos.CheckedChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+        GridBuscar()
+    End Sub
+
+    Private Sub radTodos_CheckedChanged(sender As Object, e As EventArgs) Handles radTodos.CheckedChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
         FormLimpiarSeleccionado()
         GridBuscar()
     End Sub
@@ -113,11 +91,14 @@ Public Class frmAgentes
     End Sub
 
     Private Sub DgvListado_SelectionChanged(sender As Object, e As EventArgs) Handles dgvListado.SelectionChanged
-        AplicarSeleccionActual()
+        If dgvListado.SelectedRows.Count > 0 Then
+            AplicarSeleccionActual()
+        End If
     End Sub
 
     ' Eventos de botones principales
     Private Sub CmdAgregar_Click(sender As Object, e As EventArgs) Handles btnAgregar.Click
+        dgvListado.ClearSelection()
         filaActual = Nothing
         filaActualIndice = -1
         FormModoEdicion()
@@ -152,7 +133,7 @@ Public Class frmAgentes
         End If
     End Sub
 
-    Public Sub CmdAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click
+    Public Sub CmdAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click, btnAceptar.Click
         If Not ValidarDatos() Then Return
 
         Try
@@ -172,14 +153,14 @@ Public Class frmAgentes
         End Try
     End Sub
 
-    Public Sub CmdCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+    Public Sub CmdCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click, btnCancelar.Click
         FormModoConsulta()
 
-        If filaActual IsNot Nothing Then
-            FormObtenerSeleccionado()
-        Else
-            FormLimpiarSeleccionado()
+        If filaActual Is Nothing Then
+            SeleccionarFila(0)
         End If
+
+        'FormObtenerSeleccionado()
     End Sub
 
     Public Sub CmdSalir_Click(sender As Object, e As EventArgs) Handles btnSalir.Click
@@ -204,14 +185,14 @@ Public Class frmAgentes
             Dim sql As String = "INSERT INTO GrupoFamiliar (Legajo, Nombre, Parentesco, Nacimiento, Edad, Ocupacion, Nivel) 
                          VALUES (@Legajo, @Nombre, @Parentesco, @Nacimiento, @Edad, @Ocupacion, @Nivel)"
             Dim parametros = CmdParams(
-        "@Legajo", CInt(legajo),
-        "@Nombre", nombre,
-        "@Parentesco", parentesco,
-        "@Nacimiento", fechaNac,
-        "@Edad", CInt(edad),
-        "@Ocupacion", ocupacion,
-        "@Nivel", nivel
-    )
+                "@Legajo", CInt(legajo),
+                "@Nombre", nombre,
+                "@Parentesco", parentesco,
+                "@Nacimiento", fechaNac,
+                "@Edad", CInt(edad),
+                "@Ocupacion", ocupacion,
+                "@Nivel", nivel
+            )
             DSM.Execute(DSM.Personal, sql, parametros, True)
         Else
             ' UPDATE - Usamos el Id del registro seleccionado en la grilla
@@ -227,15 +208,15 @@ Public Class frmAgentes
                              Nivel = @Nivel
                          WHERE Id = @Id"
             Dim parametros = CmdParams(
-        "@Legajo", CInt(legajo),
-        "@Nombre", nombre,
-        "@Parentesco", parentesco,
-        "@Nacimiento", fechaNac,
-        "@Edad", CInt(edad),
-        "@Ocupacion", ocupacion,
-        "@Nivel", nivel,
-        "@Id", idFamiliar
-    )
+                "@Legajo", CInt(legajo),
+                "@Nombre", nombre,
+                "@Parentesco", parentesco,
+                "@Nacimiento", fechaNac,
+                "@Edad", CInt(edad),
+                "@Ocupacion", ocupacion,
+                "@Nivel", nivel,
+                "@Id", idFamiliar
+            )
             DSM.Execute(DSM.Personal, sql, parametros, True)
         End If
 
@@ -489,36 +470,34 @@ Public Class frmAgentes
             txtNroDto.Text = If(IsDBNull(row("NroDto")), "", row("NroDto").ToString())
 
             pctFoto.Image = Image.FromFile("F:\Imagenes\LEG_" & txtLegajo.Text.Trim & ".jpg")
-
-
         End If
     End Sub
 
-    Private Sub ConfigurarModoFormulario(modo As String)
-        Select Case modo.ToUpper()
-            Case "AGREGAR"
-                LimpiarFormulario()
-                HabilitarControles(True)
-                ' Configurar botones para modo agregar
-                SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
-                SetControlesEnabled(True, btnAceptar, btnCancelar)
-                txtLegajo.Focus()
+    'Private Sub ConfigurarModoFormulario(modo As String)
+    '    Select Case modo.ToUpper()
+    '        Case "AGREGAR"
+    '            LimpiarFormulario()
+    '            HabilitarControles(True)
+    '            ' Configurar botones para modo agregar
+    '            SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
+    '            SetControlesEnabled(True, btnAceptar, btnCancelar)
+    '            txtLegajo.Focus()
 
-            Case "MODIFICAR"
-                HabilitarControles(True)
-                txtLegajo.Enabled = False ' No permitir modificar el legajo
-                ' Configurar botones para modo modificar
-                SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
-                SetControlesEnabled(True, btnAceptar, btnCancelar)
-                txtNombre.Focus()
+    '        Case "MODIFICAR"
+    '            HabilitarControles(True)
+    '            txtLegajo.Enabled = False ' No permitir modificar el legajo
+    '            ' Configurar botones para modo modificar
+    '            SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
+    '            SetControlesEnabled(True, btnAceptar, btnCancelar)
+    '            txtNombre.Focus()
 
-            Case "CONSULTA"
-                HabilitarControles(False)
-                ' Configurar botones para modo consulta
-                SetControlesEnabled(True, btnAgregar, btnModificar, btnBorrar)
-                SetControlesEnabled(False, btnAceptar, btnCancelar)
-        End Select
-    End Sub
+    '        Case "CONSULTA"
+    '            HabilitarControles(False)
+    '            ' Configurar botones para modo consulta
+    '            SetControlesEnabled(True, btnAgregar, btnModificar, btnBorrar)
+    '            SetControlesEnabled(False, btnAceptar, btnCancelar)
+    '    End Select
+    'End Sub
 
     Private Sub HabilitarControles(habilitar As Boolean)
         ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
@@ -531,7 +510,6 @@ Public Class frmAgentes
                            txtNroDto, CmbMotivo)
     End Sub
 
-    ' Métodos auxiliares faltantes
     Private Sub GridBuscar()
 
         Try
@@ -544,6 +522,12 @@ Public Class frmAgentes
                 sql &= " AND (Baja IS NULL OR Baja = '')"
             End If
 
+            Dim sucursal As String = cmbSucursal.Text.Trim()
+            If Not String.IsNullOrEmpty(sucursal) And sucursal <> "(Todas)" Then
+                sql &= " AND Instituto = @Sucursal"
+                parametros.AddRange(New Object() {"@Sucursal", sucursal})
+            End If
+
             ' Filtro por búsqueda en varias columnas
             If Not String.IsNullOrEmpty(texto) Then
                 sql &= " AND (Nombre LIKE @Nombre OR NroDto LIKE @DNI OR Legajo LIKE @Legajo)"
@@ -553,15 +537,16 @@ Public Class frmAgentes
             ' Orden
             sql &= " ORDER BY Nombre"
 
-
             Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
             dgvListado.DataSource = dt
             lblTotalAgentes.Text = "Total de Empleados: " & dt.Rows.Count.ToString()
 
+            SeleccionarFila(0)
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
     Private Sub CargaGrupoFamiliar(legajo As Integer)
         Try
             ' 1. Traer los registros del grupo familiar
@@ -605,19 +590,6 @@ Public Class frmAgentes
             MessageBox.Show("Error al actualizar edades: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-    Private Sub FormModoConsulta()
-        HabilitarControles(False)
-        ' Configurar botones para modo consulta usando SetControlesEnabled
-        SetControlesEnabled(True, btnAgregar, btnModificar, btnBorrar)
-        SetControlesEnabled(False, btnAceptar, btnCancelar)
-    End Sub
-
-    Private Sub FormModoEdicion()
-        HabilitarControles(True)
-        ' Configurar botones para modo edición usando SetControlesEnabled
-        SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
-        SetControlesEnabled(True, btnAceptar, btnCancelar)
-    End Sub
 
     Private Sub FormObtenerSeleccionado()
         If filaActual IsNot Nothing Then
@@ -655,52 +627,71 @@ Public Class frmAgentes
         FormObtenerSeleccionado()
     End Sub
 
+    Private Sub SeleccionarFila(numero As Integer)
+        If dgvListado.Rows.Count > 0 Then
+            dgvListado.Rows(numero).Selected = True
+        End If
+        AplicarSeleccionActual()
+    End Sub
+
     Private Sub ConfiguraColListado()
         Try
             If dgvListado.Columns.Count > 0 Then
                 For Each col As DataGridViewColumn In dgvListado.Columns
                     col.Visible = False
                 Next
+
+                ConfigurarEstiloGrid(dgvListado)
+
                 ' Configurar columnas del grid principal
                 dgvListado.Columns("Legajo").Visible = True
                 dgvListado.Columns("Legajo").HeaderText = "Legajo"
                 dgvListado.Columns("Legajo").Width = 50
+                dgvListado.Columns("Legajo").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                dgvListado.Columns("Legajo").DisplayIndex = 0
 
                 dgvListado.Columns("Nombre").Visible = True
                 dgvListado.Columns("Nombre").HeaderText = "Nombre"
                 dgvListado.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-
-                dgvListado.Columns("Instituto").Visible = True
-                dgvListado.Columns("Instituto").HeaderText = "Sucursal"
-                dgvListado.Columns("Instituto").Width = 80
+                dgvListado.Columns("Nombre").DisplayIndex = 1
 
                 dgvListado.Columns("Cuil").Visible = True
                 dgvListado.Columns("Cuil").HeaderText = "CUIL"
-                dgvListado.Columns("Cuil").Width = 80
+                dgvListado.Columns("Cuil").Width = 110
+                dgvListado.Columns("Cuil").DisplayIndex = 2
+
+                dgvListado.Columns("Instituto").Visible = True
+                dgvListado.Columns("Instituto").HeaderText = "Sucursal"
+                dgvListado.Columns("Instituto").Width = 150
+                dgvListado.Columns("Instituto").DisplayIndex = 3
 
                 dgvListado.Columns("Telefono").Visible = True
                 dgvListado.Columns("Telefono").HeaderText = "Teléfono"
-                dgvListado.Columns("Telefono").Width = 80
+                dgvListado.Columns("Telefono").Width = 110
+                dgvListado.Columns("Telefono").DisplayIndex = 4
 
                 dgvListado.Columns("Celular").Visible = True
                 dgvListado.Columns("Celular").HeaderText = "Celular"
-                dgvListado.Columns("Celular").Width = 80
+                dgvListado.Columns("Celular").Width = 110
+                dgvListado.Columns("Celular").DisplayIndex = 5
 
                 dgvListado.Columns("Interno").Visible = True
                 dgvListado.Columns("Interno").HeaderText = "Interno"
                 dgvListado.Columns("Interno").Width = 60
+                dgvListado.Columns("Interno").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                dgvListado.Columns("Interno").DisplayIndex = 6
 
                 dgvListado.Columns("CorreoE").Visible = True
                 dgvListado.Columns("CorreoE").HeaderText = "E-Mail"
-                dgvListado.Columns("CorreoE").Width = 150
-
-                ConfigurarEstiloGrid(dgvListado)
+                dgvListado.Columns("CorreoE").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                dgvListado.Columns("CorreoE").DisplayIndex = 7
 
             End If
         Catch ex As Exception
             ' Ignorar errores de configuración de columnas
         End Try
     End Sub
+
     Private Sub ConfiguraColFamilia()
         Try
             If DgvGrupoFamiliar.Columns.Count > 0 Then
@@ -740,6 +731,7 @@ Public Class frmAgentes
             ' Ignorar errores de configuración de columnas
         End Try
     End Sub
+
     Private Sub ConfiguraColComentario()
         Try
             If DgvComentarios.Columns.Count > 0 Then
@@ -767,16 +759,69 @@ Public Class frmAgentes
             ' Ignorar errores de configuración de columnas
         End Try
     End Sub
-    Private Sub opTodos_CheckedChanged(sender As Object, e As EventArgs)
 
-        GridBuscar()
+    Private Sub CargarComboBoxes()
+        Try
+            ' Cargar sucursales
+            CargarCombos(cmbSucursal, "Institutos", "Descripcion", "Descripcion")
+
+            ' Cargar Institutos/Sucursales
+            CargarCombos(cmbInstituto, "Institutos", "Descripcion", "Descripcion")
+
+            ' Cargar Encargados/Jefes
+            CargarCombos(cmbJefe, "Encargados", "Encargado", "Encargado")
+
+            ' Cargar Categorias
+            CargarCombos(cmbCategoria, "Categorias", "Descripcion", "Descripcion")
+
+            ' Cargar Escalafones
+            CargarCombos(cmbEscalafon, "Escalafon", "Descripcion", "Descripcion")
+
+            ' Cargar Estado Parental
+            CargarCombos(cmbEstadoParental, "EstadoParental", "Estado", "Estado")
+
+            ' Cargar Caracter
+            CargarCombos(cmbCaracter, "Caracter", "Descripcion", "Descripcion")
+
+            ' Cargar Motivos de Desvinculacion
+            CargarCombos(CmbMotivo, "Motivos", "Motivo", "Motivo")
+
+            ' Motivos para Comentarios
+            CargarCombos(cmbMotivoComentario, "Inasistencias", "Descripcion", "Descripcion")
+
+            ' Configurar ComboBoxes con valores fijos
+            ConfigurarComboBoxesFijos()
+
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar datos de los ComboBoxes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
-    Private Sub optActivos_CheckedChanged(sender As Object, e As EventArgs)
-        GridBuscar()
+    Private Sub ConfigurarComboBoxesFijos()
+        ' Sexo
+        cmbSexo.Items.Clear()
+        cmbSexo.Items.AddRange({"M", "F"})
+
+        ' Tipo de Documento
+        cmbTipoDto.Items.Clear()
+        cmbTipoDto.Items.AddRange({"DNI", "LC", "LE", "CI", "PAS"})
+
+        ' Horas Diarias
+        cmbHorasDiarias.Items.Clear()
+        cmbHorasDiarias.Items.AddRange({"4", "6", "8", "Tiempo Completo", "Dedicación Full Time"})
     End Sub
 
-    Private Sub DgvListado_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListado.CellContentClick
+    Private Sub FormModoConsulta()
+        HabilitarControles(False)
+        ' Configurar botones para modo consulta usando SetControlesEnabled
+        SetControlesEnabled(True, btnAgregar, btnModificar, btnBorrar)
+        SetControlesEnabled(False, btnAceptar, btnCancelar)
+    End Sub
 
+    Private Sub FormModoEdicion()
+        HabilitarControles(True)
+        ' Configurar botones para modo edición usando SetControlesEnabled
+        SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
+        SetControlesEnabled(True, btnAceptar, btnCancelar)
     End Sub
 End Class
