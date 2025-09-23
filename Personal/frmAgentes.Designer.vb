@@ -1002,6 +1002,7 @@ Partial Class frmAgentes
         ' 
         ' DgvGrupoFamiliar
         ' 
+        DgvGrupoFamiliar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         DgvGrupoFamiliar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DgvGrupoFamiliar.Location = New Point(11, 70)
         DgvGrupoFamiliar.Margin = New Padding(4, 3, 4, 3)
@@ -1011,6 +1012,7 @@ Partial Class frmAgentes
         ' 
         ' btnEliminarFamiliar
         ' 
+        btnEliminarFamiliar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         btnEliminarFamiliar.FlatStyle = FlatStyle.Flat
         btnEliminarFamiliar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         btnEliminarFamiliar.Location = New Point(1062, 184)
@@ -1025,7 +1027,7 @@ Partial Class frmAgentes
         ' 
         btnAgregarFamiliar.FlatStyle = FlatStyle.Flat
         btnAgregarFamiliar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnAgregarFamiliar.Location = New Point(804, 34)
+        btnAgregarFamiliar.Location = New Point(982, 34)
         btnAgregarFamiliar.Margin = New Padding(4, 3, 4, 3)
         btnAgregarFamiliar.Name = "btnAgregarFamiliar"
         btnAgregarFamiliar.Size = New Size(75, 30)
@@ -1035,16 +1037,16 @@ Partial Class frmAgentes
         ' 
         ' txtNivelEstudio
         ' 
-        txtNivelEstudio.Location = New Point(603, 41)
+        txtNivelEstudio.Location = New Point(739, 41)
         txtNivelEstudio.Margin = New Padding(4, 3, 4, 3)
         txtNivelEstudio.Name = "txtNivelEstudio"
-        txtNivelEstudio.Size = New Size(143, 23)
+        txtNivelEstudio.Size = New Size(185, 23)
         txtNivelEstudio.TabIndex = 11
         ' 
         ' Label40
         ' 
         Label40.AutoSize = True
-        Label40.Location = New Point(603, 23)
+        Label40.Location = New Point(739, 23)
         Label40.Margin = New Padding(4, 0, 4, 0)
         Label40.Name = "Label40"
         Label40.Size = New Size(95, 15)
@@ -1053,16 +1055,16 @@ Partial Class frmAgentes
         ' 
         ' txtOcupacionFamiliar
         ' 
-        txtOcupacionFamiliar.Location = New Point(433, 41)
+        txtOcupacionFamiliar.Location = New Point(511, 41)
         txtOcupacionFamiliar.Margin = New Padding(4, 3, 4, 3)
         txtOcupacionFamiliar.Name = "txtOcupacionFamiliar"
-        txtOcupacionFamiliar.Size = New Size(162, 23)
+        txtOcupacionFamiliar.Size = New Size(220, 23)
         txtOcupacionFamiliar.TabIndex = 9
         ' 
         ' Label39
         ' 
         Label39.AutoSize = True
-        Label39.Location = New Point(433, 23)
+        Label39.Location = New Point(511, 23)
         Label39.Margin = New Padding(4, 0, 4, 0)
         Label39.Name = "Label39"
         Label39.Size = New Size(68, 15)
@@ -1071,7 +1073,7 @@ Partial Class frmAgentes
         ' 
         ' txtEdadFamiliar
         ' 
-        txtEdadFamiliar.Location = New Point(754, 41)
+        txtEdadFamiliar.Location = New Point(932, 41)
         txtEdadFamiliar.Margin = New Padding(4, 3, 4, 3)
         txtEdadFamiliar.Name = "txtEdadFamiliar"
         txtEdadFamiliar.Size = New Size(42, 23)
@@ -1080,7 +1082,7 @@ Partial Class frmAgentes
         ' Label38
         ' 
         Label38.AutoSize = True
-        Label38.Location = New Point(754, 23)
+        Label38.Location = New Point(932, 23)
         Label38.Margin = New Padding(4, 0, 4, 0)
         Label38.Name = "Label38"
         Label38.Size = New Size(36, 15)
@@ -1090,7 +1092,7 @@ Partial Class frmAgentes
         ' dtpNacimientoFamiliar
         ' 
         dtpNacimientoFamiliar.Format = DateTimePickerFormat.Short
-        dtpNacimientoFamiliar.Location = New Point(303, 41)
+        dtpNacimientoFamiliar.Location = New Point(381, 41)
         dtpNacimientoFamiliar.Margin = New Padding(4, 3, 4, 3)
         dtpNacimientoFamiliar.Name = "dtpNacimientoFamiliar"
         dtpNacimientoFamiliar.Size = New Size(122, 23)
@@ -1099,7 +1101,7 @@ Partial Class frmAgentes
         ' Label37
         ' 
         Label37.AutoSize = True
-        Label37.Location = New Point(303, 23)
+        Label37.Location = New Point(381, 23)
         Label37.Margin = New Padding(4, 0, 4, 0)
         Label37.Name = "Label37"
         Label37.Size = New Size(122, 15)
@@ -1109,7 +1111,7 @@ Partial Class frmAgentes
         ' Label36
         ' 
         Label36.AutoSize = True
-        Label36.Location = New Point(140, 23)
+        Label36.Location = New Point(219, 23)
         Label36.Margin = New Padding(4, 0, 4, 0)
         Label36.Name = "Label36"
         Label36.Size = New Size(68, 15)
@@ -1121,7 +1123,7 @@ Partial Class frmAgentes
         txtNombreFamiliar.Location = New Point(11, 41)
         txtNombreFamiliar.Margin = New Padding(4, 3, 4, 3)
         txtNombreFamiliar.Name = "txtNombreFamiliar"
-        txtNombreFamiliar.Size = New Size(121, 23)
+        txtNombreFamiliar.Size = New Size(200, 23)
         txtNombreFamiliar.TabIndex = 1
         ' 
         ' Label35
@@ -1137,7 +1139,7 @@ Partial Class frmAgentes
         ' cmbParentesco
         ' 
         cmbParentesco.DropDownStyle = ComboBoxStyle.DropDownList
-        cmbParentesco.Location = New Point(140, 41)
+        cmbParentesco.Location = New Point(219, 41)
         cmbParentesco.Margin = New Padding(4, 3, 4, 3)
         cmbParentesco.Name = "cmbParentesco"
         cmbParentesco.Size = New Size(155, 23)
@@ -1150,7 +1152,7 @@ Partial Class frmAgentes
         tabComentarios.Margin = New Padding(4, 3, 4, 3)
         tabComentarios.Name = "tabComentarios"
         tabComentarios.Padding = New Padding(4, 3, 4, 3)
-        tabComentarios.Size = New Size(1153, 358)
+        tabComentarios.Size = New Size(1156, 358)
         tabComentarios.TabIndex = 2
         tabComentarios.Text = "Comentarios"
         tabComentarios.UseVisualStyleBackColor = True
@@ -1171,25 +1173,27 @@ Partial Class frmAgentes
         GroupBox3.Margin = New Padding(4, 3, 4, 3)
         GroupBox3.Name = "GroupBox3"
         GroupBox3.Padding = New Padding(4, 3, 4, 3)
-        GroupBox3.Size = New Size(1145, 352)
+        GroupBox3.Size = New Size(1148, 352)
         GroupBox3.TabIndex = 0
         GroupBox3.TabStop = False
         GroupBox3.Text = "Comentarios y Novedades"
         ' 
         ' DgvComentarios
         ' 
+        DgvComentarios.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         DgvComentarios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DgvComentarios.Location = New Point(12, 138)
         DgvComentarios.Margin = New Padding(4, 3, 4, 3)
         DgvComentarios.Name = "DgvComentarios"
-        DgvComentarios.Size = New Size(839, 255)
+        DgvComentarios.Size = New Size(1128, 214)
         DgvComentarios.TabIndex = 8
         ' 
         ' btnEliminarComentario
         ' 
+        btnEliminarComentario.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         btnEliminarComentario.FlatStyle = FlatStyle.Flat
         btnEliminarComentario.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnEliminarComentario.Location = New Point(757, 102)
+        btnEliminarComentario.Location = New Point(1064, 102)
         btnEliminarComentario.Margin = New Padding(4, 3, 4, 3)
         btnEliminarComentario.Name = "btnEliminarComentario"
         btnEliminarComentario.Size = New Size(75, 30)
@@ -1199,9 +1203,10 @@ Partial Class frmAgentes
         ' 
         ' btnAgregarComentario
         ' 
+        btnAgregarComentario.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         btnAgregarComentario.FlatStyle = FlatStyle.Flat
         btnAgregarComentario.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnAgregarComentario.Location = New Point(674, 102)
+        btnAgregarComentario.Location = New Point(981, 102)
         btnAgregarComentario.Margin = New Padding(4, 3, 4, 3)
         btnAgregarComentario.Name = "btnAgregarComentario"
         btnAgregarComentario.Size = New Size(75, 30)

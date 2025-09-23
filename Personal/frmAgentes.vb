@@ -78,6 +78,8 @@ Public Class frmAgentes
             CopiarDataGrid(dgvListado, chkEncabezados.Checked)
             e.Handled = True
         End If
+        Dim filaActualIndex = dgvListado.CurrentRow.Index
+        SeleccionarFila(filaActualIndex)
     End Sub
 
     Private Sub DgvListado_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListado.CellClick
