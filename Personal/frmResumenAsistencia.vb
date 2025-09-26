@@ -160,7 +160,6 @@ Public Class frmResumenAsistencia
                 Dim row As DataRow = dt.Rows(0)
                 TxtOficina.Text = If(row("Escalafon") IsNot DBNull.Value, row("Escalafon").ToString(), "")
                 TxtEncargado.Text = If(row("Jefe") IsNot DBNull.Value, row("Jefe").ToString(), "")
-                TxtCategoria.Text = If(row("Cargo") IsNot DBNull.Value, row("Cargo").ToString(), "")
                 TxtCaracter.Text = If(row("Caracter") IsNot DBNull.Value, row("Caracter").ToString(), "")
                 TxtInstituto.Text = If(row("Instituto") IsNot DBNull.Value, row("Instituto").ToString(), "")
                 TxtDiasLicencia.Text = If(row("LicAnual") IsNot DBNull.Value, row("LicAnual").ToString(), "0")

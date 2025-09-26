@@ -75,7 +75,7 @@ DELETE FROM ListadoMensual
     A.HorasDedicacion,
     M.Dia,
     A.Comentario,
-    A.Secretaria,
+    A.Cargo,
     M.HsCumplidas,
     M.MotivoInasistencia,
     A.HorasSemanales,
@@ -125,7 +125,7 @@ totales AS (
     MAX(CASE WHEN b.MayorDedicacion = 1 THEN 1 ELSE 0 END) AS MayorDedicacion,
     MIN(b.HorasDedicacion)  AS HorasDedicacion,
     MIN(b.Comentario)       AS Comentario,
-    MIN(b.Secretaria)       AS Secretaria,
+    MIN(b.Cargo)       AS Cargo,
     MIN(b.HorasSemanales)   AS HsSemanalesTxt,   -- nvarchar
     MIN(b.HorasDiarias)     AS HorasDiariasTxt,  -- nvarchar
     SUM(b.MinCumplidas)     AS TotalMin
@@ -142,7 +142,7 @@ calc AS (
     CAST(t.MayorDedicacion AS bit) AS MayorDedicacion,
     t.HorasDedicacion,
     t.Comentario,
-    t.Secretaria,
+    t.Cargo,
     ISNULL(t.HsSemanalesTxt, N'0')  AS HsSemanales,
     ISNULL(t.HorasDiariasTxt, N'0') AS HorasDiarias,
     ISNULL(d.DiasTrabajados, 0)     AS DiasTrabajados,
@@ -173,7 +173,7 @@ formateado AS (
 INSERT INTO ListadoMensual
  (Legajo, Instituto, Nombre, Oficina, Critico, MayorDedicacion, HorasDedicacion,
   Desde, Hasta, HsSemanales, Promedio, DiasTrabajados, HorasDiarias, Diferencia,
-  Comentario, Debe, Secretaria, HsCumplidas)
+  Comentario, Debe, Cargo, HsCumplidas)
 SELECT
   f.Legajo,
   LEFT(ISNULL(f.Instituto, N''), 50)       AS Instituto,
@@ -204,7 +204,7 @@ SELECT
     CAST(ABS(f.DifMinPorDia * ISNULL(f.DiasTrabajados, 0)) / 60 AS varchar(10)) + 'h ' +
     CAST(ABS(f.DifMinPorDia * ISNULL(f.DiasTrabajados, 0)) % 60 AS varchar(10)) + 'm'
   , 50)                                     AS Debe,
-  LEFT(ISNULL(f.Secretaria, N''), 50)       AS Secretaria,
+  LEFT(ISNULL(f.Cargo, N''), 50)       AS Cargo,
   LEFT(CONVERT(varchar(30), CAST(ROUND(f.TotalMin / 60.0, 2) AS decimal(10,2))), 50) AS HsCumplidas
 FROM formateado f
 

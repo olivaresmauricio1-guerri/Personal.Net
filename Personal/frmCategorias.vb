@@ -74,7 +74,7 @@ Public Class frmCategorias
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles CmdBorrar.Click
         If filaActual Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar esta categoría?", "Confirmar borrado", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+        If MessageBox.Show("¿Está seguro de que desea eliminar esta categoría?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim IdCategoria = Convert.ToInt32(filaActual.Cells("IdCategoria").Value)
             Dim sql = "DELETE FROM Categorias WHERE IdCategoria = @IdCategoria"
             Dim parametros = CmdParams("@IdCategoria", IdCategoria)

@@ -74,7 +74,7 @@ Public Class frmSucursales
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles CmdBorrar.Click
         If filaActual Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar este instituto?", "Confirmar borrado", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+        If MessageBox.Show("¿Está seguro de que desea eliminar este instituto?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim Id = Convert.ToInt32(filaActual.Cells("Id").Value)
             Dim sql = "DELETE FROM Institutos WHERE Id = @Id"
             Dim parametros = CmdParams("@Id", Id)
