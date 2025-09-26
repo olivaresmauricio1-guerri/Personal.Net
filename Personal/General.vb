@@ -33,6 +33,7 @@ Public Module General
 
     Public ReadOnly ReportesPath As String = SistemaINI("DEBUG_RUTAREPORTES") & "\Reportes.exe"
     Public ReadOnly rutaBase As String = SistemaINI("DEBUG_RUTAZ")
+    Public ReadOnly rutaRelojesBA As String = SistemaINI("DEBUG_RUTARELOJESBA")
 #Else
     Public ReadOnly Entorno As String = "Producción"
 
@@ -50,6 +51,7 @@ Public Module General
     
     Public ReadOnly ReportesPath As String = SistemaINI("SISTEMA") & "\Reportes.net\Reportes.exe"
     Public ReadOnly rutaBase As String = "Z:\reservorio"
+    Public ReadOnly rutaRelojesBA As String = SistemaINI("RUTARELOJESBA")
 #End If
 
 
@@ -146,7 +148,8 @@ Public Module General
             {DSM.Seguridad_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Seguridad.mdb;"},
             {DSM.Proveedores_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Provee.mdb;"},
             {DSM.Bancos_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Bancos.mdb;"},
-            {DSM.Contabilidad_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Conta.mdb;"}
+            {DSM.Contabilidad_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaBase}\Conta.mdb;"},
+            {DSM.RelojesBA_, $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={rutaRelojesBA}\Fichadas.mdb;"}
         }
 
         ' Configuración de la API

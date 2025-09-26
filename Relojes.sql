@@ -29,13 +29,16 @@ BEGIN TRAN;
 SET IDENTITY_INSERT dbo.Relojes ON;
 
 INSERT INTO dbo.Relojes
-    (RelojId, Nombre, Ip, Puerto, ClaveCom, RutaId, Activo, Ubicacion, Notas, UltimaLectura)
+    (RelojId, Nombre,              Ip,               Puerto, ClaveCom, RutaId, Activo, Ubicacion, Notas, UltimaLectura)
 VALUES
-    (1, N'Casa Central',   '192.168.2.5',   4370, 0, NULL, 1, NULL, NULL, NULL),
-    (2, N'Autoshop Mdz',   '192.168.2.6',   4370, 0, NULL, 1, NULL, NULL, NULL),
-    (3, N'Zona Franca',    '192.168.3.5',   4370, 0,    1, 1, NULL, NULL, NULL),
-    (4, N'Deposito Halpern','192.168.4.50', 4371, 0,    2, 1, NULL, NULL, NULL),
-    (5, N'Neuquen',        '181.171.90.106',4370, 1234, NULL, 1, NULL, NULL, NULL);
+    (      1, N'Casa Central',     '192.168.2.5',      4370,        0,   NULL,      1, 'Mendoza',  NULL, NULL),
+    (      2, N'Autoshop Mdz',     '192.168.2.6',      4370,        0,   NULL,      1, 'Mendoza',  NULL, NULL),
+    (      3, N'Zona Franca',      '192.168.3.5',      4370,        0,      1,      1, 'Mendoza',  NULL, NULL),
+    (      4, N'Deposito Halpern', '192.168.4.50',     4371,        0,      2,      1, 'Mendoza',  NULL, NULL),
+    (      5, N'Neuquen',          '181.171.90.106',   4370,     1234,   NULL,      1, 'Neuquen',  NULL, NULL),
+    (      6, N'Alcorta',          '192.168.1.73/A',   4370,        0,   NULL,      1, 'BsAires',  NULL, NULL),
+    (      7, N'Garay',            '192.168.1.73/B',   4370,        0,   NULL,      1, 'BsAires',  NULL, NULL),
+    (      8, N'Belgrano',         '192.168.1.73/C',   4370,        0,   NULL,      1, 'BsAires',  NULL, NULL);
 
 SET IDENTITY_INSERT dbo.Relojes OFF;
 

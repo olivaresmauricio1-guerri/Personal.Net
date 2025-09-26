@@ -5,12 +5,17 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Module Relojes
 
+    Public ReadOnly SucursalAlcorta = "A"
+    Public ReadOnly SucursalGaray = "B"
+    Public ReadOnly SucursalBelgrano = "C"
+
     Public Class Reloj
         Public Property Nombre As String
         Public Property Ip As String
         Public Property Puerto As Integer
         Public Property CommKey As Integer = 0
         Public Property Conectado As Boolean
+        Public Property Ubicacion As String
         Public Property UltimaVerif As DateTime?
         Public Property Conectando As Boolean
     End Class
@@ -18,7 +23,7 @@ Public Module Relojes
     Public Function ObtenerRelojes() As List(Of Reloj)
         Dim relojes As New List(Of Reloj)
 
-        Dim sql = "SELECT Nombre, Ip, Puerto, ClaveCom FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
+        Dim sql = "SELECT RelojId, Nombre, Ip, Puerto, Ubicacion, ClaveCom FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
         Dim dtRelojes As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, Nothing)
 
         For Each row As DataRow In dtRelojes.Rows
@@ -28,6 +33,7 @@ Public Module Relojes
                 .Puerto = If(IsDBNull(row("Puerto")), 4370, Convert.ToInt32(row("Puerto"))),
                 .CommKey = If(IsDBNull(row("ClaveCom")), 0, Convert.ToInt32(row("ClaveCom"))),
                 .Conectado = False,
+                .Ubicacion = CStr(row("Ubicacion")),
                 .UltimaVerif = Nothing
             }
             relojes.Add(reloj)
@@ -45,6 +51,21 @@ Public Module Relojes
             rutas.Add((CStr(row("Red")), CStr(row("Mascara")), CStr(row("Gateway"))))
         Next
         Return rutas
+    End Function
+
+    Public Function ObtenerMarcacionesBA(reloj As Reloj) As DataTable
+        Dim sucursal = ""
+        If reloj.Nombre = "Alcorta" Then sucursal = Relojes.SucursalAlcorta
+        If reloj.Nombre = "Garay" Then sucursal = Relojes.SucursalGaray
+        If reloj.Nombre = "Belgrano" Then sucursal = Relojes.SucursalBelgrano
+
+        Dim Desde = DateTime.Now.AddDays(-90)
+        Dim fechaStr = "#" & Desde.ToString("MM/dd/yyyy") & "#"
+
+        Dim sql = "SELECT * FROM Fichadas " &
+          "WHERE FIReloj = @Sucursal AND FIFecha >= " & fechaStr & ";"
+        Dim parametros = CmdParams("@Sucursal", sucursal)
+        Return DSM.ExecuteQuery(DSM.RelojesBA_, sql, parametros)
     End Function
 
     Public Function RegistrarMarcacion(reloj As Reloj, legajo As String, fechahoraStr As String) As Integer

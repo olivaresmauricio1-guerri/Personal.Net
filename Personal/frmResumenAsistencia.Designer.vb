@@ -27,15 +27,10 @@ Partial Class frmResumenAsistencia
         CmdSalir = New Button()
         CmdImprimir = New Button()
         CmdInasistencias = New Button()
-        CmdResumen = New Button()
-        CmdFechaDesde = New Button()
-        CmdFechaHasta = New Button()
         DgvListado = New DataGridView()
         DgvInasistencias = New DataGridView()
         TxtLegajo = New TextBox()
-        TxtAño = New TextBox()
-        TxtFechaDesde = New TextBox()
-        TxtFechaHasta = New TextBox()
+        TxtAnio = New TextBox()
         TxtDiasTrabajados = New TextBox()
         TxtPromedio = New TextBox()
         TxtDiasPromedio = New TextBox()
@@ -59,9 +54,9 @@ Partial Class frmResumenAsistencia
         CmbMeses = New ComboBox()
         CmbNombres = New ComboBox()
         Label2 = New Label()
-        Label3 = New Label()
-        Label4 = New Label()
-        Label5 = New Label()
+        lblDesde = New Label()
+        lblHasta = New Label()
+        lblAnio = New Label()
         Label6 = New Label()
         Label7 = New Label()
         Label8 = New Label()
@@ -81,7 +76,10 @@ Partial Class frmResumenAsistencia
         Label22 = New Label()
         GroupBox1 = New GroupBox()
         GroupBox2 = New GroupBox()
-        Label1 = New Label()
+        lblLegajo = New Label()
+        dtpHasta = New DateTimePicker()
+        dtpDesde = New DateTimePicker()
+        lblMes = New Label()
         Label23 = New Label()
         Label24 = New Label()
         Label25 = New Label()
@@ -93,6 +91,7 @@ Partial Class frmResumenAsistencia
         ' 
         ' chkEncabezados
         ' 
+        chkEncabezados.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         chkEncabezados.AutoSize = True
         chkEncabezados.Location = New Point(711, 542)
         chkEncabezados.Margin = New Padding(4, 3, 4, 3)
@@ -104,6 +103,7 @@ Partial Class frmResumenAsistencia
         ' 
         ' lnkCopiar
         ' 
+        lnkCopiar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         lnkCopiar.AutoSize = True
         lnkCopiar.LinkColor = Color.Black
         lnkCopiar.Location = New Point(609, 542)
@@ -116,9 +116,11 @@ Partial Class frmResumenAsistencia
         ' 
         ' CmdSalir
         ' 
+        CmdSalir.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         CmdSalir.BackColor = Color.IndianRed
+        CmdSalir.Cursor = Cursors.Hand
         CmdSalir.FlatStyle = FlatStyle.Flat
-        CmdSalir.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
+        CmdSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         CmdSalir.ForeColor = Color.White
         CmdSalir.Location = New Point(755, 584)
         CmdSalir.Margin = New Padding(4, 3, 4, 3)
@@ -130,8 +132,10 @@ Partial Class frmResumenAsistencia
         ' 
         ' CmdImprimir
         ' 
+        CmdImprimir.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        CmdImprimir.Cursor = Cursors.Hand
         CmdImprimir.FlatStyle = FlatStyle.Flat
-        CmdImprimir.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
+        CmdImprimir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         CmdImprimir.Location = New Point(671, 584)
         CmdImprimir.Margin = New Padding(4, 3, 4, 3)
         CmdImprimir.Name = "CmdImprimir"
@@ -142,8 +146,10 @@ Partial Class frmResumenAsistencia
         ' 
         ' CmdInasistencias
         ' 
+        CmdInasistencias.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        CmdInasistencias.Cursor = Cursors.Hand
         CmdInasistencias.FlatStyle = FlatStyle.Flat
-        CmdInasistencias.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
+        CmdInasistencias.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         CmdInasistencias.Location = New Point(555, 584)
         CmdInasistencias.Margin = New Padding(4, 3, 4, 3)
         CmdInasistencias.Name = "CmdInasistencias"
@@ -152,58 +158,26 @@ Partial Class frmResumenAsistencia
         CmdInasistencias.Text = "&Inasistencias"
         CmdInasistencias.UseVisualStyleBackColor = True
         ' 
-        ' CmdResumen
-        ' 
-        CmdResumen.FlatStyle = FlatStyle.Flat
-        CmdResumen.Font = New Font("Microsoft Sans Serif", 9F, FontStyle.Bold)
-        CmdResumen.Location = New Point(744, 16)
-        CmdResumen.Margin = New Padding(4, 3, 4, 3)
-        CmdResumen.Name = "CmdResumen"
-        CmdResumen.Size = New Size(85, 60)
-        CmdResumen.TabIndex = 5
-        CmdResumen.Text = "&Resumen"
-        CmdResumen.UseVisualStyleBackColor = True
-        ' 
-        ' CmdFechaDesde
-        ' 
-        CmdFechaDesde.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        CmdFechaDesde.Location = New Point(342, 48)
-        CmdFechaDesde.Margin = New Padding(4, 3, 4, 3)
-        CmdFechaDesde.Name = "CmdFechaDesde"
-        CmdFechaDesde.Size = New Size(29, 27)
-        CmdFechaDesde.TabIndex = 6
-        CmdFechaDesde.Text = "F"
-        CmdFechaDesde.UseVisualStyleBackColor = True
-        ' 
-        ' CmdFechaHasta
-        ' 
-        CmdFechaHasta.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        CmdFechaHasta.Location = New Point(572, 46)
-        CmdFechaHasta.Margin = New Padding(4, 3, 4, 3)
-        CmdFechaHasta.Name = "CmdFechaHasta"
-        CmdFechaHasta.Size = New Size(29, 27)
-        CmdFechaHasta.TabIndex = 7
-        CmdFechaHasta.Text = "F"
-        CmdFechaHasta.UseVisualStyleBackColor = True
-        ' 
         ' DgvListado
         ' 
         DgvListado.AllowUserToAddRows = False
         DgvListado.AllowUserToDeleteRows = False
+        DgvListado.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         DgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvListado.Location = New Point(8, 244)
+        DgvListado.Location = New Point(8, 249)
         DgvListado.Margin = New Padding(4, 3, 4, 3)
         DgvListado.MultiSelect = False
         DgvListado.Name = "DgvListado"
         DgvListado.ReadOnly = True
         DgvListado.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        DgvListado.Size = New Size(822, 292)
+        DgvListado.Size = New Size(824, 287)
         DgvListado.TabIndex = 8
         ' 
         ' DgvInasistencias
         ' 
         DgvInasistencias.AllowUserToAddRows = False
         DgvInasistencias.AllowUserToDeleteRows = False
+        DgvInasistencias.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         DgvInasistencias.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DgvInasistencias.Location = New Point(159, 272)
         DgvInasistencias.Margin = New Padding(4, 3, 4, 3)
@@ -217,76 +191,68 @@ Partial Class frmResumenAsistencia
         ' 
         ' TxtLegajo
         ' 
-        TxtLegajo.Location = New Point(8, 17)
+        TxtLegajo.BackColor = SystemColors.Window
+        TxtLegajo.Font = New Font("Segoe UI", 9F)
+        TxtLegajo.Location = New Point(716, 19)
         TxtLegajo.Margin = New Padding(4, 3, 4, 3)
         TxtLegajo.Name = "TxtLegajo"
         TxtLegajo.ReadOnly = True
         TxtLegajo.Size = New Size(93, 23)
         TxtLegajo.TabIndex = 11
         ' 
-        ' TxtAño
+        ' TxtAnio
         ' 
-        TxtAño.Location = New Point(623, 18)
-        TxtAño.Margin = New Padding(4, 3, 4, 3)
-        TxtAño.Name = "TxtAño"
-        TxtAño.Size = New Size(69, 23)
-        TxtAño.TabIndex = 12
-        ' 
-        ' TxtFechaDesde
-        ' 
-        TxtFechaDesde.Location = New Point(225, 50)
-        TxtFechaDesde.Margin = New Padding(4, 3, 4, 3)
-        TxtFechaDesde.Name = "TxtFechaDesde"
-        TxtFechaDesde.Size = New Size(116, 23)
-        TxtFechaDesde.TabIndex = 13
-        ' 
-        ' TxtFechaHasta
-        ' 
-        TxtFechaHasta.Location = New Point(440, 48)
-        TxtFechaHasta.Margin = New Padding(4, 3, 4, 3)
-        TxtFechaHasta.Name = "TxtFechaHasta"
-        TxtFechaHasta.Size = New Size(124, 23)
-        TxtFechaHasta.TabIndex = 14
+        TxtAnio.Font = New Font("Segoe UI", 9F)
+        TxtAnio.Location = New Point(612, 50)
+        TxtAnio.Margin = New Padding(4, 3, 4, 3)
+        TxtAnio.Name = "TxtAnio"
+        TxtAnio.Size = New Size(69, 23)
+        TxtAnio.TabIndex = 12
         ' 
         ' TxtDiasTrabajados
         ' 
-        TxtDiasTrabajados.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtDiasTrabajados.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        TxtDiasTrabajados.Font = New Font("Segoe UI", 9F)
         TxtDiasTrabajados.ForeColor = Color.Red
         TxtDiasTrabajados.Location = New Point(354, 560)
         TxtDiasTrabajados.Margin = New Padding(4, 3, 4, 3)
         TxtDiasTrabajados.Name = "TxtDiasTrabajados"
         TxtDiasTrabajados.ReadOnly = True
-        TxtDiasTrabajados.Size = New Size(69, 22)
+        TxtDiasTrabajados.Size = New Size(69, 23)
         TxtDiasTrabajados.TabIndex = 15
         TxtDiasTrabajados.TextAlign = HorizontalAlignment.Center
         ' 
         ' TxtPromedio
         ' 
-        TxtPromedio.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtPromedio.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        TxtPromedio.Font = New Font("Segoe UI", 9F)
         TxtPromedio.ForeColor = Color.Red
         TxtPromedio.Location = New Point(354, 592)
         TxtPromedio.Margin = New Padding(4, 3, 4, 3)
         TxtPromedio.Name = "TxtPromedio"
         TxtPromedio.ReadOnly = True
-        TxtPromedio.Size = New Size(93, 22)
+        TxtPromedio.Size = New Size(93, 23)
         TxtPromedio.TabIndex = 16
         TxtPromedio.TextAlign = HorizontalAlignment.Center
         ' 
         ' TxtDiasPromedio
         ' 
-        TxtDiasPromedio.Font = New Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtDiasPromedio.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        TxtDiasPromedio.Font = New Font("Segoe UI", 9F)
         TxtDiasPromedio.ForeColor = Color.Red
         TxtDiasPromedio.Location = New Point(457, 593)
         TxtDiasPromedio.Margin = New Padding(4, 3, 4, 3)
         TxtDiasPromedio.Name = "TxtDiasPromedio"
         TxtDiasPromedio.ReadOnly = True
-        TxtDiasPromedio.Size = New Size(69, 22)
+        TxtDiasPromedio.Size = New Size(69, 23)
         TxtDiasPromedio.TabIndex = 17
         TxtDiasPromedio.TextAlign = HorizontalAlignment.Center
         ' 
         ' TxtOficina
         ' 
-        TxtOficina.Location = New Point(93, 13)
+        TxtOficina.BackColor = SystemColors.Window
+        TxtOficina.Font = New Font("Segoe UI", 9F)
+        TxtOficina.Location = New Point(93, 12)
         TxtOficina.Margin = New Padding(4, 3, 4, 3)
         TxtOficina.Name = "TxtOficina"
         TxtOficina.ReadOnly = True
@@ -295,7 +261,9 @@ Partial Class frmResumenAsistencia
         ' 
         ' TxtEncargado
         ' 
-        TxtEncargado.Location = New Point(463, 13)
+        TxtEncargado.BackColor = SystemColors.Window
+        TxtEncargado.Font = New Font("Segoe UI", 9F)
+        TxtEncargado.Location = New Point(463, 12)
         TxtEncargado.Margin = New Padding(4, 3, 4, 3)
         TxtEncargado.Name = "TxtEncargado"
         TxtEncargado.ReadOnly = True
@@ -304,66 +272,74 @@ Partial Class frmResumenAsistencia
         ' 
         ' TxtCategoria
         ' 
-        TxtCategoria.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtCategoria.BackColor = SystemColors.Window
+        TxtCategoria.Font = New Font("Segoe UI", 9F)
         TxtCategoria.Location = New Point(93, 43)
         TxtCategoria.Margin = New Padding(4, 3, 4, 3)
         TxtCategoria.Name = "TxtCategoria"
         TxtCategoria.ReadOnly = True
-        TxtCategoria.Size = New Size(174, 20)
+        TxtCategoria.Size = New Size(174, 23)
         TxtCategoria.TabIndex = 20
         ' 
         ' TxtCaracter
         ' 
-        TxtCaracter.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtCaracter.Location = New Point(450, 45)
+        TxtCaracter.BackColor = SystemColors.Window
+        TxtCaracter.Font = New Font("Segoe UI", 9F)
+        TxtCaracter.Location = New Point(450, 43)
         TxtCaracter.Margin = New Padding(4, 3, 4, 3)
         TxtCaracter.Name = "TxtCaracter"
         TxtCaracter.ReadOnly = True
-        TxtCaracter.Size = New Size(139, 20)
+        TxtCaracter.Size = New Size(139, 23)
         TxtCaracter.TabIndex = 21
         ' 
         ' TxtInstituto
         ' 
-        TxtInstituto.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtInstituto.Location = New Point(659, 45)
+        TxtInstituto.BackColor = SystemColors.Window
+        TxtInstituto.Font = New Font("Segoe UI", 9F)
+        TxtInstituto.Location = New Point(659, 43)
         TxtInstituto.Margin = New Padding(4, 3, 4, 3)
         TxtInstituto.Name = "TxtInstituto"
         TxtInstituto.ReadOnly = True
-        TxtInstituto.Size = New Size(157, 20)
+        TxtInstituto.Size = New Size(157, 23)
         TxtInstituto.TabIndex = 22
         ' 
         ' TxtHorasContrato
         ' 
-        TxtHorasContrato.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtHorasContrato.BackColor = SystemColors.Window
+        TxtHorasContrato.Font = New Font("Segoe UI", 9F)
         TxtHorasContrato.Location = New Point(93, 74)
         TxtHorasContrato.Margin = New Padding(4, 3, 4, 3)
         TxtHorasContrato.Name = "TxtHorasContrato"
         TxtHorasContrato.ReadOnly = True
-        TxtHorasContrato.Size = New Size(69, 20)
+        TxtHorasContrato.Size = New Size(69, 23)
         TxtHorasContrato.TabIndex = 23
         ' 
         ' TxtObligacionMensual
         ' 
-        TxtObligacionMensual.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtObligacionMensual.Location = New Point(305, 73)
+        TxtObligacionMensual.BackColor = SystemColors.Window
+        TxtObligacionMensual.Font = New Font("Segoe UI", 9F)
+        TxtObligacionMensual.Location = New Point(305, 74)
         TxtObligacionMensual.Margin = New Padding(4, 3, 4, 3)
         TxtObligacionMensual.Name = "TxtObligacionMensual"
         TxtObligacionMensual.ReadOnly = True
-        TxtObligacionMensual.Size = New Size(69, 20)
+        TxtObligacionMensual.Size = New Size(69, 23)
         TxtObligacionMensual.TabIndex = 24
         ' 
         ' TxtDiasLicencia
         ' 
-        TxtDiasLicencia.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        TxtDiasLicencia.BackColor = SystemColors.Window
+        TxtDiasLicencia.Font = New Font("Segoe UI", 9F)
         TxtDiasLicencia.Location = New Point(747, 74)
         TxtDiasLicencia.Margin = New Padding(4, 3, 4, 3)
         TxtDiasLicencia.Name = "TxtDiasLicencia"
         TxtDiasLicencia.ReadOnly = True
-        TxtDiasLicencia.Size = New Size(69, 20)
+        TxtDiasLicencia.Size = New Size(69, 23)
         TxtDiasLicencia.TabIndex = 25
         ' 
         ' TxtComentarios
         ' 
+        TxtComentarios.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        TxtComentarios.Font = New Font("Segoe UI", 9F)
         TxtComentarios.Location = New Point(8, 556)
         TxtComentarios.Margin = New Padding(4, 3, 4, 3)
         TxtComentarios.Multiline = True
@@ -373,89 +349,98 @@ Partial Class frmResumenAsistencia
         ' 
         ' TxtVac2019
         ' 
-        TxtVac2019.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2019.Location = New Point(151, 105)
+        TxtVac2019.BackColor = SystemColors.Window
+        TxtVac2019.Font = New Font("Segoe UI", 9F)
+        TxtVac2019.Location = New Point(151, 106)
         TxtVac2019.Margin = New Padding(4, 3, 4, 3)
         TxtVac2019.Name = "TxtVac2019"
         TxtVac2019.ReadOnly = True
-        TxtVac2019.Size = New Size(58, 20)
+        TxtVac2019.Size = New Size(58, 23)
         TxtVac2019.TabIndex = 27
         ' 
         ' TxtVac2020
         ' 
-        TxtVac2020.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2020.Location = New Point(221, 105)
+        TxtVac2020.BackColor = SystemColors.Window
+        TxtVac2020.Font = New Font("Segoe UI", 9F)
+        TxtVac2020.Location = New Point(221, 106)
         TxtVac2020.Margin = New Padding(4, 3, 4, 3)
         TxtVac2020.Name = "TxtVac2020"
         TxtVac2020.ReadOnly = True
-        TxtVac2020.Size = New Size(58, 20)
+        TxtVac2020.Size = New Size(58, 23)
         TxtVac2020.TabIndex = 28
         ' 
         ' TxtVac2021
         ' 
-        TxtVac2021.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2021.Location = New Point(291, 105)
+        TxtVac2021.BackColor = SystemColors.Window
+        TxtVac2021.Font = New Font("Segoe UI", 9F)
+        TxtVac2021.Location = New Point(291, 106)
         TxtVac2021.Margin = New Padding(4, 3, 4, 3)
         TxtVac2021.Name = "TxtVac2021"
         TxtVac2021.ReadOnly = True
-        TxtVac2021.Size = New Size(58, 20)
+        TxtVac2021.Size = New Size(58, 23)
         TxtVac2021.TabIndex = 29
         ' 
         ' TxtVac2022
         ' 
-        TxtVac2022.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2022.Location = New Point(361, 105)
+        TxtVac2022.BackColor = SystemColors.Window
+        TxtVac2022.Font = New Font("Segoe UI", 9F)
+        TxtVac2022.Location = New Point(361, 106)
         TxtVac2022.Margin = New Padding(4, 3, 4, 3)
         TxtVac2022.Name = "TxtVac2022"
         TxtVac2022.ReadOnly = True
-        TxtVac2022.Size = New Size(58, 20)
+        TxtVac2022.Size = New Size(58, 23)
         TxtVac2022.TabIndex = 30
         ' 
         ' TxtVac2023
         ' 
-        TxtVac2023.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2023.Location = New Point(431, 105)
+        TxtVac2023.BackColor = SystemColors.Window
+        TxtVac2023.Font = New Font("Segoe UI", 9F)
+        TxtVac2023.Location = New Point(431, 106)
         TxtVac2023.Margin = New Padding(4, 3, 4, 3)
         TxtVac2023.Name = "TxtVac2023"
         TxtVac2023.ReadOnly = True
-        TxtVac2023.Size = New Size(58, 20)
+        TxtVac2023.Size = New Size(58, 23)
         TxtVac2023.TabIndex = 31
         ' 
         ' TxtVac2024
         ' 
-        TxtVac2024.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2024.Location = New Point(501, 105)
+        TxtVac2024.BackColor = SystemColors.Window
+        TxtVac2024.Font = New Font("Segoe UI", 9F)
+        TxtVac2024.Location = New Point(501, 106)
         TxtVac2024.Margin = New Padding(4, 3, 4, 3)
         TxtVac2024.Name = "TxtVac2024"
         TxtVac2024.ReadOnly = True
-        TxtVac2024.Size = New Size(58, 20)
+        TxtVac2024.Size = New Size(58, 23)
         TxtVac2024.TabIndex = 32
         ' 
         ' TxtVac2025
         ' 
-        TxtVac2025.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2025.Location = New Point(571, 105)
+        TxtVac2025.BackColor = SystemColors.Window
+        TxtVac2025.Font = New Font("Segoe UI", 9F)
+        TxtVac2025.Location = New Point(571, 106)
         TxtVac2025.Margin = New Padding(4, 3, 4, 3)
         TxtVac2025.Name = "TxtVac2025"
         TxtVac2025.ReadOnly = True
-        TxtVac2025.Size = New Size(58, 20)
+        TxtVac2025.Size = New Size(58, 23)
         TxtVac2025.TabIndex = 33
         ' 
         ' TxtVac2026
         ' 
-        TxtVac2026.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtVac2026.Location = New Point(641, 105)
+        TxtVac2026.BackColor = SystemColors.Window
+        TxtVac2026.Font = New Font("Segoe UI", 9F)
+        TxtVac2026.Location = New Point(641, 106)
         TxtVac2026.Margin = New Padding(4, 3, 4, 3)
         TxtVac2026.Name = "TxtVac2026"
         TxtVac2026.ReadOnly = True
-        TxtVac2026.Size = New Size(58, 20)
+        TxtVac2026.Size = New Size(58, 23)
         TxtVac2026.TabIndex = 34
         ' 
         ' CmbMeses
         ' 
         CmbMeses.DropDownStyle = ComboBoxStyle.DropDownList
+        CmbMeses.Font = New Font("Segoe UI", 9F)
         CmbMeses.FormattingEnabled = True
-        CmbMeses.Location = New Point(440, 19)
+        CmbMeses.Location = New Point(424, 50)
         CmbMeses.Margin = New Padding(4, 3, 4, 3)
         CmbMeses.Name = "CmbMeses"
         CmbMeses.Size = New Size(124, 23)
@@ -463,11 +448,12 @@ Partial Class frmResumenAsistencia
         ' 
         ' CmbNombres
         ' 
+        CmbNombres.Font = New Font("Segoe UI", 9F)
         CmbNombres.FormattingEnabled = True
-        CmbNombres.Location = New Point(161, 19)
+        CmbNombres.Location = New Point(59, 19)
         CmbNombres.Margin = New Padding(4, 3, 4, 3)
         CmbNombres.Name = "CmbNombres"
-        CmbNombres.Size = New Size(209, 23)
+        CmbNombres.Size = New Size(593, 23)
         CmbNombres.TabIndex = 36
         ' 
         ' Label2
@@ -480,35 +466,35 @@ Partial Class frmResumenAsistencia
         Label2.TabIndex = 38
         Label2.Text = "Legajo:"
         ' 
-        ' Label3
+        ' lblDesde
         ' 
-        Label3.AutoSize = True
-        Label3.Location = New Point(175, 54)
-        Label3.Margin = New Padding(4, 0, 4, 0)
-        Label3.Name = "Label3"
-        Label3.Size = New Size(42, 15)
-        Label3.TabIndex = 39
-        Label3.Text = "Desde:"
+        lblDesde.AutoSize = True
+        lblDesde.Location = New Point(8, 54)
+        lblDesde.Margin = New Padding(4, 0, 4, 0)
+        lblDesde.Name = "lblDesde"
+        lblDesde.Size = New Size(42, 15)
+        lblDesde.TabIndex = 39
+        lblDesde.Text = "Desde:"
         ' 
-        ' Label4
+        ' lblHasta
         ' 
-        Label4.AutoSize = True
-        Label4.Location = New Point(385, 52)
-        Label4.Margin = New Padding(4, 0, 4, 0)
-        Label4.Name = "Label4"
-        Label4.Size = New Size(40, 15)
-        Label4.TabIndex = 40
-        Label4.Text = "Hasta:"
+        lblHasta.AutoSize = True
+        lblHasta.Location = New Point(192, 54)
+        lblHasta.Margin = New Padding(4, 0, 4, 0)
+        lblHasta.Name = "lblHasta"
+        lblHasta.Size = New Size(40, 15)
+        lblHasta.TabIndex = 40
+        lblHasta.Text = "Hasta:"
         ' 
-        ' Label5
+        ' lblAnio
         ' 
-        Label5.AutoSize = True
-        Label5.Location = New Point(583, 22)
-        Label5.Margin = New Padding(4, 0, 4, 0)
-        Label5.Name = "Label5"
-        Label5.Size = New Size(32, 15)
-        Label5.TabIndex = 41
-        Label5.Text = "Año:"
+        lblAnio.AutoSize = True
+        lblAnio.Location = New Point(572, 53)
+        lblAnio.Margin = New Padding(4, 0, 4, 0)
+        lblAnio.Name = "lblAnio"
+        lblAnio.Size = New Size(32, 15)
+        lblAnio.TabIndex = 41
+        lblAnio.Text = "Año:"
         ' 
         ' Label6
         ' 
@@ -553,7 +539,7 @@ Partial Class frmResumenAsistencia
         ' Label10
         ' 
         Label10.AutoSize = True
-        Label10.Location = New Point(597, 49)
+        Label10.Location = New Point(597, 47)
         Label10.Margin = New Padding(4, 0, 4, 0)
         Label10.Name = "Label10"
         Label10.Size = New Size(54, 15)
@@ -583,7 +569,7 @@ Partial Class frmResumenAsistencia
         ' Label13
         ' 
         Label13.AutoSize = True
-        Label13.Location = New Point(604, 79)
+        Label13.Location = New Point(604, 78)
         Label13.Margin = New Padding(4, 0, 4, 0)
         Label13.Name = "Label13"
         Label13.Size = New Size(128, 15)
@@ -603,7 +589,7 @@ Partial Class frmResumenAsistencia
         ' Label15
         ' 
         Label15.AutoSize = True
-        Label15.Location = New Point(151, 131)
+        Label15.Location = New Point(151, 132)
         Label15.Margin = New Padding(4, 0, 4, 0)
         Label15.Name = "Label15"
         Label15.Size = New Size(31, 15)
@@ -613,7 +599,7 @@ Partial Class frmResumenAsistencia
         ' Label16
         ' 
         Label16.AutoSize = True
-        Label16.Location = New Point(221, 131)
+        Label16.Location = New Point(221, 132)
         Label16.Margin = New Padding(4, 0, 4, 0)
         Label16.Name = "Label16"
         Label16.Size = New Size(31, 15)
@@ -623,7 +609,7 @@ Partial Class frmResumenAsistencia
         ' Label17
         ' 
         Label17.AutoSize = True
-        Label17.Location = New Point(291, 131)
+        Label17.Location = New Point(291, 132)
         Label17.Margin = New Padding(4, 0, 4, 0)
         Label17.Name = "Label17"
         Label17.Size = New Size(31, 15)
@@ -633,7 +619,7 @@ Partial Class frmResumenAsistencia
         ' Label18
         ' 
         Label18.AutoSize = True
-        Label18.Location = New Point(361, 131)
+        Label18.Location = New Point(361, 132)
         Label18.Margin = New Padding(4, 0, 4, 0)
         Label18.Name = "Label18"
         Label18.Size = New Size(31, 15)
@@ -643,7 +629,7 @@ Partial Class frmResumenAsistencia
         ' Label19
         ' 
         Label19.AutoSize = True
-        Label19.Location = New Point(431, 131)
+        Label19.Location = New Point(431, 132)
         Label19.Margin = New Padding(4, 0, 4, 0)
         Label19.Name = "Label19"
         Label19.Size = New Size(31, 15)
@@ -653,7 +639,7 @@ Partial Class frmResumenAsistencia
         ' Label20
         ' 
         Label20.AutoSize = True
-        Label20.Location = New Point(501, 131)
+        Label20.Location = New Point(501, 132)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
         Label20.Size = New Size(31, 15)
@@ -663,7 +649,7 @@ Partial Class frmResumenAsistencia
         ' Label21
         ' 
         Label21.AutoSize = True
-        Label21.Location = New Point(571, 131)
+        Label21.Location = New Point(571, 132)
         Label21.Margin = New Padding(4, 0, 4, 0)
         Label21.Name = "Label21"
         Label21.Size = New Size(31, 15)
@@ -673,7 +659,7 @@ Partial Class frmResumenAsistencia
         ' Label22
         ' 
         Label22.AutoSize = True
-        Label22.Location = New Point(641, 131)
+        Label22.Location = New Point(641, 132)
         Label22.Margin = New Padding(4, 0, 4, 0)
         Label22.Name = "Label22"
         Label22.Size = New Size(31, 15)
@@ -682,6 +668,7 @@ Partial Class frmResumenAsistencia
         ' 
         ' GroupBox1
         ' 
+        GroupBox1.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         GroupBox1.Controls.Add(Label6)
         GroupBox1.Controls.Add(TxtOficina)
         GroupBox1.Controls.Add(Label7)
@@ -720,48 +707,75 @@ Partial Class frmResumenAsistencia
         GroupBox1.Margin = New Padding(4, 3, 4, 3)
         GroupBox1.Name = "GroupBox1"
         GroupBox1.Padding = New Padding(4, 3, 4, 3)
-        GroupBox1.Size = New Size(824, 153)
+        GroupBox1.Size = New Size(824, 158)
         GroupBox1.TabIndex = 59
         GroupBox1.TabStop = False
         ' 
         ' GroupBox2
         ' 
-        GroupBox2.Controls.Add(Label1)
+        GroupBox2.Controls.Add(lblLegajo)
+        GroupBox2.Controls.Add(dtpHasta)
+        GroupBox2.Controls.Add(dtpDesde)
+        GroupBox2.Controls.Add(lblMes)
         GroupBox2.Controls.Add(Label23)
         GroupBox2.Controls.Add(Label2)
         GroupBox2.Controls.Add(TxtLegajo)
-        GroupBox2.Controls.Add(Label3)
-        GroupBox2.Controls.Add(TxtFechaDesde)
-        GroupBox2.Controls.Add(CmdFechaDesde)
-        GroupBox2.Controls.Add(Label4)
-        GroupBox2.Controls.Add(TxtFechaHasta)
-        GroupBox2.Controls.Add(CmdFechaHasta)
-        GroupBox2.Controls.Add(Label5)
-        GroupBox2.Controls.Add(TxtAño)
+        GroupBox2.Controls.Add(lblDesde)
+        GroupBox2.Controls.Add(lblHasta)
+        GroupBox2.Controls.Add(lblAnio)
+        GroupBox2.Controls.Add(TxtAnio)
         GroupBox2.Controls.Add(CmbMeses)
         GroupBox2.Controls.Add(CmbNombres)
         GroupBox2.Location = New Point(7, 3)
         GroupBox2.Margin = New Padding(4, 3, 4, 3)
         GroupBox2.Name = "GroupBox2"
         GroupBox2.Padding = New Padding(4, 3, 4, 3)
-        GroupBox2.Size = New Size(723, 83)
+        GroupBox2.Size = New Size(817, 83)
         GroupBox2.TabIndex = 60
         GroupBox2.TabStop = False
         ' 
-        ' Label1
+        ' lblLegajo
         ' 
-        Label1.AutoSize = True
-        Label1.Location = New Point(385, 22)
-        Label1.Margin = New Padding(4, 0, 4, 0)
-        Label1.Name = "Label1"
-        Label1.Size = New Size(32, 15)
-        Label1.TabIndex = 43
-        Label1.Text = "Mes:"
+        lblLegajo.AutoSize = True
+        lblLegajo.Location = New Point(663, 22)
+        lblLegajo.Margin = New Padding(4, 0, 4, 0)
+        lblLegajo.Name = "lblLegajo"
+        lblLegajo.Size = New Size(45, 15)
+        lblLegajo.TabIndex = 46
+        lblLegajo.Text = "Legajo:"
+        ' 
+        ' dtpHasta
+        ' 
+        dtpHasta.Font = New Font("Segoe UI", 9F)
+        dtpHasta.Format = DateTimePickerFormat.Short
+        dtpHasta.Location = New Point(239, 50)
+        dtpHasta.Name = "dtpHasta"
+        dtpHasta.Size = New Size(114, 23)
+        dtpHasta.TabIndex = 45
+        ' 
+        ' dtpDesde
+        ' 
+        dtpDesde.Font = New Font("Segoe UI", 9F)
+        dtpDesde.Format = DateTimePickerFormat.Short
+        dtpDesde.Location = New Point(59, 50)
+        dtpDesde.Name = "dtpDesde"
+        dtpDesde.Size = New Size(114, 23)
+        dtpDesde.TabIndex = 44
+        ' 
+        ' lblMes
+        ' 
+        lblMes.AutoSize = True
+        lblMes.Location = New Point(384, 54)
+        lblMes.Margin = New Padding(4, 0, 4, 0)
+        lblMes.Name = "lblMes"
+        lblMes.Size = New Size(32, 15)
+        lblMes.TabIndex = 43
+        lblMes.Text = "Mes:"
         ' 
         ' Label23
         ' 
         Label23.AutoSize = True
-        Label23.Location = New Point(105, 22)
+        Label23.Location = New Point(8, 22)
         Label23.Margin = New Padding(4, 0, 4, 0)
         Label23.Name = "Label23"
         Label23.Size = New Size(48, 15)
@@ -770,6 +784,7 @@ Partial Class frmResumenAsistencia
         ' 
         ' Label24
         ' 
+        Label24.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         Label24.AutoSize = True
         Label24.Location = New Point(258, 596)
         Label24.Margin = New Padding(4, 0, 4, 0)
@@ -780,11 +795,12 @@ Partial Class frmResumenAsistencia
         ' 
         ' Label25
         ' 
+        Label25.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         Label25.AutoSize = True
         Label25.Location = New Point(258, 564)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
-        Label25.Size = New Size(92, 15)
+        Label25.Size = New Size(91, 15)
         Label25.TabIndex = 62
         Label25.Text = "Días Trabajados:"
         ' 
@@ -801,7 +817,6 @@ Partial Class frmResumenAsistencia
         Controls.Add(CmdSalir)
         Controls.Add(CmdImprimir)
         Controls.Add(CmdInasistencias)
-        Controls.Add(CmdResumen)
         Controls.Add(DgvListado)
         Controls.Add(TxtDiasTrabajados)
         Controls.Add(TxtPromedio)
@@ -809,10 +824,9 @@ Partial Class frmResumenAsistencia
         Controls.Add(TxtComentarios)
         Controls.Add(chkEncabezados)
         Controls.Add(lnkCopiar)
-        FormBorderStyle = FormBorderStyle.FixedSingle
         Margin = New Padding(4, 3, 4, 3)
-        MaximizeBox = False
         MinimizeBox = False
+        MinimumSize = New Size(853, 661)
         Name = "frmResumenAsistencia"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Consultas - Resumen de Asistencia"
@@ -832,15 +846,10 @@ Partial Class frmResumenAsistencia
     Friend WithEvents CmdSalir As Button
     Friend WithEvents CmdImprimir As Button
     Friend WithEvents CmdInasistencias As Button
-    Friend WithEvents CmdResumen As Button
-    Friend WithEvents CmdFechaDesde As Button
-    Friend WithEvents CmdFechaHasta As Button
     Friend WithEvents DgvListado As DataGridView
     Friend WithEvents DgvInasistencias As DataGridView
     Friend WithEvents TxtLegajo As TextBox
-    Friend WithEvents TxtAño As TextBox
-    Friend WithEvents TxtFechaDesde As TextBox
-    Friend WithEvents TxtFechaHasta As TextBox
+    Friend WithEvents TxtAnio As TextBox
     Friend WithEvents TxtDiasTrabajados As TextBox
     Friend WithEvents TxtPromedio As TextBox
     Friend WithEvents TxtDiasPromedio As TextBox
@@ -864,9 +873,9 @@ Partial Class frmResumenAsistencia
     Friend WithEvents CmbMeses As ComboBox
     Friend WithEvents CmbNombres As ComboBox
     Friend WithEvents Label2 As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Label4 As Label
-    Friend WithEvents Label5 As Label
+    Friend WithEvents lblDesde As Label
+    Friend WithEvents lblHasta As Label
+    Friend WithEvents lblAnio As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents Label8 As Label
@@ -887,7 +896,10 @@ Partial Class frmResumenAsistencia
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents Label23 As Label
-    Friend WithEvents Label1 As Label
+    Friend WithEvents lblMes As Label
     Friend WithEvents Label24 As Label
     Friend WithEvents Label25 As Label
+    Friend WithEvents lblLegajo As Label
+    Friend WithEvents dtpHasta As DateTimePicker
+    Friend WithEvents dtpDesde As DateTimePicker
 End Class

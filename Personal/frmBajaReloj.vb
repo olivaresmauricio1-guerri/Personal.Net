@@ -93,6 +93,7 @@ Partial Class frmBajaReloj
 
     Private Sub InicializarGrilla()
         dgvRelojes.Columns.Clear()
+        dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Ubicacion", .HeaderText = "Ubicación"})
         dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Nombre", .HeaderText = "Reloj"})
         dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "IP", .HeaderText = "IP"})
         dgvRelojes.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Puerto", .HeaderText = "Puerto"})
@@ -105,7 +106,7 @@ Partial Class frmBajaReloj
 
         dgvRelojes.Rows.Clear()
         For Each reloj As Reloj In _relojes
-            dgvRelojes.Rows.Add(reloj.Nombre, reloj.Ip, reloj.Puerto.ToString(), "—", "—")
+            dgvRelojes.Rows.Add(reloj.Ubicacion, reloj.Nombre, reloj.Ip, reloj.Puerto.ToString(), "—", "—")
         Next
 
         dgvRelojes.ClearSelection()
@@ -119,8 +120,9 @@ Partial Class frmBajaReloj
         dgvRelojes.AllowUserToOrderColumns = True
 
         dgvRelojes.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgvRelojes.Columns("IP").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgvRelojes.Columns("Puerto").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgvRelojes.Columns("IP").Width = 120
+        dgvRelojes.Columns("Puerto").Width = 60
+        dgvRelojes.Columns("Ubicacion").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         dgvRelojes.Columns("Estado").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         dgvRelojes.Columns("Ultima").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
 
@@ -132,9 +134,79 @@ Partial Class frmBajaReloj
         Red.EstablecerRutas(rutas)
     End Sub
 
-    ' abre un hilo para el reloj indicado y conecta
     Private Sub ConectarRelojAsync(indice As Integer, Optional cargarMarcaciones As Boolean = False)
         If indice < 0 OrElse indice >= _relojes.Count Then Return
+        Dim reloj = _relojes(indice)
+        If reloj.Conectando Then Return
+
+        If reloj.Ubicacion = "BsAires" Then
+            conectarRelojIndirectoAsync(indice, cargarMarcaciones)
+        Else
+            ConectarRelojDirectoAsync(indice, cargarMarcaciones)
+        End If
+    End Sub
+
+    ' abre un hilo para conectar a una bbdd remota y traer marcaciones, las guarda localmente
+    ' por ahora no implementado, 
+    ' mockea conexion, con un delay de 2 segundos, y luego mestra "conectado"
+    Private Sub conectarRelojIndirectoAsync(indice As Integer, Optional cargarMarcaciones As Boolean = False)
+        Dim reloj = _relojes(indice)
+        If reloj.Conectando Then Return
+        reloj.Conectando = True
+        If Me.IsHandleCreated Then Me.BeginInvoke(
+            Sub()
+                dgvRelojes.Rows(indice).Cells("Estado").Value = "Conectando (indirecto)..."
+                dgvRelojes.Rows(indice).Cells("Ultima").Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                ResaltarEstado(indice)
+            End Sub)
+        Dim th As New Thread(
+            Sub()
+                ToggleUI(False)
+
+                reloj.Conectando = False
+                reloj.Conectado = True
+                reloj.UltimaVerif = DateTime.Now
+                If Me.IsHandleCreated Then SafeUI(
+                    Sub()
+                        dgvRelojes.Rows(indice).Cells("Estado").Value = "Conectado (indirecto)"
+                        dgvRelojes.Rows(indice).Cells("Ultima").Value = reloj.UltimaVerif.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                        ResaltarEstado(indice)
+                    End Sub)
+
+                If cargarMarcaciones Then
+                    Dim dt As DataTable = Relojes.ObtenerMarcacionesBA(reloj)
+                    Dim total = dt.Rows.Count
+                    Dim procesadas = 0
+                    For Each row As DataRow In dt.Rows
+                        ' quitar ceros a la izquierda del legajo
+                        Dim legajo = CStr(row("FILegajo"))
+                        legajo = legajo.TrimStart("0"c)
+                        Dim fechahora = Convert.ToDateTime(row("FIFecha")).ToString("yyyy-MM-dd HH:mm:ss")
+                        procesadas += Relojes.RegistrarMarcacion(reloj, legajo, fechahora)
+                        If Me.IsHandleCreated Then SafeUI(
+                            Sub()
+                                Dim pct = CInt(Math.Floor(procesadas * 100.0 / Math.Max(total, 1)))
+                                dgvRelojes.Rows(indice).Cells("Estado").Value = $"Importando (indirecto) ({pct}%)"
+                                ResaltarEstado(indice)
+                            End Sub)
+                    Next
+                    Try : Relojes.ProcesarMarcaciones(reloj) : Catch : End Try
+                    If Me.IsHandleCreated Then SafeUI(
+                        Sub()
+                            dgvRelojes.Rows(indice).Cells("Estado").Value = $"Importado (indirecto) {procesadas}/{total}"
+                            ResaltarEstado(indice)
+                        End Sub)
+                End If
+
+                ToggleUI(True)
+            End Sub)
+        th.IsBackground = True
+        th.SetApartmentState(ApartmentState.STA) ' COM/ActiveX ⇒ STA
+        th.Start() ' ← ¡no esperamos! la UI sigue
+    End Sub
+
+    ' abre un hilo para el reloj indicado y conecta
+    Private Sub ConectarRelojDirectoAsync(indice As Integer, Optional cargarMarcaciones As Boolean = False)
         Dim reloj = _relojes(indice)
         If reloj.Conectando Then Return
 

@@ -184,7 +184,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuConsultarAgentes_Click(sender As Object, e As EventArgs) Handles MnuConsultarAgentes.Click
-        MessageBox.Show("Función de consultar agentes no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmAgentes.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuResumenAsistencia_Click(sender As Object, e As EventArgs) Handles MnuResumenAsistencia.Click
