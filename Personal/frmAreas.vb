@@ -78,7 +78,7 @@ Public Class frmAreas
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles CmdBorrar.Click
         If filaActual Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar este escalafón?", "Confirmar borrado", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+        If MessageBox.Show("¿Está seguro de que desea eliminar este escalafón?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim Principal = Convert.ToInt32(filaActual.Cells("Principal").Value)
             Dim sql = "DELETE FROM Escalafon WHERE Principal = @Principal"
             Dim parametros = CmdParams("@Principal", Principal)

@@ -74,7 +74,7 @@ Public Class frmTipoInasistencias
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles CmdBorrar.Click
         If filaActual Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar esta inasistencia?", "Confirmar borrado", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+        If MessageBox.Show("¿Está seguro de que desea eliminar esta inasistencia?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim Codigo = Convert.ToInt32(filaActual.Cells("Codigo").Value)
             Dim sql = "DELETE FROM Inasistencias WHERE Codigo = @Codigo"
             Dim parametros = CmdParams("@Codigo", Codigo)
