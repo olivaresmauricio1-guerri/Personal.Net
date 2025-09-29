@@ -398,12 +398,12 @@ Public Class frmResumenAsistencia
 
     Private Sub ImprimirReporte()
         Try
-            Dim sql1 = "DELETE * FROM Resumen"
+            Dim sql1 = "DELETE FROM Resumen"
             DSM.Execute(DSM.Personal, sql1, Nothing, True)
 
             Dim sql2 = "
                 INSERT INTO Resumen ( Dia, Legajo ) 
-                SELECT Movimiento.Dia, Movimiento.Legajo, * FROM Movimiento 
+                SELECT Movimiento.Dia, Movimiento.Legajo FROM Movimiento 
                 WHERE Legajo = @Legajo AND Dia BETWEEN @FechaDesde AND @FechaHasta ORDER BY Dia"
             Dim parametros As New Dictionary(Of String, Object) From {
                 {"@Legajo", TxtLegajo.Text},
@@ -412,7 +412,7 @@ Public Class frmResumenAsistencia
             }
             DSM.Execute(DSM.Personal, sql2, parametros, True)
 
-            Dim sql3 = "DELETE * FROM Resumen2"
+            Dim sql3 = "DELETE FROM Resumen2"
             DSM.Execute(DSM.Personal, sql3, Nothing, True)
 
             Dim sql4 = "
@@ -424,24 +424,15 @@ Public Class frmResumenAsistencia
                     Agentes.MayorDedicacion, Agentes.HorasDedicacion,
                     Agentes.HorasSemanales, Agentes.Escalafon, Agentes.Jefe,
                     Agentes.Caracter, Agentes.Comentario , Agentes.CUIL, Agentes.NroDto, Agentes.TipoDto 
-                From Agentes 
+                FROM Agentes 
                 WHERE Agentes.Legajo = @Legajo"
             DSM.Execute(DSM.Personal, sql4, parametros, True)
 
-            Dim sql5 = "
-                UPDATE Resumen2 SET 
-                    DiasT = Agentes.LicAnual, 
-                    Vac2019 = Agentes.Vac2019, 
-                    Vac2020 = Agentes.Vac2020, 
-                    Vac2021 = Agentes.Vac2021, 
-                    Vac2022 = Agentes.Vac2022, 
-                    Vac2023 = Agentes.Vac2023, 
-                    Vac2024 = Agentes.Vac2024, 
-                    Vac2025 = Agentes.Vac2025, 
-                    Vac2026 = Agentes.Vac2026
-"
+            Dim sql5 = "UPDATE Resumen2 SET diast = @DiasTrabajados, promedio = @Promedio WHERE Legajo = @Legajo"
+            Dim parametros5 = CmdParams("@DiasTrabajados", TxtDiasTrabajados.Text, "@Promedio", TxtPromedio.Text, "@Legajo", TxtLegajo.Text)
+            DSM.Execute(DSM.Personal, sql5, parametros5, True)
 
-
+            Process.Start(General.ReportesPath, "Personal ListaResu")
 
         Catch ex As Exception
             MessageBox.Show("Error al generar el reporte: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
