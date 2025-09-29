@@ -402,9 +402,34 @@ Public Class frmResumenAsistencia
             DSM.Execute(DSM.Personal, sql1, Nothing, True)
 
             Dim sql2 = "
-                INSERT INTO Resumen ( Dia, Legajo ) 
-                SELECT Movimiento.Dia, Movimiento.Legajo FROM Movimiento 
-                WHERE Legajo = @Legajo AND Dia BETWEEN @FechaDesde AND @FechaHasta ORDER BY Dia"
+                INSERT INTO Resumen (
+                    Legajo,
+                    Instituto,  
+                    Dia, 
+                    Entro, 
+                    Salio, 
+                    HsCumplidas, 
+                    MotivoInasistencia, 
+                    Comentario,
+                    nopromedianada, 
+                    nopromedia, 
+                    sinficha)
+                SELECT
+                    m.Legajo,
+                    m.Instituto,
+                    m.Dia,
+                    CONVERT(varchar, m.Entro, 108) AS Entro,
+                    CONVERT(varchar, m.Salio, 108) AS Salio,
+                    m.HsCumplidas,
+                    CAST(LEFT(COALESCE(m.MotivoInasistencia, ''), 50) AS nvarchar(50)) AS MotivoInasistencia,
+                    CAST(COALESCE(m.Comentario, '') AS nvarchar(MAX)) AS Comentario,
+                    CAST(0 AS bit),
+                    CAST(0 AS bit),
+                    CAST(0 AS bit)
+                FROM Movimiento AS m
+                WHERE m.Legajo = @Legajo
+                    AND m.Dia BETWEEN @FechaDesde AND @FechaHasta
+                ORDER BY m.Dia asc"
             Dim parametros As New Dictionary(Of String, Object) From {
                 {"@Legajo", TxtLegajo.Text},
                 {"@FechaDesde", dtpDesde.Value},
@@ -416,16 +441,36 @@ Public Class frmResumenAsistencia
             DSM.Execute(DSM.Personal, sql3, Nothing, True)
 
             Dim sql4 = "
-                INSERT INTO Resumen2 ( Legajo, Cargo, Instituto, Nombre, Oficina, 
-                    Critico, MayorDedicacion, HorasDedicacion, HorasSemanales, 
-                    Escalafon, Jefe, Caracter, Comentario, CUIL, NroDto, TipoDto )
-                SELECT Agentes.Legajo, Agentes.Cargo, Agentes.Instituto, 
-                    Agentes.Nombre, Agentes.Oficina, Agentes.Critico,
-                    Agentes.MayorDedicacion, Agentes.HorasDedicacion,
-                    Agentes.HorasSemanales, Agentes.Escalafon, Agentes.Jefe,
-                    Agentes.Caracter, Agentes.Comentario , Agentes.CUIL, Agentes.NroDto, Agentes.TipoDto 
-                FROM Agentes 
-                WHERE Agentes.Legajo = @Legajo"
+                INSERT INTO Resumen2 (
+                    Legajo, Cargo, Instituto, Nombre, Oficina,
+                    Critico, MayorDedicacion, HorasDedicacion, HorasSemanales,
+                    Escalafon, Jefe, Caracter, Comentario, CUIL, NroDto, TipoDto,
+                    nopromedianada
+                )
+                SELECT
+                    a.Legajo,
+                    CAST(LEFT(COALESCE(a.Cargo, ''),        10) AS nvarchar(10))  AS Cargo,
+                    CAST(LEFT(COALESCE(a.Instituto, ''),    30) AS nvarchar(30))  AS Instituto,
+                    CAST(LEFT(COALESCE(a.Nombre, ''),       30) AS nvarchar(30))  AS Nombre,
+                    CAST(LEFT(COALESCE(a.Oficina, ''),      50) AS nvarchar(50))  AS Oficina,
+                    CAST(COALESCE(a.Critico, 0) AS bit)                         AS Critico,
+                    CAST(COALESCE(a.MayorDedicacion, 0) AS bit)                 AS MayorDedicacion,
+                    CAST(LEFT(COALESCE(CAST(a.HorasDedicacion AS nvarchar(20)), ''), 4) AS nvarchar(4)) AS HorasDedicacion,
+                    COALESCE(a.HorasSemanales, 0)                               AS HorasSemanales,
+                    CAST(LEFT(COALESCE(a.Escalafon, ''),    30) AS nvarchar(30)) AS Escalafon,
+                    CAST(LEFT(COALESCE(a.Jefe, ''),         30) AS nvarchar(30)) AS Jefe,
+                    CAST(LEFT(COALESCE(a.Caracter, ''),     20) AS nvarchar(20)) AS Caracter,
+                    CAST(COALESCE(a.Comentario, '') AS nvarchar(MAX))           AS Comentario,
+                    CAST(LEFT(COALESCE(a.CUIL, ''),         13) AS nvarchar(13)) AS CUIL,
+                    CASE 
+                      WHEN a.NroDto IS NULL THEN NULL
+                      WHEN CAST(a.NroDto AS nvarchar(32)) LIKE '%[^0-9]%' THEN NULL
+                      ELSE CONVERT(int, a.NroDto)
+                    END                                                        AS NroDto,
+                    CAST(LEFT(COALESCE(a.TipoDto, ''),       3) AS nvarchar(3))  AS TipoDto,
+                    CAST(0 AS bit)
+                FROM Agentes a
+                WHERE a.Legajo = @Legajo;"
             DSM.Execute(DSM.Personal, sql4, parametros, True)
 
             Dim sql5 = "UPDATE Resumen2 SET diast = @DiasTrabajados, promedio = @Promedio WHERE Legajo = @Legajo"
