@@ -159,7 +159,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuIngresoHorarioManual_Click(sender As Object, e As EventArgs) Handles MnuIngresoHorarioManual.Click
-        MessageBox.Show("Función de ingreso horario manual no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmIngresoHorarioManual.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuCambiarLegajo_Click(sender As Object, e As EventArgs) Handles MnuCambiarLegajo.Click
