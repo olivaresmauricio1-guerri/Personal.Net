@@ -138,7 +138,9 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuAyudaHelp_Click(sender As Object, e As EventArgs) Handles MnuAyudaHelp.Click
-        MessageBox.Show("Función de ayuda no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Dim frm As New frmPruebas()
+        frm.MdiParent = Me
+        frm.Show()
     End Sub
 
     ' Eventos adicionales del menú Actualizaciones
