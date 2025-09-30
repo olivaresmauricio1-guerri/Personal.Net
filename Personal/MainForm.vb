@@ -143,11 +143,11 @@ Public Class MainForm
 
     ' Eventos adicionales del menú Actualizaciones
     Private Sub MnuIngresoHorario_Click(sender As Object, e As EventArgs) Handles MnuIngresoHorario.Click
-        MessageBox.Show("Función de ingreso horario no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmIngresoHorario.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuIngresoInasistencias_Click(sender As Object, e As EventArgs) Handles MnuIngresoInasistencias.Click
-        MessageBox.Show("Función de ingreso inasistencias justificadas no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmInasistenciasJustificadas.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuBajaInasistencia_Click(sender As Object, e As EventArgs) Handles MnuBajaInasistencia.Click
