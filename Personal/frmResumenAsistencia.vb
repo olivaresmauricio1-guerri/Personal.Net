@@ -99,52 +99,26 @@ Public Class frmResumenAsistencia
     Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkCopiar.LinkClicked
         CopiarDataGrid(DgvListado)
     End Sub
-
-    ' Eventos de botones de fecha
-    Private Sub cmdFechaDesde_Click(sender As Object, e As EventArgs) Handles CmdFechaDesde.Click
-        ' Abrir selector de fecha para fecha desde
-        Using frm As New Form()
-            Dim dtp As New DateTimePicker()
-            dtp.Value = If(DateTime.TryParse(TxtFechaDesde.Text, Nothing), DateTime.Parse(TxtFechaDesde.Text), DateTime.Now)
-            dtp.Dock = DockStyle.Fill
-            frm.Controls.Add(dtp)
-            frm.Size = New Size(250, 100)
-            frm.StartPosition = FormStartPosition.CenterParent
-            If frm.ShowDialog() = DialogResult.OK Then
-                TxtFechaDesde.Text = dtp.Value.ToString("dd/MM/yyyy")
-            End If
-        End Using
-    End Sub
-
-    Private Sub cmdFechaHasta_Click(sender As Object, e As EventArgs) Handles CmdFechaHasta.Click
-        ' Abrir selector de fecha para fecha hasta
-        Using frm As New Form()
-            Dim dtp As New DateTimePicker()
-            dtp.Value = If(DateTime.TryParse(TxtFechaHasta.Text, Nothing), DateTime.Parse(TxtFechaHasta.Text), DateTime.Now)
-            dtp.Dock = DockStyle.Fill
-            frm.Controls.Add(dtp)
-            frm.Size = New Size(250, 100)
-            frm.StartPosition = FormStartPosition.CenterParent
-            If frm.ShowDialog() = DialogResult.OK Then
-                TxtFechaHasta.Text = dtp.Value.ToString("dd/MM/yyyy")
-            End If
-        End Using
-    End Sub
-
-    ' Eventos de ComboBox
     Private Sub CmbMeses_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbMeses.SelectedIndexChanged
         If CmbMeses.SelectedIndex >= 0 Then
             Dim mesSeleccionado As Integer = CmbMeses.SelectedIndex + 1
-            Dim año As Integer = If(String.IsNullOrEmpty(TxtAño.Text), DateTime.Now.Year, Convert.ToInt32(TxtAño.Text))
+            Dim año As Integer
+
+            ' Validar año ingresado
+            If String.IsNullOrEmpty(TxtAño.Text) OrElse Not Integer.TryParse(TxtAño.Text, año) Then
+                año = DateTime.Now.Year
+            End If
 
             ' Calcular primer y último día del mes
             Dim primerDia As New Date(año, mesSeleccionado, 1)
             Dim ultimoDia As Date = primerDia.AddMonths(1).AddDays(-1)
 
-            TxtFechaDesde.Text = primerDia.ToString("dd/MM/yyyy")
-            TxtFechaHasta.Text = ultimoDia.ToString("dd/MM/yyyy")
+            ' Asignar a los DateTimePicker
+            DtpDesde.Value = primerDia
+            DtpHasta.Value = ultimoDia
         End If
     End Sub
+
 
     Private Sub CmbNombres_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbNombres.SelectedIndexChanged
         If CmbNombres.SelectedValue IsNot Nothing Then
@@ -177,12 +151,9 @@ Public Class frmResumenAsistencia
     ' Cálculos de asistencia
     Private Function CalcularDiasTrabajados() As Integer
         Try
-            If String.IsNullOrEmpty(TxtLegajo.Text) OrElse String.IsNullOrEmpty(TxtFechaDesde.Text) OrElse String.IsNullOrEmpty(TxtFechaHasta.Text) Then
-                Return 0
-            End If
 
-            Dim fechaDesde As DateTime = Convert.ToDateTime(TxtFechaDesde.Text)
-            Dim fechaHasta As DateTime = Convert.ToDateTime(TxtFechaHasta.Text)
+            Dim fechaDesde = DtpDesde.Value.Date
+            Dim fechaHasta = DtpHasta.Value.Date
 
             ' Consulta similar al VB6: contar días únicos con movimientos sin motivo de inasistencia
             Dim parametros As New Dictionary(Of String, Object) From {
@@ -232,11 +203,6 @@ Public Class frmResumenAsistencia
                 Return
             End If
 
-            If String.IsNullOrEmpty(TxtFechaDesde.Text) OrElse String.IsNullOrEmpty(TxtFechaHasta.Text) Then
-                MessageBox.Show("Debe seleccionar un período de fechas", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
-
             ' Limpiar campos de totales
             TxtDiasTrabajados.Text = ""
             TxtPromedio.Text = ""
@@ -245,8 +211,8 @@ Public Class frmResumenAsistencia
             ' Parámetros para las consultas
             Dim parametros As New Dictionary(Of String, Object) From {
                 {"@Legajo", TxtLegajo.Text},
-                {"@FechaDesde", Convert.ToDateTime(TxtFechaDesde.Text)},
-                {"@FechaHasta", Convert.ToDateTime(TxtFechaHasta.Text)}
+                {"@FechaDesde", DtpDesde.Value.Date},
+                {"@FechaHasta", DtpHasta.Value.Date}
             }
 
             ' Consulta para obtener movimientos del empleado (similar a VB6)
@@ -346,29 +312,21 @@ Public Class frmResumenAsistencia
                 Return
             End If
 
-            If String.IsNullOrEmpty(TxtFechaDesde.Text) OrElse String.IsNullOrEmpty(TxtFechaHasta.Text) Then
-                MessageBox.Show("Debe seleccionar un período de fechas", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
-
             ' Parámetros para las consultas
             Dim parametros As New Dictionary(Of String, Object) From {
                 {"@Legajo", TxtLegajo.Text},
-                {"@FechaDesde", Convert.ToDateTime(TxtFechaDesde.Text)},
-                {"@FechaHasta", Convert.ToDateTime(TxtFechaHasta.Text)}
+                {"@FechaDesde", DtpDesde.Value.Date},
+                {"@FechaHasta", DtpHasta.Value.Date}
             }
 
-            ' Consulta para obtener movimientos del empleado (similar a VB6)
-            Dim consultaInasistencias As String = "SELECT Legajo,  " &
-                "CONVERT(varchar, Dia, 103) as Dia, " &
-                "MotivoInasistencia, " &
-                "Comentario " &
+            Dim consultaInasistencias As String = "SELECT MotivoInasistencia, " &
+                "COUNT(MotivoInasistencia) AS Cantidad " &
                 "FROM Movimiento " &
-                "WHERE Legajo = @Legajo AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
+                "WHERE Legajo = @Legajo " &
                 "AND MotivoInasistencia <> '' " &
-                "ORDER BY Dia"
-
-            ' DSM es una clase estática, no necesita validación de instancia
+                "AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
+                "GROUP BY MotivoInasistencia " &
+                "ORDER BY MotivoInasistencia"
 
             Dim dtMovimientos As DataTable = DSM.ExecuteQuery(DSM.Personal, consultaInasistencias, parametros)
 
@@ -377,7 +335,7 @@ Public Class frmResumenAsistencia
                 Return
             End If
 
-            ' Mostrar movimientos en el DataGridView
+            ' Mostrar resumen de inasistencias en el DataGridView
             DgvInasistencias.DataSource = dtMovimientos.DefaultView
             DgvInasistencias.Visible = True
             ConfigurarEstiloGrid(DgvInasistencias)
@@ -409,7 +367,7 @@ Public Class frmResumenAsistencia
             End If
 
             ' Ejecutar reporte externo usando Reportes.exe
-            Dim parametros As String = $"Personal resumen {TxtLegajo.Text} {TxtFechaDesde.Text} {TxtFechaHasta.Text}"
+            Dim parametros As String = $"Personal listaresu {TxtLegajo.Text} {DtpDesde.Value.Date} {DtpHasta.Value.Date}"
             Process.Start(General.ReportesPath, parametros)
 
         Catch ex As Exception
@@ -425,7 +383,7 @@ Public Class frmResumenAsistencia
             End If
 
             ' Ejecutar reporte detallado usando Reportes.exe
-            Dim parametros As String = $"Personal detallado {TxtLegajo.Text} {TxtFechaDesde.Text} {TxtFechaHasta.Text}"
+            Dim parametros As String = $"Personal detallado {TxtLegajo.Text} {DtpDesde.Value.Date} {DtpHasta.Value.Date}"
             Process.Start(General.ReportesPath, parametros)
 
         Catch ex As Exception
@@ -461,14 +419,11 @@ Public Class frmResumenAsistencia
     Private Sub GridInasistenciasConfigurarColumnas()
         Try
             If DgvInasistencias.Columns.Count > 0 Then
-                DgvInasistencias.Columns("Legajo").HeaderText = "Legajo"
-                DgvInasistencias.Columns("Legajo").Width = 50
-                DgvInasistencias.Columns("Dia").HeaderText = "Día"
-                DgvInasistencias.Columns("Dia").Width = 80
+
                 DgvInasistencias.Columns("MotivoInasistencia").HeaderText = "Motivo Inasistencia"
-                DgvInasistencias.Columns("MotivoInasistencia").Width = 180
-                DgvInasistencias.Columns("Comentario").HeaderText = "Comentario"
-                DgvInasistencias.Columns("Comentario").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                DgvInasistencias.Columns("MotivoInasistencia").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                DgvInasistencias.Columns("Cantidad").HeaderText = "Cantidad"
+                DgvInasistencias.Columns("Cantidad").Width = 80
 
             End If
         Catch ex As Exception

@@ -28,14 +28,10 @@ Partial Class frmResumenAsistencia
         CmdImprimir = New Button()
         CmdInasistencias = New Button()
         CmdResumen = New Button()
-        CmdFechaDesde = New Button()
-        CmdFechaHasta = New Button()
         DgvListado = New DataGridView()
         DgvInasistencias = New DataGridView()
         TxtLegajo = New TextBox()
         TxtAño = New TextBox()
-        TxtFechaDesde = New TextBox()
-        TxtFechaHasta = New TextBox()
         TxtDiasTrabajados = New TextBox()
         TxtPromedio = New TextBox()
         TxtDiasPromedio = New TextBox()
@@ -81,6 +77,8 @@ Partial Class frmResumenAsistencia
         Label22 = New Label()
         GroupBox1 = New GroupBox()
         GroupBox2 = New GroupBox()
+        DtpHasta = New DateTimePicker()
+        DtpDesde = New DateTimePicker()
         Label1 = New Label()
         Label23 = New Label()
         Label24 = New Label()
@@ -164,28 +162,6 @@ Partial Class frmResumenAsistencia
         CmdResumen.Text = "&Resumen"
         CmdResumen.UseVisualStyleBackColor = True
         ' 
-        ' CmdFechaDesde
-        ' 
-        CmdFechaDesde.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        CmdFechaDesde.Location = New Point(342, 48)
-        CmdFechaDesde.Margin = New Padding(4, 3, 4, 3)
-        CmdFechaDesde.Name = "CmdFechaDesde"
-        CmdFechaDesde.Size = New Size(29, 27)
-        CmdFechaDesde.TabIndex = 6
-        CmdFechaDesde.Text = "F"
-        CmdFechaDesde.UseVisualStyleBackColor = True
-        ' 
-        ' CmdFechaHasta
-        ' 
-        CmdFechaHasta.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        CmdFechaHasta.Location = New Point(572, 46)
-        CmdFechaHasta.Margin = New Padding(4, 3, 4, 3)
-        CmdFechaHasta.Name = "CmdFechaHasta"
-        CmdFechaHasta.Size = New Size(29, 27)
-        CmdFechaHasta.TabIndex = 7
-        CmdFechaHasta.Text = "F"
-        CmdFechaHasta.UseVisualStyleBackColor = True
-        ' 
         ' DgvListado
         ' 
         DgvListado.AllowUserToAddRows = False
@@ -205,13 +181,13 @@ Partial Class frmResumenAsistencia
         DgvInasistencias.AllowUserToAddRows = False
         DgvInasistencias.AllowUserToDeleteRows = False
         DgvInasistencias.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvInasistencias.Location = New Point(159, 272)
+        DgvInasistencias.Location = New Point(199, 273)
         DgvInasistencias.Margin = New Padding(4, 3, 4, 3)
         DgvInasistencias.MultiSelect = False
         DgvInasistencias.Name = "DgvInasistencias"
         DgvInasistencias.ReadOnly = True
         DgvInasistencias.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        DgvInasistencias.Size = New Size(507, 231)
+        DgvInasistencias.Size = New Size(438, 231)
         DgvInasistencias.TabIndex = 9
         DgvInasistencias.Visible = False
         ' 
@@ -231,22 +207,6 @@ Partial Class frmResumenAsistencia
         TxtAño.Name = "TxtAño"
         TxtAño.Size = New Size(69, 23)
         TxtAño.TabIndex = 12
-        ' 
-        ' TxtFechaDesde
-        ' 
-        TxtFechaDesde.Location = New Point(225, 50)
-        TxtFechaDesde.Margin = New Padding(4, 3, 4, 3)
-        TxtFechaDesde.Name = "TxtFechaDesde"
-        TxtFechaDesde.Size = New Size(116, 23)
-        TxtFechaDesde.TabIndex = 13
-        ' 
-        ' TxtFechaHasta
-        ' 
-        TxtFechaHasta.Location = New Point(440, 48)
-        TxtFechaHasta.Margin = New Padding(4, 3, 4, 3)
-        TxtFechaHasta.Name = "TxtFechaHasta"
-        TxtFechaHasta.Size = New Size(124, 23)
-        TxtFechaHasta.TabIndex = 14
         ' 
         ' TxtDiasTrabajados
         ' 
@@ -355,7 +315,7 @@ Partial Class frmResumenAsistencia
         ' TxtDiasLicencia
         ' 
         TxtDiasLicencia.Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        TxtDiasLicencia.Location = New Point(747, 74)
+        TxtDiasLicencia.Location = New Point(747, 76)
         TxtDiasLicencia.Margin = New Padding(4, 3, 4, 3)
         TxtDiasLicencia.Name = "TxtDiasLicencia"
         TxtDiasLicencia.ReadOnly = True
@@ -493,7 +453,7 @@ Partial Class frmResumenAsistencia
         ' Label4
         ' 
         Label4.AutoSize = True
-        Label4.Location = New Point(385, 52)
+        Label4.Location = New Point(385, 53)
         Label4.Margin = New Padding(4, 0, 4, 0)
         Label4.Name = "Label4"
         Label4.Size = New Size(40, 15)
@@ -573,7 +533,7 @@ Partial Class frmResumenAsistencia
         ' Label12
         ' 
         Label12.AutoSize = True
-        Label12.Location = New Point(175, 78)
+        Label12.Location = New Point(175, 76)
         Label12.Margin = New Padding(4, 0, 4, 0)
         Label12.Name = "Label12"
         Label12.Size = New Size(116, 15)
@@ -593,7 +553,7 @@ Partial Class frmResumenAsistencia
         ' Label14
         ' 
         Label14.AutoSize = True
-        Label14.Location = New Point(14, 110)
+        Label14.Location = New Point(14, 108)
         Label14.Margin = New Padding(4, 0, 4, 0)
         Label14.Name = "Label14"
         Label14.Size = New Size(100, 15)
@@ -726,16 +686,14 @@ Partial Class frmResumenAsistencia
         ' 
         ' GroupBox2
         ' 
+        GroupBox2.Controls.Add(DtpHasta)
+        GroupBox2.Controls.Add(DtpDesde)
         GroupBox2.Controls.Add(Label1)
         GroupBox2.Controls.Add(Label23)
         GroupBox2.Controls.Add(Label2)
         GroupBox2.Controls.Add(TxtLegajo)
         GroupBox2.Controls.Add(Label3)
-        GroupBox2.Controls.Add(TxtFechaDesde)
-        GroupBox2.Controls.Add(CmdFechaDesde)
         GroupBox2.Controls.Add(Label4)
-        GroupBox2.Controls.Add(TxtFechaHasta)
-        GroupBox2.Controls.Add(CmdFechaHasta)
         GroupBox2.Controls.Add(Label5)
         GroupBox2.Controls.Add(TxtAño)
         GroupBox2.Controls.Add(CmbMeses)
@@ -747,6 +705,22 @@ Partial Class frmResumenAsistencia
         GroupBox2.Size = New Size(723, 83)
         GroupBox2.TabIndex = 60
         GroupBox2.TabStop = False
+        ' 
+        ' DtpHasta
+        ' 
+        DtpHasta.Format = DateTimePickerFormat.Short
+        DtpHasta.Location = New Point(440, 50)
+        DtpHasta.Name = "DtpHasta"
+        DtpHasta.Size = New Size(91, 23)
+        DtpHasta.TabIndex = 45
+        ' 
+        ' DtpDesde
+        ' 
+        DtpDesde.Format = DateTimePickerFormat.Short
+        DtpDesde.Location = New Point(224, 50)
+        DtpDesde.Name = "DtpDesde"
+        DtpDesde.Size = New Size(91, 23)
+        DtpDesde.TabIndex = 44
         ' 
         ' Label1
         ' 
@@ -833,14 +807,10 @@ Partial Class frmResumenAsistencia
     Friend WithEvents CmdImprimir As Button
     Friend WithEvents CmdInasistencias As Button
     Friend WithEvents CmdResumen As Button
-    Friend WithEvents CmdFechaDesde As Button
-    Friend WithEvents CmdFechaHasta As Button
     Friend WithEvents DgvListado As DataGridView
     Friend WithEvents DgvInasistencias As DataGridView
     Friend WithEvents TxtLegajo As TextBox
     Friend WithEvents TxtAño As TextBox
-    Friend WithEvents TxtFechaDesde As TextBox
-    Friend WithEvents TxtFechaHasta As TextBox
     Friend WithEvents TxtDiasTrabajados As TextBox
     Friend WithEvents TxtPromedio As TextBox
     Friend WithEvents TxtDiasPromedio As TextBox
@@ -890,4 +860,6 @@ Partial Class frmResumenAsistencia
     Friend WithEvents Label1 As Label
     Friend WithEvents Label24 As Label
     Friend WithEvents Label25 As Label
+    Friend WithEvents DtpDesde As DateTimePicker
+    Friend WithEvents DtpHasta As DateTimePicker
 End Class

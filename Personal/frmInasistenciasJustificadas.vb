@@ -64,17 +64,6 @@ Public Class frmInasistenciasJustificadas
             Dim comentario = TxtComentario.Text.Trim
             Dim corridos = ChkCorridos.Checked
 
-            ' Verificar si ya existe un movimiento para esta fecha y agente
-            Dim sqlVerificar = "SELECT COUNT(*) FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha"
-            Dim parametrosVerificar = CmdParams("@Legajo", legajo, "@Fecha", fecha)
-            Dim tablaVerificar = DSM.ExecuteQuery(DSM.Personal, sqlVerificar, parametrosVerificar)
-            Dim existe = Convert.ToInt32(tablaVerificar.Rows(0)(0))
-
-            If existe > 0 AndAlso filaActual Is Nothing Then
-                MessageBox.Show("Ya existe un movimiento registrado para este agente en la fecha seleccionada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
-
             ' Obtener información del tipo de inasistencia
             Dim sqlTipoInasistencia = "SELECT Goce, Corrido, Habil FROM Inasistencias WHERE Codigo = @Codigo"
             Dim parametrosTipo = CmdParams("@Codigo", codigoInasistencia)
@@ -257,36 +246,47 @@ Public Class frmInasistenciasJustificadas
     End Function
 
     ''' <summary>
-    ''' Valida que no exista una inasistencia duplicada para el mismo agente, fecha y tipo.
+    ''' Valida que no exista una inasistencia duplicada para el mismo agente en el rango de fechas.
     ''' </summary>
     Private Function ValidarDuplicado() As Boolean
         Try
             Dim legajo = Convert.ToInt32(CmbAgente.SelectedValue)
             Dim fecha = DtpFecha.Value.Date
-            Dim codigo = Convert.ToInt32(CmbTipoInasistencia.SelectedValue)
+            Dim dias = Convert.ToInt32(TxtDias.Text.Trim)
+            Dim corridos = ChkCorridos.Checked
 
-            Dim sql = "SELECT COUNT(*) FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha"
-            Dim parametros = CmdParams("@Legajo", legajo, "@Fecha", fecha)
+            ' Calcular días según el tipo
+            Dim diasCalculados = CalcularDias(fecha, dias, corridos)
 
-            ' Si estamos editando, excluir el registro actual
-            If filaActual IsNot Nothing Then
-                Dim legajoAnterior = Convert.ToInt32(filaActual.Cells("Legajo").Value)
-                Dim fechaAnterior = Convert.ToDateTime(filaActual.Cells("Dia").Value)
-                Dim codigoAnterior = Convert.ToInt32(filaActual.Cells("CodigoInasistencia").Value)
+            ' Validar cada día del rango de inasistencia
+            For i As Integer = 0 To diasCalculados - 1
+                Dim fechaActual As Date = fecha.AddDays(i)
 
-                sql &= " AND NOT (Legajo = @LegajoAnterior AND Dia = @FechaAnterior)"
-                parametros = CmdParams("@Legajo", legajo, "@Fecha", fecha,
-                                     "@LegajoAnterior", legajoAnterior, "@FechaAnterior", fechaAnterior)
-            End If
+                Dim sql = "SELECT COUNT(*) FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha"
+                Dim parametros = CmdParams("@Legajo", legajo, "@Fecha", fechaActual)
 
-            Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
-            Dim count = Convert.ToInt32(tabla.Rows(0)(0))
+                ' Si estamos editando, excluir los registros actuales
+                If filaActual IsNot Nothing Then
+                    Dim legajoAnterior = Convert.ToInt32(filaActual.Cells("Legajo").Value)
+                    Dim fechaAnterior = Convert.ToDateTime(filaActual.Cells("Dia").Value)
+                    Dim diasAnteriores = Convert.ToInt32(filaActual.Cells("CantidadDias").Value)
 
-            If count > 0 Then
-                MessageBox.Show("Ya existe una inasistencia del mismo tipo para este agente en la fecha seleccionada.",
-                              "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return False
-            End If
+                    ' Excluir todo el rango de fechas del registro que se está editando
+                    sql &= " AND NOT (Legajo = @LegajoAnterior AND Dia >= @FechaAnterior AND Dia < @FechaAnteriorFin)"
+                    Dim fechaAnteriorFin = fechaAnterior.AddDays(diasAnteriores)
+                    parametros = CmdParams("@Legajo", legajo, "@Fecha", fechaActual,
+                                         "@LegajoAnterior", legajoAnterior, "@FechaAnterior", fechaAnterior, "@FechaAnteriorFin", fechaAnteriorFin)
+                End If
+
+                Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+                Dim count = Convert.ToInt32(tabla.Rows(0)(0))
+
+                If count > 0 Then
+                    MessageBox.Show($"Ya existe un movimiento registrado para este agente en la fecha {fechaActual:dd/MM/yyyy}.",
+                                  "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return False
+                End If
+            Next
 
             Return True
         Catch ex As Exception
@@ -433,11 +433,6 @@ Public Class frmInasistenciasJustificadas
         Dim fechaActual = DateTime.Now.Date
         Dim fechaLimite = fechaActual.AddMonths(-6) ' No más de 6 meses atrás
 
-        If fecha > fechaActual Then
-            MessageBox.Show("La fecha de inasistencia no puede ser futura.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return False
-        End If
-
         If fecha < fechaLimite Then
             Dim resultado = MessageBox.Show($"La fecha de inasistencia es anterior a {fechaLimite:dd/MM/yyyy}. ¿Desea continuar?",
                                           "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
@@ -452,11 +447,22 @@ Public Class frmInasistenciasJustificadas
     ''' </summary>
     Private Sub InsertarNuevaInasistencia(legajo As Integer, codigoInasistencia As String, fecha As Date, dias As Integer, comentario As String, esGoce As Boolean)
         Try
-            ' Insertar en tabla Movimiento
-            Dim horaActual As DateTime = DateTime.Now
+            ' Insertar en tabla Movimiento - un registro por cada día de inasistencia
+            Dim horaEntrada As DateTime = fecha.Date.AddHours(8) ' 08:00:00
+            Dim horaSalida As DateTime = fecha.Date.AddHours(8)   ' 08:00:00
+            Dim horasCumplidas As TimeSpan = TimeSpan.Zero       ' 0 horas trabajadas
+
             Dim sqlMovimiento = "INSERT INTO Movimiento (Legajo, Instituto, Dia, Entro, Salio, HsCumplidas, MotivoInasistencia, Comentario, Nopromedianada, SinFicha, NoPromedia) VALUES (@Legajo, @Instituto, @Dia, @Entro, @Salio, @HsCumplidas, @MotivoInasistencia, @Comentario, 0, 0, 0)"
-            Dim parametrosMovimiento = CmdParams("@Legajo", legajo, "@Instituto", DBNull.Value, "@Dia", fecha, "@Entro", horaActual, "@Salio", horaActual, "@HsCumplidas", TimeSpan.Zero, "@MotivoInasistencia", codigoInasistencia, "@Comentario", comentario)
-            DSM.Execute(DSM.Personal, sqlMovimiento, parametrosMovimiento, True)
+
+            ' Crear un registro por cada día de inasistencia
+            For i As Integer = 0 To dias - 1
+                Dim fechaActual As Date = fecha.AddDays(i)
+                Dim horaEntradaActual As DateTime = fechaActual.Date.AddHours(8) ' 08:00:00
+                Dim horaSalidaActual As DateTime = fechaActual.Date.AddHours(8)   ' 08:00:00
+
+                Dim parametrosMovimiento = CmdParams("@Legajo", legajo, "@Instituto", DBNull.Value, "@Dia", fechaActual, "@Entro", horaEntradaActual, "@Salio", horaSalidaActual, "@HsCumplidas", horasCumplidas, "@MotivoInasistencia", codigoInasistencia, "@Comentario", comentario)
+                DSM.Execute(DSM.Personal, sqlMovimiento, parametrosMovimiento, True)
+            Next
 
             ' Insertar en tabla Expediente
             Dim motivoDescripcion = CmbTipoInasistencia.Text
@@ -466,11 +472,10 @@ Public Class frmInasistenciasJustificadas
             DSM.Execute(DSM.Personal, sqlExpediente, parametrosExpediente, True)
 
             ' Insertar comentario si existe
-            If Not String.IsNullOrEmpty(comentario) Then
-                Dim sqlComentario = "INSERT INTO Comentarios (Legajo, Fecha, Comenta, Motivo) VALUES (@Legajo, @Fecha, @Comentario, @Motivo)"
-                Dim parametrosComentario = CmdParams("@Legajo", legajo, "@Fecha", fecha, "@Comentario", comentario, "@Motivo", motivoDescripcion)
-                DSM.Execute(DSM.Personal, sqlComentario, parametrosComentario, True)
-            End If
+
+            Dim sqlComentario = "INSERT INTO Comentarios (Legajo, Fecha, Comenta, Motivo) VALUES (@Legajo, @Fecha, @Comentario, @Motivo)"
+            Dim parametrosComentario = CmdParams("@Legajo", legajo, "@Fecha", fecha, "@Comentario", comentario, "@Motivo", motivoDescripcion)
+            DSM.Execute(DSM.Personal, sqlComentario, parametrosComentario, True)
 
             ' Si es vacaciones, descontar del saldo de vacaciones
             If motivoDescripcion.ToUpper().Contains("VACACIONES") Then
@@ -513,10 +518,13 @@ Public Class frmInasistenciasJustificadas
             ' Verificar si el tipo es vacaciones para restaurar saldo
             Dim esVacaciones = motivoInasistencia.ToUpper().Contains("VACACIONES")
 
-            ' Eliminar de tabla Movimiento
-            Dim sqlMovimiento = "DELETE FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha "
-            Dim parametrosMovimiento = CmdParams("@Legajo", legajo, "@Fecha", fecha)
-            DSM.Execute(DSM.Personal, sqlMovimiento, parametrosMovimiento, True)
+            ' Eliminar de tabla Movimiento - todos los registros de los días de inasistencia
+            For i As Integer = 0 To dias - 1
+                Dim fechaActual As Date = fecha.AddDays(i)
+                Dim sqlMovimiento = "DELETE FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha "
+                Dim parametrosMovimiento = CmdParams("@Legajo", legajo, "@Fecha", fechaActual)
+                DSM.Execute(DSM.Personal, sqlMovimiento, parametrosMovimiento, True)
+            Next
 
             ' Eliminar de tabla Expediente
             Dim sqlExpediente = "DELETE FROM Expediente WHERE Legajo = @Legajo AND Dia = @Fecha "

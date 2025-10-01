@@ -170,6 +170,8 @@ Partial Class frmInasistenciasJustificadas
         ' ChkCorridos
         ' 
         ChkCorridos.AutoSize = True
+        ChkCorridos.Checked = True
+        ChkCorridos.CheckState = CheckState.Checked
         ChkCorridos.Location = New Point(175, 70)
         ChkCorridos.Name = "ChkCorridos"
         ChkCorridos.Size = New Size(96, 19)
