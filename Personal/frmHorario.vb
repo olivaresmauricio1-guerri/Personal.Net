@@ -37,11 +37,12 @@ Public Class frmHorario
         Dim sucursalTexto As String = cmbSucursal.Text
         Dim soloTarde As Boolean = chkTarde.Checked
         Dim vista As String = If(radSemana.Checked, "semana", If(radAgente.Checked, "agente", "normal"))
+        Dim reporte As String = If(chkDuplicado.Checked, "lsthorario2", "lsthorario")
 
         Reportes.ListadoHorario(dtpDesde.Value, dtpHasta.Value, sucursalId, sucursalTexto, soloTarde)
 
         Try
-            Process.Start(General.ReportesPath, $"Personal lsthorario vista {vista}")
+            Process.Start(General.ReportesPath, $"Personal {reporte} vista {vista}")
         Catch ex As Exception
             MessageBox.Show("Error al abrir el reporte: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try

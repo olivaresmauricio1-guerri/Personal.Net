@@ -87,9 +87,9 @@ Partial Class frmInasistenciasJustificadas
         CmdSalir.FlatStyle = FlatStyle.Flat
         CmdSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         CmdSalir.ForeColor = Color.White
-        CmdSalir.Location = New Point(474, 6)
+        CmdSalir.Location = New Point(460, 6)
         CmdSalir.Name = "CmdSalir"
-        CmdSalir.Size = New Size(75, 30)
+        CmdSalir.Size = New Size(88, 30)
         CmdSalir.TabIndex = 10
         CmdSalir.Text = "Salir"
         CmdSalir.UseVisualStyleBackColor = False
@@ -98,7 +98,7 @@ Partial Class frmInasistenciasJustificadas
         ' 
         CmdCancelar.FlatStyle = FlatStyle.Flat
         CmdCancelar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        CmdCancelar.Location = New Point(380, 6)
+        CmdCancelar.Location = New Point(366, 6)
         CmdCancelar.Name = "CmdCancelar"
         CmdCancelar.Size = New Size(88, 30)
         CmdCancelar.TabIndex = 9
@@ -109,7 +109,7 @@ Partial Class frmInasistenciasJustificadas
         ' 
         CmdAceptar.FlatStyle = FlatStyle.Flat
         CmdAceptar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        CmdAceptar.Location = New Point(286, 6)
+        CmdAceptar.Location = New Point(272, 6)
         CmdAceptar.Name = "CmdAceptar"
         CmdAceptar.Size = New Size(88, 30)
         CmdAceptar.TabIndex = 8
