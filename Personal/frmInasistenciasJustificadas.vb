@@ -114,6 +114,7 @@ Public Class frmInasistenciasJustificadas
     Private Sub CmbAgente_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbAgente.SelectedIndexChanged
         ActualizarSaldoVacaciones()
         CargarHistorialInasistencias()
+        CargarLicencias()
     End Sub
 
     Private Sub CmbTipoInasistencia_SelectedIndexChanged(sender As Object, e As EventArgs)
@@ -559,6 +560,39 @@ Public Class frmInasistenciasJustificadas
 
     End Sub
 
+    Private Sub ConfigurarColLicencia()
+        Try
+            If dgvLicencia.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In dgvLicencia.Columns
+                    col.Visible = False
+                Next
+
+                ' Configurar columnas del grid de historial de inasistencias
+
+                dgvLicencia.Columns("Motivo").Visible = True
+                dgvLicencia.Columns("Motivo").HeaderText = "Motivo"
+                dgvLicencia.Columns("Motivo").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+                dgvLicencia.Columns("diasDisponibles").Visible = True
+                dgvLicencia.Columns("diasDisponibles").HeaderText = "Disp"
+                dgvLicencia.Columns("diasDisponibles").Width = 60
+                dgvLicencia.Columns("diasDisponibles").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+
+                dgvLicencia.Columns("diasRestantes").Visible = True
+                dgvLicencia.Columns("diasRestantes").HeaderText = "Resto"
+                dgvLicencia.Columns("diasRestantes").Width = 60
+                dgvLicencia.Columns("diasRestantes").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+
+
+                ' Aplicar estilo común
+                ConfigurarEstiloGrid(dgvLicencia)
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuración de columnas
+        End Try
+
+    End Sub
+
 
     ''' <summary>
     ''' Configura las columnas del DataGridView para mostrar el historial de inasistencias
@@ -598,6 +632,28 @@ Public Class frmInasistenciasJustificadas
             End If
         Catch ex As Exception
             ' Ignorar errores de configuración de columnas
+        End Try
+    End Sub
+
+    Private Sub CargarLicencias()
+        Try
+            If CmbAgente.SelectedValue Is Nothing OrElse TypeOf CmbAgente.SelectedValue Is DataRowView Then
+                Return
+            End If
+            Dim legajo As Integer = Convert.ToInt32(CmbAgente.SelectedValue)
+
+            Vacaciones.ActualizarVacacionesPorAgente(legajo)
+
+
+            ' Consulta para obtener las licencias del agente
+            Dim sql = "SELECT * FROM Licencia WHERE Legajo = @Legajo ORDER BY Motivo DESC"
+            Dim parametros = CmdParams("@Legajo", legajo)
+            Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+            dgvLicencia.DataSource = tabla
+            ' Configurar columnas después de cargar los datos
+            ConfigurarColLicencia()
+        Catch ex As Exception
+            MessageBox.Show($"Error al cargar las licencias: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

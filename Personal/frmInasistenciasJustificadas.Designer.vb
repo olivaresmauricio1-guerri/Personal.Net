@@ -44,11 +44,13 @@ Partial Class frmInasistenciasJustificadas
         DgvListado = New DataGridView()
         CmbAgente = New ComboBox()
         Label3 = New Label()
+        dgvLicencia = New DataGridView()
         TableLayoutPanel1.SuspendLayout()
         Panel1.SuspendLayout()
         Panel5.SuspendLayout()
         GroupBox2.SuspendLayout()
         CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
+        CType(dgvLicencia, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' TableLayoutPanel1
@@ -65,7 +67,7 @@ Partial Class frmInasistenciasJustificadas
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 330F))
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 55F))
-        TableLayoutPanel1.Size = New Size(561, 571)
+        TableLayoutPanel1.Size = New Size(859, 571)
         TableLayoutPanel1.TabIndex = 0
         ' 
         ' Panel1
@@ -78,7 +80,7 @@ Partial Class frmInasistenciasJustificadas
         Panel1.Dock = DockStyle.Fill
         Panel1.Location = New Point(3, 519)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(555, 49)
+        Panel1.Size = New Size(853, 49)
         Panel1.TabIndex = 10
         ' 
         ' CmdSalir
@@ -153,7 +155,7 @@ Partial Class frmInasistenciasJustificadas
         Panel5.Dock = DockStyle.Fill
         Panel5.Location = New Point(3, 333)
         Panel5.Name = "Panel5"
-        Panel5.Size = New Size(555, 180)
+        Panel5.Size = New Size(853, 180)
         Panel5.TabIndex = 9
         ' 
         ' LblSaldo
@@ -186,7 +188,7 @@ Partial Class frmInasistenciasJustificadas
         TxtComentario.Multiline = True
         TxtComentario.Name = "TxtComentario"
         TxtComentario.ScrollBars = ScrollBars.Vertical
-        TxtComentario.Size = New Size(458, 74)
+        TxtComentario.Size = New Size(756, 74)
         TxtComentario.TabIndex = 7
         ' 
         ' Label7
@@ -238,7 +240,7 @@ Partial Class frmInasistenciasJustificadas
         CmbTipoInasistencia.FormattingEnabled = True
         CmbTipoInasistencia.Location = New Point(88, 10)
         CmbTipoInasistencia.Name = "CmbTipoInasistencia"
-        CmbTipoInasistencia.Size = New Size(458, 23)
+        CmbTipoInasistencia.Size = New Size(756, 23)
         CmbTipoInasistencia.TabIndex = 3
         ' 
         ' Label4
@@ -252,13 +254,14 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' GroupBox2
         ' 
+        GroupBox2.Controls.Add(dgvLicencia)
         GroupBox2.Controls.Add(DgvListado)
         GroupBox2.Controls.Add(CmbAgente)
         GroupBox2.Controls.Add(Label3)
         GroupBox2.Dock = DockStyle.Fill
         GroupBox2.Location = New Point(3, 3)
         GroupBox2.Name = "GroupBox2"
-        GroupBox2.Size = New Size(555, 324)
+        GroupBox2.Size = New Size(853, 324)
         GroupBox2.TabIndex = 5
         GroupBox2.TabStop = False
         GroupBox2.Text = "Historial de Inasistencia"
@@ -279,7 +282,7 @@ Partial Class frmInasistenciasJustificadas
         CmbAgente.FormattingEnabled = True
         CmbAgente.Location = New Point(88, 23)
         CmbAgente.Name = "CmbAgente"
-        CmbAgente.Size = New Size(458, 23)
+        CmbAgente.Size = New Size(756, 23)
         CmbAgente.TabIndex = 1
         ' 
         ' Label3
@@ -291,11 +294,19 @@ Partial Class frmInasistenciasJustificadas
         Label3.TabIndex = 0
         Label3.Text = "Agente:"
         ' 
+        ' dgvLicencia
+        ' 
+        dgvLicencia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvLicencia.Location = New Point(561, 64)
+        dgvLicencia.Name = "dgvLicencia"
+        dgvLicencia.Size = New Size(283, 254)
+        dgvLicencia.TabIndex = 3
+        ' 
         ' frmInasistenciasJustificadas
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(561, 571)
+        ClientSize = New Size(859, 571)
         Controls.Add(TableLayoutPanel1)
         FormBorderStyle = FormBorderStyle.FixedSingle
         MaximizeBox = False
@@ -310,6 +321,7 @@ Partial Class frmInasistenciasJustificadas
         GroupBox2.ResumeLayout(False)
         GroupBox2.PerformLayout()
         CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
+        CType(dgvLicencia, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
 
     End Sub
@@ -336,4 +348,5 @@ Partial Class frmInasistenciasJustificadas
     Friend WithEvents CmbTipoInasistencia As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents DgvListado As DataGridView
+    Friend WithEvents dgvLicencia As DataGridView
 End Class
