@@ -120,7 +120,9 @@ Public Class ZkBridge
                     Dim enroll As String = ""
                     Dim verify, inout, y, mm, d, h, nn, ss, workcode As Integer
                     While _zk.SSR_GetGeneralLogData(m, enroll, verify, inout, y, mm, d, h, nn, ss, workcode)
-                        Dim fh As New DateTime(y, mm, d, h, nn, Math.Max(0, ss))
+                        ' Dim fh As New DateTime(y, mm, d, h, nn, Math.Max(0, ss))
+                        Dim fh As New DateTime(y, mm, d, h, nn, ss)
+
                         logs.Add(New With {
                             .id = If(enroll, ""),
                             .fechaHora = fh.ToString("yyyy-MM-dd HH:mm:ss"),
