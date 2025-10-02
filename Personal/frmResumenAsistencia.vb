@@ -354,15 +354,15 @@ Public Class frmResumenAsistencia
                 {"@FechaHasta", dtpHasta.Value}
             }
 
-            ' Consulta para obtener movimientos del empleado (similar a VB6)
-            Dim consultaInasistencias As String = "SELECT Legajo,  " &
-                "CONVERT(varchar, Dia, 103) as Dia, " &
-                "MotivoInasistencia, " &
-                "Comentario " &
+            ' Consulta para obtener resumen de inasistencias agrupadas por motivo (igual que VB6)
+            Dim consultaInasistencias As String = "SELECT MotivoInasistencia, " &
+                "COUNT(MotivoInasistencia) AS Cantidad " &
                 "FROM Movimiento " &
-                "WHERE Legajo = @Legajo AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
+                "WHERE Legajo = @Legajo " &
+                "AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
                 "AND MotivoInasistencia <> '' " &
-                "ORDER BY Dia"
+                "GROUP BY MotivoInasistencia " &
+                "ORDER BY MotivoInasistencia"
 
             ' DSM es una clase estática, no necesita validación de instancia
 
@@ -373,7 +373,7 @@ Public Class frmResumenAsistencia
                 Return
             End If
 
-            ' Mostrar movimientos en el DataGridView
+            ' Mostrar resumen de inasistencias en el DataGridView
             DgvInasistencias.DataSource = dtMovimientos.DefaultView
             DgvInasistencias.Visible = True
             ConfigurarEstiloGrid(DgvInasistencias)
@@ -550,14 +550,12 @@ Public Class frmResumenAsistencia
     Private Sub GridInasistenciasConfigurarColumnas()
         Try
             If DgvInasistencias.Columns.Count > 0 Then
-                DgvInasistencias.Columns("Legajo").HeaderText = "Legajo"
-                DgvInasistencias.Columns("Legajo").Width = 50
-                DgvInasistencias.Columns("Dia").HeaderText = "Día"
-                DgvInasistencias.Columns("Dia").Width = 80
+
+
                 DgvInasistencias.Columns("MotivoInasistencia").HeaderText = "Motivo Inasistencia"
-                DgvInasistencias.Columns("MotivoInasistencia").Width = 180
-                DgvInasistencias.Columns("Comentario").HeaderText = "Comentario"
-                DgvInasistencias.Columns("Comentario").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                DgvInasistencias.Columns("MotivoInasistencia").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                DgvInasistencias.Columns("Cantidad").HeaderText = "Dias"
+                DgvInasistencias.Columns("Cantidad").Width = 80
 
             End If
         Catch ex As Exception

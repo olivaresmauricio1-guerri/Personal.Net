@@ -1396,4 +1396,6 @@ Public Class frmAgentes
         ' Formar el CUIL completo
         Return prefijo & dni & verificador
     End Function
+
+
 End Class

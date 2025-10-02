@@ -169,18 +169,48 @@ Public Module General
         DSM.Inicializar(conexiones, configuracionApi)
     End Sub
 
-    Public Sub CargarCombos(combo As ComboBox, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "")
+    'Public Sub CargarCombos(combo As ComboBox, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "", Optional Were As String = "")
+    '    Try
+    '        Dim sql As String = "SELECT * FROM " & nombreTabla & " ORDER BY " & campoOrden
+    '        Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql)
+    '        combo.DataSource = tabla
+    '        combo.DisplayMember = campoMostrar
+    '        If campoValor <> "" Then combo.ValueMember = campoValor
+    '        combo.SelectedIndex = -1
+    '    Catch ex As Exception
+    '        MessageBox.Show($"Error al cargar datos de {nombreTabla}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+    'End Sub
+    Public Sub CargarCombos(combo As ComboBox, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "", Optional where As String = "")
         Try
-            Dim sql As String = "SELECT * FROM " & nombreTabla & " ORDER BY " & campoOrden
+            ' Armamos la consulta base
+            Dim sql As String = "SELECT * FROM " & nombreTabla
+
+            ' Si viene un where, lo concatenamos
+            If Not String.IsNullOrWhiteSpace(where) Then
+                sql &= " WHERE " & where
+            End If
+
+            ' Orden
+            sql &= " ORDER BY " & campoOrden
+
+            ' Ejecutamos la consulta
             Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql)
-            combo.DataSource = tabla
+
+            ' Bind al combo
+            combo.DataSource = Nothing
             combo.DisplayMember = campoMostrar
+
             If campoValor <> "" Then combo.ValueMember = campoValor
+
+            combo.DataSource = tabla
             combo.SelectedIndex = -1
+
         Catch ex As Exception
             MessageBox.Show($"Error al cargar datos de {nombreTabla}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
     Public Sub CargarCombosGrid(combo As DataGridViewComboBoxColumn, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "")
         Try
             Dim sql As String = "SELECT * FROM " & nombreTabla & " ORDER BY " & campoOrden

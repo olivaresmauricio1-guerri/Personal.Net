@@ -34,6 +34,7 @@ Partial Class frmHorario
         radNormal = New RadioButton()
         radAgente = New RadioButton()
         radSemana = New RadioButton()
+        chkDuplicado = New CheckBox()
         SuspendLayout()
         ' 
         ' dtpDesde
@@ -159,11 +160,22 @@ Partial Class frmHorario
         radSemana.Text = "Hoja por semana"
         radSemana.UseVisualStyleBackColor = True
         ' 
+        ' chkDuplicado
+        ' 
+        chkDuplicado.AutoSize = True
+        chkDuplicado.Location = New Point(123, 96)
+        chkDuplicado.Name = "chkDuplicado"
+        chkDuplicado.Size = New Size(100, 19)
+        chkDuplicado.TabIndex = 12
+        chkDuplicado.Text = "Por duplicado"
+        chkDuplicado.UseVisualStyleBackColor = True
+        ' 
         ' frmHorario
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(482, 139)
+        Controls.Add(chkDuplicado)
         Controls.Add(radSemana)
         Controls.Add(radAgente)
         Controls.Add(radNormal)
@@ -197,4 +209,5 @@ Partial Class frmHorario
     Friend WithEvents radNormal As RadioButton
     Friend WithEvents radAgente As RadioButton
     Friend WithEvents radSemana As RadioButton
+    Friend WithEvents chkDuplicado As CheckBox
 End Class
