@@ -68,9 +68,9 @@ Public Module Vacaciones
     Public Function CalcularDiasVacaciones(fechaIngreso As Date, fechaHasta As Date) As Integer
 
         Dim antiguedad As Integer = fechaHasta.Year - fechaIngreso.Year + 1
-        'If (fechaHasta.Month < fechaIngreso.Month) Or (fechaHasta.Month = fechaIngreso.Month And fechaHasta.Day < fechaIngreso.Day) Then
-        '    antiguedad -= 1
-        'End If
+        If (fechaHasta.Month < fechaIngreso.Month) Or (fechaHasta.Month = fechaIngreso.Month And fechaHasta.Day < fechaIngreso.Day) Then
+            antiguedad -= 1
+        End If
         If antiguedad < 0 Then antiguedad = 0
         If antiguedad > 40 Then antiguedad = 40
         If VacacionesPorAntiguedad.ContainsKey(antiguedad) Then
@@ -85,16 +85,16 @@ Public Module Vacaciones
 
     ' hasta 40 años
     Public ReadOnly VacacionesPorAntiguedad As New Dictionary(Of Integer, Integer) From {
-        {1, 14},   ' 1 año de antigüedad: 14 días
-        {2, 14},   ' 2 años de antigüedad: 14 días
-        {3, 14},   ' 3 años de antigüedad: 21 días
-        {4, 14},   ' 4 años de antigüedad: 21 días
-        {5, 21},   ' 5 años de antigüedad: 28 días
-        {6, 21},   ' 6 años de antigüedad: 28 días
-        {7, 21},   ' 7 años de antigüedad: 28 días
-        {8, 21},   ' 8 años de antigüedad: 28 días
-        {9, 21},   ' 9 años de antigüedad: 28 días
-        {10, 28},   ' 10 o más años de antigüedad: 35 días
+        {1, 14},
+        {2, 14},
+        {3, 14},
+        {4, 14},
+        {5, 21},
+        {6, 21},
+        {7, 21},
+        {8, 21},
+        {9, 21},
+        {10, 28},
         {11, 28},
         {12, 28},
         {13, 28},
