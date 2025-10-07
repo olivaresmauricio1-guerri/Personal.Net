@@ -467,12 +467,20 @@ Public Class frmInasistenciasJustificadas
             ' Insertar en tabla Expediente
             Dim motivoDescripcion = CmbTipoInasistencia.Text
             Dim nombreAgente = CmbAgente.Text
-            Dim sqlExpediente = "INSERT INTO Expediente (Legajo, Dia, Motivo, CantidadDias, Nombre, Listar) VALUES (@Legajo, @Dia, @Motivo, @CantidadDias, @Nombre, 0)"
-            Dim parametrosExpediente = CmdParams("@Legajo", legajo, "@Dia", fecha, "@Motivo", motivoDescripcion, "@CantidadDias", dias, "@Nombre", nombreAgente)
+            Dim sqlExpediente = "INSERT INTO Expediente (Legajo, Dia, Motivo, CantidadDias, Nombre, Listar, Autorizo, Cargo) VALUES (@Legajo, @Dia, @Motivo, @CantidadDias, @Nombre, 0, @Autorizo, @Cargo);"
+            Dim parametrosExpediente = CmdParams("@Legajo", legajo, "@Dia", fecha, "@Motivo", motivoDescripcion, "@CantidadDias", dias, "@Nombre", nombreAgente, "@Autorizo", UsuarioActual, "@Cargo", "Recursos Humanos")
             DSM.Execute(DSM.Personal, sqlExpediente, parametrosExpediente, True)
 
-            ' Insertar comentario si existe
+            'Obtengo el ultimo id insertado en la tabla expediente para imprimir reporte
+            Dim sqlUltimoId = "SELECT TOP 1 Id FROM Expediente WHERE Legajo = @Legajo AND Dia = @Dia ORDER BY Id DESC"
+            Dim parametrosUltimoId = CmdParams("@Legajo", legajo, "@Dia", fecha)
+            Dim tablaUltimoId = DSM.ExecuteQuery(DSM.Personal, sqlUltimoId, parametrosUltimoId)
+            Dim idExpte As Integer = 0
+            If tablaUltimoId IsNot Nothing AndAlso tablaUltimoId.Rows.Count > 0 Then
+                idExpte = Convert.ToInt32(tablaUltimoId.Rows(0)("Id"))
+            End If
 
+            ' Insertar comentario si existe
             Dim sqlComentario = "INSERT INTO Comentarios (Legajo, Fecha, Comenta, Motivo) VALUES (@Legajo, @Fecha, @Comentario, @Motivo)"
             Dim parametrosComentario = CmdParams("@Legajo", legajo, "@Fecha", fecha, "@Comentario", comentario, "@Motivo", motivoDescripcion)
             DSM.Execute(DSM.Personal, sqlComentario, parametrosComentario, True)
@@ -487,6 +495,7 @@ Public Class frmInasistenciasJustificadas
                 DSM.Execute(DSM.Personal, sqlActualizar, parametrosActualizar, True)
             End If
 
+            ImprimirFicha(idExpte)
             FormModoConsulta()
             CargarHistorialInasistencias() ' Actualizar el grid después de insertar
         Catch ex As Exception
@@ -500,7 +509,10 @@ Public Class frmInasistenciasJustificadas
     ''' </summary>
     Private Sub EliminarInasistencia()
         Try
-            If filaActual Is Nothing Then Return
+            If filaActual Is Nothing OrElse DgvListado.Rows.Count = 0 Then
+                MessageBox.Show("Debe seleccionar una fila válida")
+                Return
+            End If
 
             ' Confirmar eliminación
             Dim resultado = MessageBox.Show("¿Está seguro de que desea eliminar esta inasistencia?",
@@ -559,6 +571,30 @@ Public Class frmInasistenciasJustificadas
 
     End Sub
 
+    Private Sub ImprimirFicha(Id As Integer)
+        If Id > 0 Then
+            ' Actualizar datos adicionales del expediente si es necesario
+            Dim sqlUpdate As String = "UPDATE Expediente " &
+            "SET Expediente.Articulo = Inasistencias.Articulo, " &
+            "Expediente.Inciso = Inasistencias.Inciso, " &
+            "Expediente.Decreto = Inasistencias.Decreto, " &
+            "Expediente.Secretaria = Agentes.Secretaria, " &
+            "Expediente.Insti = Agentes.Instituto, " &
+            "Expediente.ListaR = 1 " &
+            "FROM Expediente " &
+            "INNER JOIN Inasistencias ON Expediente.Motivo = Inasistencias.Descripcion " &
+            "INNER JOIN Agentes ON Expediente.Legajo = Agentes.Legajo " &
+            "WHERE Expediente.ID = @IdExpte"
+
+            Dim parametrosUpdate As Dictionary(Of String, Object) = CmdParams("@IdExpte", Id)
+            DSM.Execute(DSM.Personal, sqlUpdate, parametrosUpdate, True)
+
+            ' Imprimir el reporte
+            Process.Start(General.ReportesPath, "Personal ficha RecordSelectionFormula {Expediente.Id}=" & Id)
+
+        End If
+
+    End Sub
 
     ''' <summary>
     ''' Configura las columnas del DataGridView para mostrar el historial de inasistencias

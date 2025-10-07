@@ -3,6 +3,7 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class frmAgentes
     Private _suspenderAccionFiltros As Boolean = False
+    Public Property MostrarSoloEventuales As Boolean?
 
     Private tabla As New DataTable()
     Private tablaGrupoFamiliar As New DataTable()
@@ -19,11 +20,12 @@ Public Class frmAgentes
     Private filaComentarioActual As DataGridViewRow
     Private filaComentarioActualIndice As Integer = -1
 
-    Public Shared Sub AbrirInstancia(mdiParent As Form)
+    Public Shared Sub AbrirInstancia(mdiParent As Form, Optional soloEventuales As Boolean? = Nothing)
         If instancia Is Nothing OrElse instancia.IsDisposed Then
             instancia = New frmAgentes()
             instancia.MdiParent = mdiParent
         End If
+        instancia.MostrarSoloEventuales = soloEventuales
         instancia.Show()
         instancia.BringToFront()
         instancia.Focus()
@@ -442,11 +444,11 @@ Public Class frmAgentes
         sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto,   Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, HorasDiarias, " &
                            "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular,  " &
-                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion) " &
+                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, Eventual) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto,   @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad,  @HorasDiarias, " &
                            "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular,  " &
-                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion)"
+                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @Eventual)"
 
         Dim parametros = ObtenerParametrosAgente()
         DSM.Execute(DSM.Personal, sql, parametros, True)
@@ -460,12 +462,13 @@ Public Class frmAgentes
                            "Escalafon=@Escalafon, Jefe=@Jefe, LicAnual=@LicAnual, Caracter=@Caracter, Comentario=@Comentario, " &
                            "Nomarca=@Nomarca, Cargo=@Cargo, Telefono=@Telefono, Interno=@Interno, Celular=@Celular, " &
                            "iNGRESO=@iNGRESO, Baja=@Baja, Motivo=@Motivo, CUIL=@CUIL, TITULO=@TITULO, UltimaActualizacion=@UltimaActualizacion, " &
-                           "EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion " &
+                           "EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion, Eventual=@Eventual " &
                            "WHERE Legajo=@Legajo"
 
         Dim parametros = ObtenerParametrosAgente()
         DSM.Execute(DSM.Personal, sql, parametros, True)
         MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        FormModoConsulta()
     End Sub
 
     Private Function ObtenerParametrosAgente() As Dictionary(Of String, Object)
@@ -489,6 +492,7 @@ Public Class frmAgentes
             {"@Caracter", If(String.IsNullOrEmpty(cmbCaracter.Text.Trim), DBNull.Value, cmbCaracter.Text.Trim)},
             {"@Comentario", If(String.IsNullOrEmpty(txtComentario.Text.Trim), DBNull.Value, txtComentario.Text.Trim)},
             {"@Nomarca", chkNomarca.Checked},
+            {"@Eventual", chkEventual.Checked},
             {"@Cargo", If(String.IsNullOrEmpty(cmbCategoria.Text.Trim), DBNull.Value, cmbCategoria.Text.Trim)},
             {"@Telefono", If(String.IsNullOrEmpty(txtTelefono.Text.Trim), DBNull.Value, txtTelefono.Text.Trim)},
             {"@Interno", If(String.IsNullOrEmpty(txtInterno.Text.Trim), DBNull.Value, txtInterno.Text.Trim)},
@@ -562,6 +566,7 @@ Public Class frmAgentes
             txtComentario.Text = If(IsDBNull(row("Comentario")), "", row("Comentario").ToString())
 
             chkNomarca.Checked = If(IsDBNull(row("Nomarca")), False, Convert.ToBoolean(row("Nomarca")))
+            chkEventual.Checked = If(IsDBNull(row("Eventual")), False, Convert.ToBoolean(row("Eventual")))
             cmbCategoria.Text = If(IsDBNull(row("Cargo")), "", row("Cargo").ToString())
             txtTelefono.Text = If(IsDBNull(row("Telefono")), "", row("Telefono").ToString())
             txtInterno.Text = If(IsDBNull(row("Interno")), "", row("Interno").ToString())
@@ -627,6 +632,12 @@ Public Class frmAgentes
             If Not String.IsNullOrEmpty(texto) Then
                 sql &= " AND (Nombre LIKE @Nombre OR NroDto LIKE @DNI OR Legajo LIKE @Legajo)"
                 parametros.AddRange(New Object() {"@Nombre", $"%{texto}%", "@DNI", $"{texto.Trim()}%", "@Legajo", $"{texto.Trim()}%"})
+            End If
+
+            ' Filtro Eventuales
+            If MostrarSoloEventuales.HasValue Then
+                sql &= " AND Eventual = @Eventual"
+                parametros.AddRange(New Object() {"@Eventual", If(MostrarSoloEventuales.Value, 1, 0)})
             End If
 
             ' Orden
@@ -747,6 +758,7 @@ Public Class frmAgentes
 
         ' Limpiar CheckBoxes
         chkNomarca.Checked = False
+        chkEventual.Checked = False
 
         ' Resetear DateTimePicker
         dtpNacimiento.Value = DateTime.Now
@@ -862,7 +874,7 @@ Public Class frmAgentes
                            txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
                            txtInterno, txtCelular, txtUltimaActualizacion, dtpIngreso, dtpBaja, txtTitulo,
-                            cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad)
+                            cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad, chkEventual)
     End Sub
     Private Sub dtpNacimientoFamiliar_ValueChanged(sender As Object, e As EventArgs) Handles dtpNacimientoFamiliar.ValueChanged
 

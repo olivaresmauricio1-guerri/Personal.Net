@@ -1,8 +1,10 @@
 Imports System.Data.SqlClient
+Imports Microsoft.Identity.Client.ApiConfig
 Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class frmResumenAsistencia
     Private _suspenderAccionFiltros As Boolean = False
+    Public Property MostrarSoloEventuales As Boolean?
 
     Private Shared instancia As frmResumenAsistencia
     Private filaActual As DataRow
@@ -12,11 +14,12 @@ Public Class frmResumenAsistencia
     Private fechaDesde As Date
     Private fechaHasta As Date
 
-    Public Shared Sub AbrirInstancia(mdiParent As Form)
+    Public Shared Sub AbrirInstancia(mdiParent As Form, Optional soloEventuales As Boolean? = Nothing)
         If instancia Is Nothing OrElse instancia.IsDisposed Then
             instancia = New frmResumenAsistencia()
             instancia.MdiParent = mdiParent
         End If
+        instancia.MostrarSoloEventuales = soloEventuales
         instancia.Show()
         instancia.BringToFront()
         instancia.Focus()
@@ -28,10 +31,6 @@ Public Class frmResumenAsistencia
         End If
         Return instancia
     End Function
-
-    'Private Sub New()
-    '    InitializeComponent()
-    'End Sub
 
     Private Sub frmResumenAsistencia_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
@@ -70,12 +69,21 @@ Public Class frmResumenAsistencia
     End Sub
 
     Private Sub CargarEmpleados()
+        Dim parametros As New List(Of Object)()
         Try
             ' Deshabilitar el evento temporalmente
             RemoveHandler CmbNombres.SelectedIndexChanged, AddressOf CmbNombres_SelectedIndexChanged
 
-            Dim sql As String = "SELECT * From Agentes WHERE Baja = '' OR Baja IS NULL ORDER BY NOMBRE;"
-            Dim dtEmpleados = DSM.ExecuteQuery(DSM.Personal, sql)
+            Dim sql As String = "SELECT * From Agentes WHERE (Baja = '' OR Baja IS NULL) "
+            ' Filtro Eventuales
+            If MostrarSoloEventuales.HasValue Then
+                sql &= " AND Eventual = @Eventual "
+                parametros.AddRange(New Object() {"@Eventual", If(MostrarSoloEventuales.Value, 1, 0)})
+            End If
+
+            sql &= " ORDER BY NOMBRE;"
+
+            Dim dtEmpleados = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
 
             ' Cargar ComboBox de nombres
             CmbNombres.DataSource = dtEmpleados
@@ -190,8 +198,8 @@ Public Class frmResumenAsistencia
             Dim consultaDiasTrabajados As String = "SELECT Dia, COUNT(HsCumplidas) AS Cuenta " &
                 "FROM Movimiento " &
                 "WHERE Legajo = @Legajo " &
-                "AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
-                "AND (MotivoInasistencia IS NULL) " &
+                "And Dia BETWEEN @FechaDesde And @FechaHasta " &
+                "And (MotivoInasistencia Is NULL) " &
                 "GROUP BY Dia"
 
             Dim dtMovimientos As DataTable = DSM.ExecuteQuery(DSM.Personal, consultaDiasTrabajados, parametros)
@@ -253,7 +261,7 @@ Public Class frmResumenAsistencia
                 "HsCumplidas, " &
                 "MotivoInasistencia, Comentario " &
                 "FROM Movimiento " &
-                "WHERE Legajo = @Legajo AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
+                "WHERE Legajo = @Legajo And Dia BETWEEN @FechaDesde And @FechaHasta " &
                 "ORDER BY Dia asc"
 
             ' DSM es una clase estática, no necesita validación de instancia
@@ -359,8 +367,8 @@ Public Class frmResumenAsistencia
                 "COUNT(MotivoInasistencia) AS Cantidad " &
                 "FROM Movimiento " &
                 "WHERE Legajo = @Legajo " &
-                "AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
-                "AND MotivoInasistencia <> '' " &
+                "And Dia BETWEEN @FechaDesde And @FechaHasta " &
+                "And MotivoInasistencia <> '' " &
                 "GROUP BY MotivoInasistencia " &
                 "ORDER BY MotivoInasistencia"
 

@@ -161,6 +161,7 @@ Partial Class frmAgentes
         btnSalir = New Button()
         lblSucursal = New Label()
         cmbSucursal = New ComboBox()
+        chkEventual = New CheckBox()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -235,6 +236,7 @@ Partial Class frmAgentes
         ' 
         ' Panel3Col
         ' 
+        Panel3Col.Controls.Add(chkEventual)
         Panel3Col.Controls.Add(txtAntiguedad)
         Panel3Col.Controls.Add(Label10)
         Panel3Col.Controls.Add(dtpBaja)
@@ -1683,6 +1685,17 @@ Partial Class frmAgentes
         cmbSucursal.Size = New Size(221, 23)
         cmbSucursal.TabIndex = 2
         ' 
+        ' chkEventual
+        ' 
+        chkEventual.AutoSize = True
+        chkEventual.CheckAlign = ContentAlignment.MiddleRight
+        chkEventual.Location = New Point(183, 43)
+        chkEventual.Name = "chkEventual"
+        chkEventual.Size = New Size(71, 19)
+        chkEventual.TabIndex = 75
+        chkEventual.Text = "Eventual"
+        chkEventual.UseVisualStyleBackColor = True
+        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -1878,5 +1891,6 @@ Partial Class frmAgentes
     Friend WithEvents Label50 As Label
     Friend WithEvents txtNroTelEquipoamiento As TextBox
     Friend WithEvents Label28 As Label
+    Friend WithEvents chkEventual As CheckBox
 
 End Class
