@@ -37,6 +37,30 @@ Public Class MainForm
         Panel3.Text = DateTime.Now.ToString("HH:mm")
 
         'AplicarOpcionesHabilitadas()
+        MostrarDatosAgentes()
+        Timer1.Start()
+    End Sub
+
+    Private Sub MainForm_Leave(sender As Object, e As EventArgs) Handles MyBase.Leave
+        Timer1.Stop()
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        MostrarDatosAgentes()
+    End Sub
+
+    Private Sub MostrarDatosAgentes()
+        Dim agentesActivos As Integer = 0
+        Dim agentesEventuales As Integer = 0
+        Dim agentesSinMarcarEntrada As Integer = 0
+        Dim reporte = Reportes.ObtenerTotalesAgentes()
+        lblDatosAgentes.Text =
+            $"Agentes: {reporte("TotalAgentes")}" & vbCrLf &
+            $"Marcaron: {reporte("AgentesHoy")}" & vbCrLf &
+            $"Sin marcar: {reporte("AgentesSinMarcar")}" & vbCrLf &
+            $"Inas/Vacac: {reporte("Inasistencias")}" & vbCrLf &
+            $"Cumpleaños: {reporte("CumpleMes")}" & vbCrLf &
+            $"Ingreso 6m: {reporte("Ingresaron_5a7m")}"
     End Sub
 
     ' Eventos del menú Configuración
@@ -253,5 +277,9 @@ Public Class MainForm
 
     Private Sub MnuEditarINI_Click(sender As Object, e As EventArgs) Handles MnuEditarINI.Click
         MessageBox.Show("Función de editar .INI no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    End Sub
+
+    Private Sub MainForm_MdiChildActivate(sender As Object, e As EventArgs) Handles MyBase.MdiChildActivate
+
     End Sub
 End Class
