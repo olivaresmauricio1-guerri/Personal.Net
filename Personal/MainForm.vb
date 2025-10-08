@@ -188,11 +188,11 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuResumenAsistencia_Click(sender As Object, e As EventArgs) Handles MnuResumenAsistencia.Click
-        frmResumenAsistencia.AbrirInstancia(Me, False)
+        frmResumenAsistencia.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuResumenEventuales_Click(sender As Object, e As EventArgs) Handles MnuResumenEventuales.Click
-        frmResumenAsistencia.AbrirInstancia(Me, True)
+        'frmResumenAsistencia.AbrirInstancia(Me, True)
     End Sub
 
     Private Sub MnuInasistenciaSinAviso_Click(sender As Object, e As EventArgs) Handles MnuInasistenciaSinAviso.Click

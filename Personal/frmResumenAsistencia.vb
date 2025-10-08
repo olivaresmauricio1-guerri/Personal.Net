@@ -4,7 +4,7 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class frmResumenAsistencia
     Private _suspenderAccionFiltros As Boolean = False
-    Public Property MostrarSoloEventuales As Boolean?
+    'Public Property MostrarSoloEventuales As Boolean?
 
     Private Shared instancia As frmResumenAsistencia
     Private filaActual As DataRow
@@ -19,7 +19,7 @@ Public Class frmResumenAsistencia
             instancia = New frmResumenAsistencia()
             instancia.MdiParent = mdiParent
         End If
-        instancia.MostrarSoloEventuales = soloEventuales
+        'instancia.MostrarSoloEventuales = soloEventuales
         instancia.Show()
         instancia.BringToFront()
         instancia.Focus()
@@ -76,10 +76,10 @@ Public Class frmResumenAsistencia
 
             Dim sql As String = "SELECT * From Agentes WHERE (Baja = '' OR Baja IS NULL) "
             ' Filtro Eventuales
-            If MostrarSoloEventuales.HasValue Then
-                sql &= " AND Eventual = @Eventual "
-                parametros.AddRange(New Object() {"@Eventual", If(MostrarSoloEventuales.Value, 1, 0)})
-            End If
+            'If MostrarSoloEventuales.HasValue Then
+            '    sql &= " AND Eventual = @Eventual "
+            '    parametros.AddRange(New Object() {"@Eventual", If(MostrarSoloEventuales.Value, 1, 0)})
+            'End If
 
             sql &= " ORDER BY NOMBRE;"
 

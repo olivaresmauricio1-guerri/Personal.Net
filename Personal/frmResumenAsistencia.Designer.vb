@@ -544,7 +544,7 @@ Partial Class frmResumenAsistencia
         Label10.Name = "Label10"
         Label10.Size = New Size(54, 15)
         Label10.TabIndex = 46
-        Label10.Text = "Instituto:"
+        Label10.Text = "Sucursal:"
         ' 
         ' Label11
         ' 
