@@ -181,7 +181,8 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuDetectarInasistencias_Click(sender As Object, e As EventArgs) Handles MnuDetectarInasistencias.Click
-        MessageBox.Show("Función de detectar inasistencias no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        ' MessageBox.Show("Función de detectar inasistencias no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmBuscaFalta.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuIngresoHorarioManual_Click(sender As Object, e As EventArgs) Handles MnuIngresoHorarioManual.Click
