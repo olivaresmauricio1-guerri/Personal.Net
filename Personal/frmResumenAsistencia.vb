@@ -145,16 +145,38 @@ Public Class frmResumenAsistencia
 
     Private Sub CmbNombres_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbNombres.SelectedIndexChanged
         If _suspenderAccionFiltros Then Exit Sub
+        TxtLegajo.Text = ""
         CargarEmpleado()
     End Sub
 
     Private Sub CargarEmpleado()
-        If CmbNombres.SelectedValue IsNot Nothing Then
-            Dim legajo As String = CmbNombres.SelectedValue.ToString()
-            TxtLegajo.Text = legajo
-            CargarDatosEmpleado(legajo)
-            verResumen()
+
+        Dim legajo As String = Nothing
+        Dim input As String = TxtLegajo.Text.Trim()
+
+        ' 1) Si el usuario escribió en el textbox, validar y usar eso
+        If input.Length > 0 Then
+            Dim nro As Integer
+            If Not Integer.TryParse(input, nro) Then
+                MessageBox.Show("Ingrese un legajo numérico.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TxtLegajo.Focus()
+                Exit Sub
+            End If
+            legajo = nro.ToString()
+            CmbNombres.SelectedValue = legajo
+
+            ' 2) Si el textbox está vacío, usar la selección del combo
+        ElseIf CmbNombres.SelectedValue IsNot Nothing Then
+            legajo = CmbNombres.SelectedValue.ToString()
         End If
+
+        ' 3) Si no hay legajo, no continuar
+        If String.IsNullOrEmpty(legajo) Then Exit Sub
+
+        TxtLegajo.Text = legajo
+        CargarDatosEmpleado(legajo)
+        verResumen()
+
     End Sub
 
     ' Cargar datos del empleado seleccionado
@@ -647,5 +669,12 @@ Public Class frmResumenAsistencia
 
     Private Sub frmResumenAsistencia_Click(sender As Object, e As EventArgs) Handles Me.Click
         DgvInasistencias.Visible = False
+    End Sub
+
+    Private Sub TxtLegajo_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtLegajo.KeyDown
+
+        If e.KeyCode = Keys.Enter Then
+            CargarEmpleado()
+        End If
     End Sub
 End Class

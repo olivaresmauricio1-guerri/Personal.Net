@@ -196,7 +196,6 @@ Partial Class frmResumenAsistencia
         TxtLegajo.Location = New Point(716, 19)
         TxtLegajo.Margin = New Padding(4, 3, 4, 3)
         TxtLegajo.Name = "TxtLegajo"
-        TxtLegajo.ReadOnly = True
         TxtLegajo.Size = New Size(93, 23)
         TxtLegajo.TabIndex = 11
         ' 

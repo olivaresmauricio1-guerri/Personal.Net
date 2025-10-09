@@ -357,6 +357,13 @@ Public Class frmAgentes
             Return False
         End If
 
+        ' Validar Caracter
+        If String.IsNullOrEmpty(cmbCaracter.Text.Trim) Then
+            MessageBox.Show("Debe seleccionar un Caracter.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cmbCaracter.Focus()
+            Return False
+        End If
+
         Return True
     End Function
     Private Function ValidarDatosFamiliar() As Boolean
@@ -450,11 +457,11 @@ Public Class frmAgentes
         sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto,   Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, HorasDiarias, " &
                            "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular,  " &
-                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion) " &
+                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, LegajoEventual) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto,   @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad,  @HorasDiarias, " &
                            "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular,  " &
-                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion)"
+                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @Legajo)"
 
         Dim parametros = ObtenerParametrosAgente()
         DSM.Execute(DSM.Personal, sql, parametros, True)
