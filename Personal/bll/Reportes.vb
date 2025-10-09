@@ -3,6 +3,129 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Module Reportes
 
+    Public Function ObtenerTotalesAgentes() As Dictionary(Of String, Integer)
+        Dim r As New Dictionary(Of String, Integer) From {
+            {"TotalAgentes", 0},
+            {"AgentesHoy", 0},
+            {"AgentesSinMarcar", 0},
+            {"Inasistencias", 0},
+            {"CumpleMes", 0},
+            {"Ingresaron_5a7m", 0}
+        }
+
+        Dim sql As String = "
+            DECLARE @hoy date      = CAST(GETDATE() AS date);
+            DECLARE @maniana date  = DATEADD(day, 1, @hoy);
+            DECLARE @d7m  date     = DATEADD(month, -7, @hoy);
+            DECLARE @d5m  date     = DATEADD(month, -5, @hoy);
+
+            SELECT
+                -- Total de agentes activos que deben marcar
+                SUM(f.Activo * f.DebeMarcar)                                      AS TotalAgentes,
+                -- De esos, los que marcaron hoy y no estan de vacaciones o con inasistencia
+                SUM(f.Activo * f.DebeMarcar * ISNULL(h.HasHoy,0))                 AS AgentesHoy,
+                -- De esos, los que marcaron hoy y estan de vacaciones o con inasistencia
+                SUM(f.Activo * f.DebeMarcar * ISNULL(i.Inasistencias,0))          AS Inasistencias,
+                -- Los que no marcaron hoy
+                SUM(f.Activo * f.DebeMarcar * (1-ISNULL(h.HasHoy,0)))             AS AgentesSinMarcar,
+                -- Agentes activos que cumplen años este mes
+                SUM(f.Activo * f.CumpleMes)                                       AS CumpleMes,
+                -- Agentes activos con fecha de ingreso entre -7 y -5 meses
+                SUM(f.Activo * f.Ingreso5a7)                                      AS Ingresaron_5a7m
+            FROM Agentes a
+            CROSS APPLY (
+                SELECT
+                    -- Activo: Baja NULL o cadena vacía
+                    CASE WHEN a.Baja IS NULL OR LTRIM(RTRIM(CAST(a.Baja AS nvarchar(50)))) = '' THEN 1 ELSE 0 END AS Activo,
+                    -- Debe marcar: Nomarca = 0 (tratando NULL como 0)
+                    CASE WHEN ISNULL(a.Nomarca,0) = 0 THEN 1 ELSE 0 END AS DebeMarcar,
+                    -- Cumpleaños en el mes actual
+                    CASE WHEN a.Nacimiento IS NOT NULL
+                              AND MONTH(a.Nacimiento) = MONTH(@hoy)
+                         THEN 1 ELSE 0 END AS CumpleMes,
+                    -- Ingreso entre hace 7 y 5 meses (inclusive)
+                    CASE WHEN a.Ingreso IS NOT NULL
+                              AND a.Ingreso LIKE '[0-3][0-9]/[01][0-9]/[12][0-9][0-9][0-9]'
+                              AND ISDATE(a.Ingreso) = 1
+                              AND CONVERT(date, a.Ingreso, 103) >= @d7m
+                              AND CONVERT(date, a.Ingreso, 103) <= @d5m
+                         THEN 1 ELSE 0 END AS Ingreso5a7
+            ) f
+            OUTER APPLY (
+                SELECT TOP 1 1 AS HasHoy
+                FROM Movimiento m
+                WHERE m.Legajo = a.Legajo AND m.MotivoInasistencia IS NULL
+                  AND m.Dia >= @hoy AND m.Dia < @maniana
+            ) h
+            OUTER APPLY (
+                SELECT TOP 1 1 AS Inasistencias
+                FROM Movimiento m
+                WHERE m.Legajo = a.Legajo AND m.MotivoInasistencia IS NOT NULL
+                  AND m.Dia >= @hoy AND m.Dia < @maniana
+            ) i;
+        "
+
+        Try
+            Using dt = DSM.ExecuteQuery(DSM.Personal, sql)
+                If dt.Rows.Count > 0 Then
+                    r("TotalAgentes") = CInt(dt.Rows(0)("TotalAgentes"))
+                    r("AgentesHoy") = CInt(dt.Rows(0)("AgentesHoy"))
+                    r("AgentesSinMarcar") = CInt(dt.Rows(0)("AgentesSinMarcar"))
+                    r("Inasistencias") = CInt(dt.Rows(0)("Inasistencias"))
+                    r("CumpleMes") = CInt(dt.Rows(0)("CumpleMes"))
+                    r("Ingresaron_5a7m") = CInt(dt.Rows(0)("Ingresaron_5a7m"))
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener totales: " & ex.Message,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return r
+    End Function
+
+
+    ' por cada agente, si debe marcar o no, consolea si hoy lo hizo o no
+    Public Sub DebugDebeMarcar()
+        Dim sql As String = "
+            DECLARE @hoy date     = CAST(GETDATE() AS date);
+            DECLARE @maniana date = DATEADD(day, 1, @hoy);
+            SELECT
+                a.Legajo,
+                a.Nombre,
+                -- Activo: Baja NULL o cadena vacía (si fuera texto)
+                CASE WHEN a.Baja IS NULL OR LTRIM(RTRIM(CAST(a.Baja AS nvarchar(50)))) = '' THEN 1 ELSE 0 END AS Activo,
+                CASE WHEN ISNULL(a.Nomarca,0) = 0 THEN 1 ELSE 0 END AS DebeMarcar,
+                -- Tiene al menos un movimiento hoy
+                CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM Movimiento m
+                    WHERE m.Legajo = a.Legajo
+                      AND m.Dia >= @hoy AND m.Dia < @maniana
+                ) THEN 1 ELSE 0 END AS HaMarcadoHoy
+            FROM Agentes a
+            ORDER BY a.Legajo;
+            "
+        Try
+            Using dt = DSM.ExecuteQuery(DSM.Personal, sql)
+                For Each row As DataRow In dt.Rows
+                    Dim legajo = CInt(row("Legajo"))
+                    Dim nombre = CStr(row("Nombre"))
+                    Dim activo = CInt(row("Activo")) = 1
+                    Dim debeMarcar = CInt(row("DebeMarcar")) = 1
+                    Dim haMarcadoHoy = CInt(row("HaMarcadoHoy")) = 1
+                    Debug.WriteLine($"Legajo {legajo} - {nombre}: Activo={activo}, DebeMarcar={debeMarcar}, HaMarcadoHoy={haMarcadoHoy}")
+                Next
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener totales: " & ex.Message,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+    End Sub
+
+
+
     Public Sub ListadoHorario(desde As Date, hasta As Date, idSucursal As Integer, txtSucursal As String, soloTarde As Boolean)
         Try
             DSM.Execute(DSM.Personal, "DELETE FROM ListaHorario")

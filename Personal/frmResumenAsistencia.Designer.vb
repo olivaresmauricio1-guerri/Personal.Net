@@ -799,7 +799,7 @@ Partial Class frmResumenAsistencia
         Label25.Location = New Point(258, 564)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
-        Label25.Size = New Size(92, 15)
+        Label25.Size = New Size(91, 15)
         Label25.TabIndex = 62
         Label25.Text = "Días Trabajados:"
         ' 

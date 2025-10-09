@@ -22,6 +22,7 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        components = New ComponentModel.Container()
         StatusBar1 = New StatusStrip()
         Panel1 = New ToolStripStatusLabel()
         Panel2 = New ToolStripStatusLabel()
@@ -108,8 +109,12 @@ Partial Class MainForm
         MnuAcercaDe = New ToolStripMenuItem()
         MnuAyudaHelp = New ToolStripMenuItem()
         MenuStrip1 = New MenuStrip()
+        pnlDatosAgentes = New Panel()
+        lblDatosAgentes = New Label()
+        Timer1 = New Timer(components)
         StatusBar1.SuspendLayout()
         MenuStrip1.SuspendLayout()
+        pnlDatosAgentes.SuspendLayout()
         SuspendLayout()
         ' 
         ' StatusBar1
@@ -629,12 +634,38 @@ Partial Class MainForm
         MenuStrip1.TabIndex = 1
         MenuStrip1.Text = "MenuStrip1"
         ' 
+        ' pnlDatosAgentes
+        ' 
+        pnlDatosAgentes.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        pnlDatosAgentes.BackColor = Color.Gainsboro
+        pnlDatosAgentes.BorderStyle = BorderStyle.Fixed3D
+        pnlDatosAgentes.Controls.Add(lblDatosAgentes)
+        pnlDatosAgentes.Location = New Point(952, 334)
+        pnlDatosAgentes.Name = "pnlDatosAgentes"
+        pnlDatosAgentes.Size = New Size(129, 100)
+        pnlDatosAgentes.TabIndex = 3
+        ' 
+        ' lblDatosAgentes
+        ' 
+        lblDatosAgentes.AutoSize = True
+        lblDatosAgentes.Dock = DockStyle.Fill
+        lblDatosAgentes.Location = New Point(0, 0)
+        lblDatosAgentes.Name = "lblDatosAgentes"
+        lblDatosAgentes.Size = New Size(41, 15)
+        lblDatosAgentes.TabIndex = 0
+        lblDatosAgentes.Text = "Label1"
+        ' 
+        ' Timer1
+        ' 
+        Timer1.Interval = 300000
+        ' 
         ' MainForm
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
         ClientSize = New Size(1081, 459)
+        Controls.Add(pnlDatosAgentes)
         Controls.Add(StatusBar1)
         Controls.Add(MenuStrip1)
         IsMdiContainer = True
@@ -646,6 +677,8 @@ Partial Class MainForm
         StatusBar1.PerformLayout()
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
+        pnlDatosAgentes.ResumeLayout(False)
+        pnlDatosAgentes.PerformLayout()
         ResumeLayout(False)
         PerformLayout()
 
@@ -737,4 +770,7 @@ Partial Class MainForm
     Friend WithEvents MnuAcercaDe As ToolStripMenuItem
     Friend WithEvents MnuAyudaHelp As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents pnlDatosAgentes As Panel
+    Friend WithEvents lblDatosAgentes As Label
+    Friend WithEvents Timer1 As Timer
 End Class
