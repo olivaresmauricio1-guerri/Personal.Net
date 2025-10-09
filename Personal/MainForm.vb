@@ -113,11 +113,11 @@ Public Class MainForm
 
     ' Eventos del menú Actualizaciones
     Private Sub MnuMantenimientoAgentes_Click(sender As Object, e As EventArgs) Handles MnuMantenimientoAgentes.Click
-        frmAgentes.AbrirInstancia(Me)
+        frmAgentes.AbrirInstancia(Me, False) ' Solo permanentes (Eventual = 0)
     End Sub
 
     Private Sub MnuMantenimientoEventuales_Click(sender As Object, e As EventArgs) Handles MnuMantenimientoEventuales.Click
-        MessageBox.Show("Función de mantenimiento de eventuales no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmAgentes.AbrirInstancia(Me, True) ' Solo permanentes (Eventual = 0)
     End Sub
 
     ' Eventos del menú Ventanas
@@ -219,7 +219,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuResumenEventuales_Click(sender As Object, e As EventArgs) Handles MnuResumenEventuales.Click
-        frmResumenAsistenciaEventuales.AbrirInstancia(Me)
+        'frmResumenAsistencia.AbrirInstancia(Me, True)
     End Sub
 
     Private Sub MnuInasistenciaSinAviso_Click(sender As Object, e As EventArgs) Handles MnuInasistenciaSinAviso.Click
@@ -227,15 +227,15 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuListadoInasistencias_Click(sender As Object, e As EventArgs) Handles MnuListadoInasistencias.Click
-        MessageBox.Show("Función de listado de inasistencias no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmListadoInasistencias.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuListadoAgentes_Click(sender As Object, e As EventArgs) Handles MnuListadoAgentes.Click
-        MessageBox.Show("Función de listados de agentes no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmLstAgentes.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuCumpleanos_Click(sender As Object, e As EventArgs) Handles MnuCumpleanos.Click
-        MessageBox.Show("Función de cumpleaños del mes no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmCumples.AbrirInstancia(Me)
     End Sub
 
     ' Eventos del menú Nomencladores

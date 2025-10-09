@@ -3,6 +3,7 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class frmAgentes
     Private _suspenderAccionFiltros As Boolean = False
+    'Public Property MostrarSoloEventuales As Boolean?
 
     Private tabla As New DataTable()
     Private tablaGrupoFamiliar As New DataTable()
@@ -19,11 +20,12 @@ Public Class frmAgentes
     Private filaComentarioActual As DataGridViewRow
     Private filaComentarioActualIndice As Integer = -1
 
-    Public Shared Sub AbrirInstancia(mdiParent As Form)
+    Public Shared Sub AbrirInstancia(mdiParent As Form, Optional soloEventuales As Boolean? = Nothing)
         If instancia Is Nothing OrElse instancia.IsDisposed Then
             instancia = New frmAgentes()
             instancia.MdiParent = mdiParent
         End If
+        'instancia.MostrarSoloEventuales = soloEventuales
         instancia.Show()
         instancia.BringToFront()
         instancia.Focus()
@@ -74,6 +76,12 @@ Public Class frmAgentes
         GridBuscar()
     End Sub
 
+    Private Sub radeventuales_CheckedChanged(sender As Object, e As EventArgs) Handles radEventuales.CheckedChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+        GridBuscar()
+    End Sub
     Private Sub DgvListado_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvListado.KeyDown
         If e.Control AndAlso e.KeyCode = Keys.C Then
             CopiarDataGrid(dgvListado, chkEncabezados.Checked)
@@ -349,6 +357,13 @@ Public Class frmAgentes
             Return False
         End If
 
+        ' Validar Caracter
+        If String.IsNullOrEmpty(cmbCaracter.Text.Trim) Then
+            MessageBox.Show("Debe seleccionar un Caracter.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cmbCaracter.Focus()
+            Return False
+        End If
+
         Return True
     End Function
     Private Function ValidarDatosFamiliar() As Boolean
@@ -442,11 +457,11 @@ Public Class frmAgentes
         sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto,   Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, HorasDiarias, " &
                            "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular,  " &
-                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion) " &
+                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, LegajoEventual) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto,   @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad,  @HorasDiarias, " &
                            "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular,  " &
-                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion)"
+                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @Legajo)"
 
         Dim parametros = ObtenerParametrosAgente()
         DSM.Execute(DSM.Personal, sql, parametros, True)
@@ -466,6 +481,7 @@ Public Class frmAgentes
         Dim parametros = ObtenerParametrosAgente()
         DSM.Execute(DSM.Personal, sql, parametros, True)
         MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        FormModoConsulta()
     End Sub
 
     Private Function ObtenerParametrosAgente() As Dictionary(Of String, Object)
@@ -614,7 +630,12 @@ Public Class frmAgentes
 
             ' Filtrar activos si corresponde
             If radActivos.Checked Then
-                sql &= " AND (Baja IS NULL OR Baja = '')"
+                sql &= " AND (Baja IS NULL OR Baja = '') AND (Caracter <> 'Eventual' OR Caracter IS NULL)"
+            End If
+
+            ' Filtrar por eventuales
+            If radEventuales.Checked Then
+                sql &= " AND (Baja IS NULL OR Baja = '') AND Caracter = 'Eventual'"
             End If
 
             Dim sucursal As String = cmbSucursal.Text.Trim()
@@ -628,6 +649,12 @@ Public Class frmAgentes
                 sql &= " AND (Nombre LIKE @Nombre OR NroDto LIKE @DNI OR Legajo LIKE @Legajo)"
                 parametros.AddRange(New Object() {"@Nombre", $"%{texto}%", "@DNI", $"{texto.Trim()}%", "@Legajo", $"{texto.Trim()}%"})
             End If
+
+            ' Filtro Eventuales
+            'If MostrarSoloEventuales.HasValue Then
+            '    sql &= " AND Eventual = @Eventual"
+            '    parametros.AddRange(New Object() {"@Eventual", If(MostrarSoloEventuales.Value, 1, 0)})
+            'End If
 
             ' Orden
             sql &= " ORDER BY Nombre"

@@ -161,6 +161,7 @@ Partial Class frmAgentes
         btnSalir = New Button()
         lblSucursal = New Label()
         cmbSucursal = New ComboBox()
+        radEventuales = New RadioButton()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -1683,11 +1684,22 @@ Partial Class frmAgentes
         cmbSucursal.Size = New Size(221, 23)
         cmbSucursal.TabIndex = 2
         ' 
+        ' radEventuales
+        ' 
+        radEventuales.AutoSize = True
+        radEventuales.Location = New Point(851, 7)
+        radEventuales.Name = "radEventuales"
+        radEventuales.Size = New Size(81, 19)
+        radEventuales.TabIndex = 42
+        radEventuales.Text = "Eventuales"
+        radEventuales.UseVisualStyleBackColor = True
+        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1184, 682)
+        Controls.Add(radEventuales)
         Controls.Add(chkEncabezados)
         Controls.Add(lnkCopiar)
         Controls.Add(cmbSucursal)
@@ -1878,5 +1890,6 @@ Partial Class frmAgentes
     Friend WithEvents Label50 As Label
     Friend WithEvents txtNroTelEquipoamiento As TextBox
     Friend WithEvents Label28 As Label
+    Friend WithEvents radEventuales As RadioButton
 
 End Class

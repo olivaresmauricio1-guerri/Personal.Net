@@ -196,7 +196,6 @@ Partial Class frmResumenAsistencia
         TxtLegajo.Location = New Point(716, 19)
         TxtLegajo.Margin = New Padding(4, 3, 4, 3)
         TxtLegajo.Name = "TxtLegajo"
-        TxtLegajo.ReadOnly = True
         TxtLegajo.Size = New Size(93, 23)
         TxtLegajo.TabIndex = 11
         ' 
@@ -544,7 +543,7 @@ Partial Class frmResumenAsistencia
         Label10.Name = "Label10"
         Label10.Size = New Size(54, 15)
         Label10.TabIndex = 46
-        Label10.Text = "Instituto:"
+        Label10.Text = "Sucursal:"
         ' 
         ' Label11
         ' 

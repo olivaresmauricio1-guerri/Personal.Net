@@ -1,8 +1,10 @@
 Imports System.Data.SqlClient
+Imports Microsoft.Identity.Client.ApiConfig
 Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class frmResumenAsistencia
     Private _suspenderAccionFiltros As Boolean = False
+    'Public Property MostrarSoloEventuales As Boolean?
 
     Private Shared instancia As frmResumenAsistencia
     Private filaActual As DataRow
@@ -12,11 +14,12 @@ Public Class frmResumenAsistencia
     Private fechaDesde As Date
     Private fechaHasta As Date
 
-    Public Shared Sub AbrirInstancia(mdiParent As Form)
+    Public Shared Sub AbrirInstancia(mdiParent As Form, Optional soloEventuales As Boolean? = Nothing)
         If instancia Is Nothing OrElse instancia.IsDisposed Then
             instancia = New frmResumenAsistencia()
             instancia.MdiParent = mdiParent
         End If
+        'instancia.MostrarSoloEventuales = soloEventuales
         instancia.Show()
         instancia.BringToFront()
         instancia.Focus()
@@ -28,10 +31,6 @@ Public Class frmResumenAsistencia
         End If
         Return instancia
     End Function
-
-    'Private Sub New()
-    '    InitializeComponent()
-    'End Sub
 
     Private Sub frmResumenAsistencia_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
@@ -70,12 +69,21 @@ Public Class frmResumenAsistencia
     End Sub
 
     Private Sub CargarEmpleados()
+        Dim parametros As New List(Of Object)()
         Try
             ' Deshabilitar el evento temporalmente
             RemoveHandler CmbNombres.SelectedIndexChanged, AddressOf CmbNombres_SelectedIndexChanged
 
-            Dim sql As String = "SELECT * From Agentes WHERE Baja = '' OR Baja IS NULL ORDER BY NOMBRE;"
-            Dim dtEmpleados = DSM.ExecuteQuery(DSM.Personal, sql)
+            Dim sql As String = "SELECT * From Agentes WHERE (Baja = '' OR Baja IS NULL) "
+            ' Filtro Eventuales
+            'If MostrarSoloEventuales.HasValue Then
+            '    sql &= " AND Eventual = @Eventual "
+            '    parametros.AddRange(New Object() {"@Eventual", If(MostrarSoloEventuales.Value, 1, 0)})
+            'End If
+
+            sql &= " ORDER BY NOMBRE;"
+
+            Dim dtEmpleados = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
 
             ' Cargar ComboBox de nombres
             CmbNombres.DataSource = dtEmpleados
@@ -137,16 +145,38 @@ Public Class frmResumenAsistencia
 
     Private Sub CmbNombres_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbNombres.SelectedIndexChanged
         If _suspenderAccionFiltros Then Exit Sub
+        TxtLegajo.Text = ""
         CargarEmpleado()
     End Sub
 
     Private Sub CargarEmpleado()
-        If CmbNombres.SelectedValue IsNot Nothing Then
-            Dim legajo As String = CmbNombres.SelectedValue.ToString()
-            TxtLegajo.Text = legajo
-            CargarDatosEmpleado(legajo)
-            verResumen()
+
+        Dim legajo As String = Nothing
+        Dim input As String = TxtLegajo.Text.Trim()
+
+        ' 1) Si el usuario escribió en el textbox, validar y usar eso
+        If input.Length > 0 Then
+            Dim nro As Integer
+            If Not Integer.TryParse(input, nro) Then
+                MessageBox.Show("Ingrese un legajo numérico.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TxtLegajo.Focus()
+                Exit Sub
+            End If
+            legajo = nro.ToString()
+            CmbNombres.SelectedValue = legajo
+
+            ' 2) Si el textbox está vacío, usar la selección del combo
+        ElseIf CmbNombres.SelectedValue IsNot Nothing Then
+            legajo = CmbNombres.SelectedValue.ToString()
         End If
+
+        ' 3) Si no hay legajo, no continuar
+        If String.IsNullOrEmpty(legajo) Then Exit Sub
+
+        TxtLegajo.Text = legajo
+        CargarDatosEmpleado(legajo)
+        verResumen()
+
     End Sub
 
     ' Cargar datos del empleado seleccionado
@@ -190,8 +220,8 @@ Public Class frmResumenAsistencia
             Dim consultaDiasTrabajados As String = "SELECT Dia, COUNT(HsCumplidas) AS Cuenta " &
                 "FROM Movimiento " &
                 "WHERE Legajo = @Legajo " &
-                "AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
-                "AND (MotivoInasistencia IS NULL) " &
+                "And Dia BETWEEN @FechaDesde And @FechaHasta " &
+                "And (MotivoInasistencia Is NULL) " &
                 "GROUP BY Dia"
 
             Dim dtMovimientos As DataTable = DSM.ExecuteQuery(DSM.Personal, consultaDiasTrabajados, parametros)
@@ -253,7 +283,7 @@ Public Class frmResumenAsistencia
                 "HsCumplidas, " &
                 "MotivoInasistencia, Comentario " &
                 "FROM Movimiento " &
-                "WHERE Legajo = @Legajo AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
+                "WHERE Legajo = @Legajo And Dia BETWEEN @FechaDesde And @FechaHasta " &
                 "ORDER BY Dia asc"
 
             ' DSM es una clase estática, no necesita validación de instancia
@@ -359,8 +389,8 @@ Public Class frmResumenAsistencia
                 "COUNT(MotivoInasistencia) AS Cantidad " &
                 "FROM Movimiento " &
                 "WHERE Legajo = @Legajo " &
-                "AND Dia BETWEEN @FechaDesde AND @FechaHasta " &
-                "AND MotivoInasistencia <> '' " &
+                "And Dia BETWEEN @FechaDesde And @FechaHasta " &
+                "And MotivoInasistencia <> '' " &
                 "GROUP BY MotivoInasistencia " &
                 "ORDER BY MotivoInasistencia"
 
@@ -639,5 +669,12 @@ Public Class frmResumenAsistencia
 
     Private Sub frmResumenAsistencia_Click(sender As Object, e As EventArgs) Handles Me.Click
         DgvInasistencias.Visible = False
+    End Sub
+
+    Private Sub TxtLegajo_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtLegajo.KeyDown
+
+        If e.KeyCode = Keys.Enter Then
+            CargarEmpleado()
+        End If
     End Sub
 End Class
