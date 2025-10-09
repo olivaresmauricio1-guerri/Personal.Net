@@ -40,18 +40,18 @@ Partial Class frmBajaReloj
         cmdImportarSeleccionado.Visible = (indiceSeleccionado >= 0 AndAlso indiceSeleccionado < _relojes.Count)
     End Sub
 
-    Private Sub btnImportarTodo_Click(sender As Object, e As EventArgs) Handles btnImportarTodo.Click
-        InicializarGrilla()
-        CargarRelojes()
+    'Private Sub btnImportarTodo_Click(sender As Object, e As EventArgs) Handles btnImportarTodo.Click
+    '    InicializarGrilla()
+    '    CargarRelojes()
 
-        If Not Funciones.AsegurarRegistroZkBridge() Then
-            MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End If
-        For i = 0 To _relojes.Count - 1
-            ConectarRelojAsync(i, True)
-        Next
-    End Sub
+    '    If Not Funciones.AsegurarRegistroZkBridge() Then
+    '        MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '        Return
+    '    End If
+    '    For i = 0 To _relojes.Count - 1
+    '        ConectarRelojAsync(i, True)
+    '    Next
+    'End Sub
 
     Private Sub cmdImportarSeleccionado_Click(sender As Object, e As EventArgs) Handles cmdImportarSeleccionado.Click
         Dim indiceSeleccionado As Integer = -1
