@@ -37,10 +37,11 @@ Public Class frmAgentes
 
     Public Sub FrmAgentes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _suspenderAccionFiltros = True
-        FormModoConsulta()
         CargarComboBoxes()
+        FormModoConsulta()
         ConfiguraColListado()
         GridBuscar()
+        ConfiguraColListado()
         ConfiguraColComentario()
         ConfiguraColFamilia()
         ConfiguraColEquipamiento()
@@ -53,6 +54,7 @@ Public Class frmAgentes
         FormModoConsulta()
         FormLimpiarSeleccionado()
         GridBuscar()
+        ConfiguraColListado()
     End Sub
 
     Private Sub cmbSucursal_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSucursal.SelectedIndexChanged
@@ -60,6 +62,7 @@ Public Class frmAgentes
         FormModoConsulta()
         FormLimpiarSeleccionado()
         GridBuscar()
+        ConfiguraColListado()
     End Sub
 
     Private Sub radActivos_CheckedChanged(sender As Object, e As EventArgs) Handles radActivos.CheckedChanged
@@ -67,6 +70,7 @@ Public Class frmAgentes
         FormModoConsulta()
         FormLimpiarSeleccionado()
         GridBuscar()
+        ConfiguraColListado()
     End Sub
 
     Private Sub radTodos_CheckedChanged(sender As Object, e As EventArgs) Handles radTodos.CheckedChanged
@@ -74,6 +78,7 @@ Public Class frmAgentes
         FormModoConsulta()
         FormLimpiarSeleccionado()
         GridBuscar()
+        ConfiguraColListado()
     End Sub
 
     Private Sub radeventuales_CheckedChanged(sender As Object, e As EventArgs) Handles radEventuales.CheckedChanged
@@ -81,8 +86,11 @@ Public Class frmAgentes
         FormModoConsulta()
         FormLimpiarSeleccionado()
         GridBuscar()
+        ConfiguraColListado()
     End Sub
+
     Private Sub DgvListado_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvListado.KeyDown
+        If _suspenderAccionFiltros Then Exit Sub
         If e.Control AndAlso e.KeyCode = Keys.C Then
             CopiarDataGrid(dgvListado, chkEncabezados.Checked)
             e.Handled = True
@@ -92,9 +100,11 @@ Public Class frmAgentes
     End Sub
 
     Private Sub DgvListado_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListado.CellClick
+        If _suspenderAccionFiltros Then Exit Sub
+
         If e.RowIndex < 0 Then
-            filaActualIndice = -1
             filaActual = Nothing
+            filaActualIndice = -1
             FormLimpiarSeleccionado()
             Return
         End If
@@ -102,8 +112,25 @@ Public Class frmAgentes
     End Sub
 
     Private Sub DgvListado_SelectionChanged(sender As Object, e As EventArgs) Handles dgvListado.SelectionChanged
+        If _suspenderAccionFiltros Then Exit Sub
+
         If dgvListado.SelectedRows.Count > 0 Then
             AplicarSeleccionActual()
+        End If
+    End Sub
+
+    Private Sub cmbCaracter_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbCaracter.SelectedIndexChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        If filaActualIndice <= 0 Then
+            Return
+        End If
+
+        If filaActual.Cells("Caracter").Value = "Eventual" AndAlso cmbCaracter.Text = "Efectivo" Then
+            txtLegajo.BackColor = Color.Gold
+            txtLegajo.ReadOnly = False
+        Else
+            txtLegajo.BackColor = SystemColors.Control
+            txtLegajo.ReadOnly = True
         End If
     End Sub
 
@@ -114,6 +141,8 @@ Public Class frmAgentes
         filaActualIndice = -1
         FormModoEdicion()
         FormLimpiarSeleccionado()
+        txtLegajo.BackColor = Color.Gold
+        txtLegajo.ReadOnly = false
         txtLegajo.Focus()
     End Sub
 
@@ -141,6 +170,7 @@ Public Class frmAgentes
 
             FormModoConsulta()
             GridBuscar()
+            ConfiguraColListado()
         End If
     End Sub
 
@@ -153,24 +183,37 @@ Public Class frmAgentes
                 InsertarNuevoAgente()
             Else
                 ' UPDATE
-                ActualizarAgente()
+                If Not ActualizarAgente() Then
+                    Return
+                End If
             End If
 
-            'FormModoConsulta()
-            'GridBuscar()
+            FormModoConsulta()
+            GridBuscar()
+            ' ConfiguraColListado()
+            SeleccionarFila(0)
+
+            txtLegajo.BackColor = SystemColors.Control
+            txtLegajo.ReadOnly = True
 
         Catch ex As Exception
             MessageBox.Show("Error al guardar: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
+
+
     Public Sub CmdCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click, btnCancelar.Click
         FormModoConsulta()
 
+        txtLegajo.BackColor = SystemColors.Control
+        txtLegajo.ReadOnly = True
+
         If filaActual Is Nothing Then
             SeleccionarFila(0)
+        Else
+            FormObtenerSeleccionado()
         End If
-
     End Sub
 
     Public Sub CmdSalir_Click(sender As Object, e As EventArgs) Handles btnSalir.Click
@@ -204,6 +247,7 @@ Public Class frmAgentes
 
         FormModoConsulta()
         GridBuscar()
+        ConfiguraColListado()
         CargaGrupoFamiliar(Convert.ToInt32(txtLegajo.Text.Trim))
     End Sub
     Private Sub btnEliminarFamiliar_Click(sender As Object, e As EventArgs) Handles btnEliminarFamiliar.Click
@@ -217,6 +261,7 @@ Public Class frmAgentes
 
             FormModoConsulta()
             GridBuscar()
+            ConfiguraColListado()
             CargaGrupoFamiliar(Convert.ToInt32(txtLegajo.Text.Trim))
         End If
     End Sub
@@ -241,6 +286,7 @@ Public Class frmAgentes
 
         FormModoConsulta()
         GridBuscar()
+        ConfiguraColListado()
         CargaComentario(Convert.ToInt32(txtLegajo.Text.Trim))
 
     End Sub
@@ -256,6 +302,7 @@ Public Class frmAgentes
 
             FormModoConsulta()
             GridBuscar()
+            ConfiguraColListado()
             CargaComentario(Convert.ToInt32(txtLegajo.Text.Trim))
         End If
     End Sub
@@ -290,6 +337,7 @@ Public Class frmAgentes
 
         FormModoConsulta()
         GridBuscar()
+        ConfiguraColListado()
         CargaEquipamiento(Convert.ToInt32(txtLegajo.Text.Trim))
     End Sub
 
@@ -304,6 +352,7 @@ Public Class frmAgentes
 
             FormModoConsulta()
             GridBuscar()
+            ConfiguraColListado()
             CargaEquipamiento(Convert.ToInt32(txtLegajo.Text.Trim))
         End If
     End Sub
@@ -453,40 +502,64 @@ Public Class frmAgentes
             End If
         End If
 
-
-        sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto,   Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
+        sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto, Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, HorasDiarias, " &
                            "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular,  " &
                            "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, LegajoEventual) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto,   @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad,  @HorasDiarias, " &
                            "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular,  " &
-                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @Legajo)"
+                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @LegajoEventual)"
 
-        Dim parametros = ObtenerParametrosAgente()
+        Dim parametros = ObtenerParametrosAgente(True)
         DSM.Execute(DSM.Personal, sql, parametros, True)
         MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
-    Private Sub ActualizarAgente()
-        Dim sql As String = "UPDATE Agentes SET TipoDto=@TipoDto, NroDto=@NroDto,  Instituto=@Instituto, " &
+    Private Function ActualizarAgente() As Boolean
+        Dim sql As String = "UPDATE Agentes SET Legajo=@Legajo, LegajoEventual=@LegajoEventual, " &
+                           "TipoDto=@TipoDto, NroDto=@NroDto,  Instituto=@Instituto, " &
                            "Nombre=@Nombre, CorreoE=@CorreoE, Sexo=@Sexo, Nacimiento=@Nacimiento, Calle=@Calle, Nro=@Nro, " &
                            "Localidad=@Localidad, HorasDiarias=@HorasDiarias, " &
                            "Escalafon=@Escalafon, Jefe=@Jefe, LicAnual=@LicAnual, Caracter=@Caracter, Comentario=@Comentario, " &
                            "Nomarca=@Nomarca, Cargo=@Cargo, Telefono=@Telefono, Interno=@Interno, Celular=@Celular, " &
                            "iNGRESO=@iNGRESO, Baja=@Baja, Motivo=@Motivo, CUIL=@CUIL, TITULO=@TITULO, UltimaActualizacion=@UltimaActualizacion, " &
                            "EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion " &
-                           "WHERE Legajo=@Legajo"
+                           "WHERE Legajo=@LegajoEventual"
+        Try
+            Dim parametros = ObtenerParametrosAgente()
 
-        Dim parametros = ObtenerParametrosAgente()
-        DSM.Execute(DSM.Personal, sql, parametros, True)
-        MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        FormModoConsulta()
-    End Sub
+            If cmbCaracter.Text = "Eventual" AndAlso (filaActual.Cells("Caracter").Value = "Efectivo") Then
+                Throw New Exception("Cambio de Efectivo a Eventual no permitido.")
+            End If
 
-    Private Function ObtenerParametrosAgente() As Dictionary(Of String, Object)
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+            MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            FormModoConsulta()
+
+            Return True
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return False
+    End Function
+
+    Private Function ObtenerParametrosAgente(Optional esNuevo = False) As Dictionary(Of String, Object)
+        Dim legajo As Integer = If(String.IsNullOrEmpty(txtLegajo.Text.Trim), DBNull.Value, Convert.ToInt32(txtLegajo.Text.Trim))
+        Dim legajoEventual As Integer = If(String.IsNullOrEmpty(txtLegajoEventual.Text.Trim), 0, Convert.ToInt32(txtLegajoEventual.Text.Trim))
+
+        If cmbCaracter.Text = "Eventual" AndAlso esNuevo Then
+            legajoEventual = legajo
+        End If
+
+        If (Not esNuevo) AndAlso cmbCaracter.Text = "Efectivo" AndAlso (filaActual.Cells("Caracter").Value = "Eventual") Then
+            legajoEventual = filaActual.Cells("Legajo").Value
+        End If
+
         Return New Dictionary(Of String, Object) From {
-            {"@Legajo", If(String.IsNullOrEmpty(txtLegajo.Text.Trim), DBNull.Value, Convert.ToInt32(txtLegajo.Text.Trim))},
+            {"@Legajo", legajo},
+            {"@LegajoEventual", legajoEventual},
             {"@TipoDto", If(String.IsNullOrEmpty(cmbTipoDto.Text.Trim), DBNull.Value, cmbTipoDto.Text.Trim)},
             {"@NroDto", If(String.IsNullOrEmpty(txtNroDto.Text.Trim), DBNull.Value, If(Integer.TryParse(txtNroDto.Text.Trim, 0), Convert.ToInt32(txtNroDto.Text.Trim), DBNull.Value))},
             {"@Instituto", If(String.IsNullOrEmpty(cmbInstituto.Text.Trim), DBNull.Value, cmbInstituto.Text.Trim)},
@@ -556,6 +629,7 @@ Public Class frmAgentes
     Private Sub CargarDatosEnFormulario(row As DataRow)
         If row IsNot Nothing Then
             txtLegajo.Text = If(IsDBNull(row("Legajo")), "", row("Legajo").ToString())
+            txtLegajoEventual.Text = If(IsDBNull(row("LegajoEventual")), "", row("LegajoEventual").ToString())
             txtNombre.Text = If(IsDBNull(row("Nombre")), "", row("Nombre").ToString())
             cmbInstituto.Text = If(IsDBNull(row("Instituto")), "", row("Instituto").ToString())
             txtCorreoE.Text = If(IsDBNull(row("CorreoE")), "", row("CorreoE").ToString())
@@ -622,6 +696,7 @@ Public Class frmAgentes
     End Sub
 
     Private Sub GridBuscar()
+        ' SeleccionarFila(0)
 
         Try
             Dim texto As String = txtBuscar.Text.Trim()
@@ -663,7 +738,7 @@ Public Class frmAgentes
             dgvListado.DataSource = dt
             lblTotalAgentes.Text = "Total de Empleados: " & dt.Rows.Count.ToString()
 
-            SeleccionarFila(0)
+            ' SeleccionarFila(0)
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -814,8 +889,8 @@ Public Class frmAgentes
         If dgvListado Is Nothing OrElse dgvListado.CurrentRow Is Nothing Then Return
 
         If dgvListado.SelectedRows.Count > 1 Then
-            filaActualIndice = -1
             filaActual = Nothing
+            filaActualIndice = -1
             FormLimpiarSeleccionado()
             Return
         End If
@@ -824,10 +899,10 @@ Public Class frmAgentes
         If idx < 0 OrElse idx = filaActualIndice Then Return
 
         FormModoConsulta()
-        FormLimpiarSeleccionado()
+        ' FormLimpiarSeleccionado()
 
-        filaActualIndice = idx
         filaActual = dgvListado.CurrentRow
+        filaActualIndice = idx
         FormObtenerSeleccionado()
     End Sub
 
@@ -1071,6 +1146,11 @@ Public Class frmAgentes
                 dgvListado.Columns("CorreoE").HeaderText = "E-Mail"
                 dgvListado.Columns("CorreoE").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
                 dgvListado.Columns("CorreoE").DisplayIndex = 7
+
+                dgvListado.Columns("Caracter").Visible = True
+                dgvListado.Columns("Caracter").HeaderText = "Caracter"
+                dgvListado.Columns("Caracter").Width = 120
+                dgvListado.Columns("Caracter").DisplayIndex = 8
 
             End If
         Catch ex As Exception
@@ -1423,6 +1503,4 @@ Public Class frmAgentes
         ' Formar el CUIL completo
         Return prefijo & dni & verificador
     End Function
-
-
 End Class

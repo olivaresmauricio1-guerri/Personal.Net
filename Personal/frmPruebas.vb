@@ -2,24 +2,24 @@
 
 Public Class frmPruebas
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ImportarAgentes()
-        ImportarCaracter()
-        ImportarCategorias()
-        ImportarComentarios()
-        ImportarConsultoras()
-        ImportarEncargados()
-        ImportarEscalafon()
-        ImportarEstadoParental()
-        ImportarEventuales()
-        ImportarExpediente()
-        ImportarGrupoFamiliar()
-        ImportarHoras()
-        ImportarInasistencias()
-        ImportarInstitutos()
-        ImportarMeses()
-        ImportarMinutos()
-        ImportarMovimientos()
-        ImportarParametros()
+        'ImportarAgentes()
+        'ImportarCaracter()
+        'ImportarCategorias()
+        'ImportarComentarios()
+        'ImportarConsultoras()
+        'ImportarEncargados()
+        'ImportarEscalafon()
+        'ImportarEstadoParental()
+        'ImportarEventuales()
+        'ImportarExpediente()
+        'ImportarGrupoFamiliar()
+        'ImportarHoras()
+        'ImportarInasistencias()
+        'ImportarInstitutos()
+        'ImportarMeses()
+        'ImportarMinutos()
+        'ImportarMovimientos()
+        'ImportarParametros()
     End Sub
 
     Private Sub ImportarAgentes()
@@ -112,21 +112,18 @@ Public Class frmPruebas
 
     Private Sub ImportarCaracter()
 
-        ' traer datos de la tabla Caracter desde Personal_
-        Dim sql = "SELECT * FROM [Caracter]"
-        Dim dt = DSM.ExecuteQuery(DSM.Personal_, sql, Nothing)
-
         ' borrar datos en la tabla Caracter en Personal
         Dim sqlDelete = "DELETE FROM Caracter"
         DSM.Execute(DSM.Personal, sqlDelete, Nothing)
 
         ' insertar datos en la tabla Caracter en Personal
-        For Each row As DataRow In dt.Rows
+        Dim caracteres = New String() {"Efectivo", "Eventual", "Jubilado"}
+        For Each caracter In caracteres
             Dim sqlInsert = "INSERT INTO Caracter (Codigo, Descripcion) VALUES (@Codigo, @Descripcion)"
             Dim parametros As New Dictionary(Of String, Object) From {
-            {"@Codigo", row("Codigo")},
-            {"@Descripcion", row("Descripcion")}
-        }
+                {"@Codigo", Array.IndexOf(caracteres, caracter) + 1},
+                {"@Descripcion", caracter}
+            }
             DSM.Execute(DSM.Personal, sqlInsert, parametros)
         Next
     End Sub
