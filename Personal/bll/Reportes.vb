@@ -135,7 +135,7 @@ Public Module Reportes
             "")
 
             Dim sql As String = $"
-                INSERT INTO ListaHorario (Legajo, Nombre, Oficina, Dia, Entro, Salio, HsCumplidas, Instituto, Motivo, CUIL, NroDto, TipoDto)
+                INSERT INTO ListaHorario (Legajo, Nombre, Dia, Entro, Salio, HsCumplidas, Instituto, Motivo, CUIL, NroDto, TipoDto)
                 SELECT 
                     Agentes.Legajo,
                     Agentes.Nombre,
