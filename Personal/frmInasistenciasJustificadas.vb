@@ -24,6 +24,7 @@ Public Class frmInasistenciasJustificadas
         FormModoConsulta()
         CargarComboBoxes()
 
+
         Me.KeyPreview = True
     End Sub
     Private Sub CmdAgregar_Click(sender As Object, e As EventArgs) Handles CmdAgregar.Click
