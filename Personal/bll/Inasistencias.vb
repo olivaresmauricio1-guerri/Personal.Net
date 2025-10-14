@@ -3,14 +3,15 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Module Inasistencias
 
-    ' Devuelve Legajo, Nombre, Dia para cada día hábil sin movimiento
+    ' Devuelve Legajo, Nombre, Instituto y Dia para cada día hábil sin movimiento,
+    ' respetando feriados nacionales (Zona='Todas') y provinciales según la zona del Instituto.
     Public Function BuscarFaltas(desde As Date, hasta As Date, sucursal As String) As DataTable
         Dim whereSucursal As String = If(String.IsNullOrWhiteSpace(sucursal), "", " AND e.Instituto = @pInstituto ")
 
         Dim sql As String = $"
             SET NOCOUNT ON;
             SET DATEFIRST 1;         -- lunes = 1
-            SET DATEFORMAT dmy;      -- interpreta 'dd/mm/yyyy' correctamente
+            SET DATEFORMAT dmy;      -- interpreta 'dd/mm/yyyy'
 
             DECLARE @desde date = @pDesde, @hasta date = @pHasta;
             IF (@hasta < @desde) BEGIN DECLARE @t date = @desde; SET @desde=@hasta; SET @hasta=@t; END;
@@ -24,8 +25,8 @@ Public Module Inasistencias
             SELECT d AS Dia
             INTO #dias_habiles
             FROM dias
+            -- Sólo días de lunes a viernes (feriados se filtran por empleado más abajo)
             WHERE DATEPART(WEEKDAY, d) BETWEEN 1 AND 5
-              AND NOT EXISTS(SELECT 1 FROM dbo.Feriados f WHERE f.Dia = d)
             OPTION (MAXRECURSION 0);
 
             SELECT 
@@ -34,6 +35,8 @@ Public Module Inasistencias
                 e.Instituto,
                 dh.Dia
             FROM dbo.Agentes e
+            INNER JOIN dbo.Institutos i
+                ON i.Descripcion = e.Instituto
             CROSS JOIN #dias_habiles dh
             -- calcula fecha de Ingreso si el string es convertible a date
             CROSS APPLY (
@@ -43,18 +46,29 @@ Public Module Inasistencias
               AND e.nomarca = 0
               -- omite días anteriores al ingreso cuando Ingreso es válido
               AND (x.IngresoDate IS NULL OR dh.Dia >= x.IngresoDate)
+              -- NO contar si hay movimiento ese día
               AND NOT EXISTS(
                     SELECT 1
                     FROM dbo.Movimiento m
                     WHERE m.Legajo = e.Legajo
                       AND CONVERT(date, m.Dia) = dh.Dia
               )
+              -- NO contar si es feriado aplicable al empleado:
+              -- aplica si el feriado es nacional (Zona='Todas') o si coincide con la zona del instituto
+              AND NOT EXISTS(
+                    SELECT 1
+                    FROM dbo.Feriados f
+                    WHERE CONVERT(date, f.Dia) = dh.Dia
+                      AND (f.Zona = 'Todas' OR f.Zona = i.Zona)
+              )
             ORDER BY dh.Dia, e.Legajo;
         "
+
         Dim parametros = CmdParams("@pDesde", desde.Date, "@pHasta", hasta.Date, "@pInstituto", sucursal)
         Dim dt = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
         Return dt
     End Function
+
 
     ' Inserta 1 registro si no existe ya para ese legajo/día
     Public Function InsertarInasistencia(legajo As Integer, dia As Date) As Boolean
