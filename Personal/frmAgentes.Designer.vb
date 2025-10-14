@@ -26,6 +26,7 @@ Partial Class frmAgentes
         tabDatosAgente = New TabPage()
         tlpDatosAgente = New TableLayoutPanel()
         Panel3Col = New Panel()
+        chkBaja = New CheckBox()
         txtAntiguedad = New TextBox()
         Label10 = New Label()
         dtpBaja = New DateTimePicker()
@@ -238,6 +239,7 @@ Partial Class frmAgentes
         ' 
         ' Panel3Col
         ' 
+        Panel3Col.Controls.Add(chkBaja)
         Panel3Col.Controls.Add(txtAntiguedad)
         Panel3Col.Controls.Add(Label10)
         Panel3Col.Controls.Add(dtpBaja)
@@ -260,6 +262,15 @@ Partial Class frmAgentes
         Panel3Col.Size = New Size(351, 302)
         Panel3Col.TabIndex = 2
         ' 
+        ' chkBaja
+        ' 
+        chkBaja.AutoSize = True
+        chkBaja.Location = New Point(84, 102)
+        chkBaja.Name = "chkBaja"
+        chkBaja.Size = New Size(15, 14)
+        chkBaja.TabIndex = 75
+        chkBaja.UseVisualStyleBackColor = True
+        ' 
         ' txtAntiguedad
         ' 
         txtAntiguedad.Location = New Point(259, 9)
@@ -281,12 +292,12 @@ Partial Class frmAgentes
         ' dtpBaja
         ' 
         dtpBaja.Format = DateTimePickerFormat.Short
-        dtpBaja.Location = New Point(86, 97)
+        dtpBaja.Location = New Point(106, 97)
         dtpBaja.Margin = New Padding(4, 3, 4, 3)
         dtpBaja.Name = "dtpBaja"
-        dtpBaja.Size = New Size(88, 23)
+        dtpBaja.Size = New Size(104, 23)
         dtpBaja.TabIndex = 32
-        dtpBaja.Value = New Date(1970, 1, 1, 0, 0, 0, 0)
+        dtpBaja.Value = New Date(2025, 10, 14, 0, 0, 0, 0)
         ' 
         ' dtpIngreso
         ' 
@@ -846,7 +857,7 @@ Partial Class frmAgentes
         Label5.Location = New Point(206, 71)
         Label5.Margin = New Padding(4, 0, 4, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(35, 15)
+        Label5.Size = New Size(34, 15)
         Label5.TabIndex = 71
         Label5.Text = "Sexo:"
         ' 
@@ -883,7 +894,7 @@ Partial Class frmAgentes
         Label20.Location = New Point(9, 188)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
-        Label20.Size = New Size(55, 15)
+        Label20.Size = New Size(56, 15)
         Label20.TabIndex = 45
         Label20.Text = "Teléfono:"
         ' 
@@ -1432,7 +1443,7 @@ Partial Class frmAgentes
         Label28.AutoSize = True
         Label28.Location = New Point(11, 76)
         Label28.Name = "Label28"
-        Label28.Size = New Size(78, 15)
+        Label28.Size = New Size(79, 15)
         Label28.TabIndex = 15
         Label28.Text = "Nro Teléfono:"
         ' 
@@ -1487,7 +1498,7 @@ Partial Class frmAgentes
         Label44.AutoSize = True
         Label44.Location = New Point(11, 23)
         Label44.Name = "Label44"
-        Label44.Size = New Size(33, 15)
+        Label44.Size = New Size(34, 15)
         Label44.TabIndex = 0
         Label44.Text = "Tipo:"
         ' 
@@ -1630,7 +1641,7 @@ Partial Class frmAgentes
         radTodos.AutoSize = True
         radTodos.Location = New Point(788, 6)
         radTodos.Name = "radTodos"
-        radTodos.Size = New Size(56, 19)
+        radTodos.Size = New Size(57, 19)
         radTodos.TabIndex = 4
         radTodos.Text = "Todos"
         radTodos.UseVisualStyleBackColor = True
@@ -1642,7 +1653,7 @@ Partial Class frmAgentes
         lblTotalAgentes.Location = New Point(1018, 9)
         lblTotalAgentes.Margin = New Padding(4, 0, 4, 0)
         lblTotalAgentes.Name = "lblTotalAgentes"
-        lblTotalAgentes.Size = New Size(97, 15)
+        lblTotalAgentes.Size = New Size(98, 15)
         lblTotalAgentes.TabIndex = 5
         lblTotalAgentes.Text = "Total de Agentes:"
         ' 
@@ -1918,5 +1929,6 @@ Partial Class frmAgentes
     Friend WithEvents radEventuales As RadioButton
     Friend WithEvents txtLegajoEventual As TextBox
     Friend WithEvents lblLegajoEventual As Label
+    Friend WithEvents chkBaja As CheckBox
 
 End Class
