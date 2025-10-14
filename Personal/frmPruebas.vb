@@ -3,23 +3,23 @@
 Public Class frmPruebas
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         ImportarAgentes()
-        'ImportarCaracter()
-        'ImportarCategorias()
-        'ImportarComentarios()
-        'ImportarConsultoras()
-        'ImportarEncargados()
-        'ImportarEscalafon()
-        'ImportarEstadoParental()
-        'ImportarEventuales()
-        'ImportarExpediente()
-        'ImportarGrupoFamiliar()
-        'ImportarHoras()
-        'ImportarInasistencias()
-        'ImportarInstitutos()
-        'ImportarMeses()
-        'ImportarMinutos()
+        ImportarCaracter()
+        ImportarCategorias()
+        ImportarComentarios()
+        ImportarConsultoras()
+        ImportarEncargados()
+        ImportarEscalafon()
+        ImportarEstadoParental()
+        ImportarExpediente()
+        ImportarFeriados2025()
+        ImportarGrupoFamiliar()
+        ImportarHoras()
+        ImportarInasistencias()
+        ImportarInstitutos()
+        ImportarMeses()
+        ImportarMinutos()
         ImportarMovimientos()
-        'ImportarParametros()
+        ImportarParametros()
     End Sub
 
     Private Sub ImportarAgentes()
@@ -40,13 +40,13 @@ Public Class frmPruebas
                     Critico, MayorDedicacion, HorasDedicacion, HorasSemanales, HorasDiarias, Escalafon, Jefe, LicAnual, Caracter, Comentario, 
                     Nomarca, Secretaria, Vac2022, Vac2023, Vac2024, Vac2025, Vac2026, Vac2027, Vac2028, Vac2014, Vac2015, Vac2016, Vac2017, 
                     Vac2018, Vac2019, Vac2020, Vac2021, MarcaAqui, Telefono, Interno, Celular, Rpv, iNGRESO, Baja, CUIL, TITULO, 
-                    UltimaActualizacion, Motivo, EstadoParental, FechaJubilacion
+                    UltimaActualizacion, Motivo, EstadoParental, FechaJubilacion, LegajoEventual
                 ) VALUES (
                     @Legajo, @TipoDto, @NroDto, @CargoPampa, @Cargo, @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, @Calle, @Nro, @Localidad, @Oficina,
                     @Critico, @MayorDedicacion, @HorasDedicacion, @HorasSemanales, @HorasDiarias, @Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario,
                     @Nomarca, @Secretaria, @Vac2022, @Vac2023, @Vac2024, @Vac2025, @Vac2026, @Vac2027, @Vac2028, @Vac2014, @Vac2015, @Vac2016, @Vac2017,
                     @Vac2018, @Vac2019, @Vac2020, @Vac2021, @MarcaAqui, @Telefono, @Interno, @Celular, @Rpv, @iNGRESO, @Baja, @CUIL, @TITULO,
-                    @UltimaActualizacion, @Motivo, @EstadoParental, @FechaJubilacion
+                    @UltimaActualizacion, @Motivo, @EstadoParental, @FechaJubilacion, 0
                 )"
 
             Dim parametros As New Dictionary(Of String, Object) From {
@@ -104,6 +104,109 @@ Public Class frmPruebas
                 {"@Motivo", row("Motivo")},
                 {"@EstadoParental", row("EstadoParental")},
                 {"@FechaJubilacion", row("FechaJubilacion")}
+            }
+
+            DSM.Execute(DSM.Personal, sqlInsert, parametros)
+        Next
+
+        ImportarEventuales()
+    End Sub
+
+    Private Sub ImportarEventuales()
+
+        ' traer datos de la tabla Eventuales desde Personal_
+        Dim sql = "SELECT * FROM [Eventuales]"
+        Dim dt = DSM.ExecuteQuery(DSM.Personal_, sql, Nothing)
+
+        ' insertar datos en la tabla Agentes como Eventuales en Personal
+        For Each row As DataRow In dt.Rows
+
+            ' si dni esta cargado, busca el dni del eventual en la tabla Agentes
+            Dim dni = row("NroDto").ToString().Trim()
+            If Not String.IsNullOrEmpty(dni) And dni <> "0" Then
+                Dim sqlBuscaDni = "SELECT * FROM Agentes WHERE NroDto = @NroDto"
+                Dim parametrosBusca = CmdParams("@NroDto", dni)
+                Dim dtBusca = DSM.ExecuteQuery(DSM.Personal, sqlBuscaDni, parametrosBusca)
+                If dtBusca.Rows.Count > 0 Then
+                    ' si ya existe un agente con ese dni, actualiza el campo LegajoEventual con el legajo del eventual
+                    Dim sqlUpdate = "UPDATE Agentes SET LegajoEventual = @LegajoEventual WHERE NroDto = @NroDto"
+                    Dim parametrosUpdate = CmdParams("@LegajoEventual", row("Legajo"), "@NroDto", dni)
+                    DSM.Execute(DSM.Personal, sqlUpdate, parametrosUpdate)
+                    Continue For
+                End If
+            End If
+
+            ' inserta eventual en la tabla de agentes, usando el mismo legajo como LegajoEventual y el caracter 'Eventual'
+            Dim sqlInsert = "
+                INSERT INTO Agentes (
+                    Legajo, TipoDto, NroDto, CargoPampa, Cargo, Instituto, Nombre, CorreoE, Sexo, Nacimiento, Calle, Nro, Localidad, Oficina,
+                    Critico, MayorDedicacion, HorasDedicacion, HorasSemanales, HorasDiarias, Escalafon, Jefe, LicAnual, Caracter, Comentario, 
+                    Nomarca, Secretaria, Vac2022, Vac2023, Vac2024, Vac2025, Vac2026, Vac2027, Vac2028, Vac2014, Vac2015, Vac2016, Vac2017, 
+                    Vac2018, Vac2019, Vac2020, Vac2021, MarcaAqui, Telefono, Interno, Celular, Rpv, iNGRESO, Baja, CUIL, TITULO, 
+                    UltimaActualizacion, Motivo, EstadoParental, FechaJubilacion, LegajoEventual
+                ) VALUES (
+                    @Legajo, @TipoDto, @NroDto, @CargoPampa, @Cargo, @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, @Calle, @Nro, @Localidad, @Oficina,
+                    @Critico, @MayorDedicacion, @HorasDedicacion, @HorasSemanales, @HorasDiarias, @Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario,
+                    @Nomarca, @Secretaria, @Vac2022, @Vac2023, @Vac2024, @Vac2025, @Vac2026, @Vac2027, @Vac2028, @Vac2014, @Vac2015, @Vac2016, @Vac2017,
+                    @Vac2018, @Vac2019, @Vac2020, @Vac2021, @MarcaAqui, @Telefono, @Interno, @Celular, @Rpv, @iNGRESO, @Baja, @CUIL, @TITULO,
+                    @UltimaActualizacion, @Motivo, @EstadoParental, @FechaJubilacion, @Legajo
+                )"
+
+            Dim parametros As New Dictionary(Of String, Object) From {
+                {"@Legajo", row("Legajo")},
+                {"@TipoDto", row("TipoDto")},
+                {"@NroDto", row("NroDto")},
+                {"@CargoPampa", row("CargoPampa")},
+                {"@Cargo", row("Cargo")},
+                {"@Instituto", row("Instituto")},
+                {"@Nombre", row("Nombre")},
+                {"@CorreoE", row("CorreroE")},
+                {"@Sexo", row("Sexo")},
+                {"@Nacimiento", row("Nacimiento")},
+                {"@Calle", row("Calle")},
+                {"@Nro", row("Nro")},
+                {"@Localidad", row("Localidad")},
+                {"@Oficina", row("Oficina")},
+                {"@Critico", row("Critico")},
+                {"@MayorDedicacion", row("MayorDedicacion")},
+                {"@HorasDedicacion", row("HorasDedicacion")},
+                {"@HorasSemanales", row("HorasSemanales")},
+                {"@HorasDiarias", row("HorasDiarias")},
+                {"@Escalafon", row("Escalafon")},
+                {"@Jefe", row("Jefe")},
+                {"@LicAnual", row("LicAnual")},
+                {"@Caracter", "Eventual"},
+                {"@Comentario", row("Comentario")},
+                {"@Nomarca", row("Nomarca")},
+                {"@Secretaria", row("Secretaria")},
+                {"@Vac2022", row("Vac2022")},
+                {"@Vac2023", row("Vac2023")},
+                {"@Vac2024", row("Vac2024")},
+                {"@Vac2025", row("Vac2025")},
+                {"@Vac2026", row("Vac2026")},
+                {"@Vac2027", row("Vac2027")},
+                {"@Vac2028", row("Vac2028")},
+                {"@Vac2014", row("Vac2014")},
+                {"@Vac2015", row("Vac2015")},
+                {"@Vac2016", row("Vac2016")},
+                {"@Vac2017", row("Vac2017")},
+                {"@Vac2018", row("Vac2018")},
+                {"@Vac2019", row("Vac2019")},
+                {"@Vac2020", row("Vac2020")},
+                {"@Vac2021", row("Vac2021")},
+                {"@MarcaAqui", row("MarcaAqui")},
+                {"@Telefono", row("Telefono")},
+                {"@Interno", row("Interno")},
+                {"@Celular", row("Celular")},
+                {"@Rpv", row("Rpv")},
+                {"@iNGRESO", row("iNGRESO")},
+                {"@Baja", row("Baja")},
+                {"@CUIL", row("CUIL")},
+                {"@TITULO", row("TITULO")},
+                {"@UltimaActualizacion", row("UltimaActualizacion")},
+                {"@Motivo", row("Motivo")},
+                {"@EstadoParental", "Sin Hijo/a"},
+                {"@FechaJubilacion", ""}
             }
 
             DSM.Execute(DSM.Personal, sqlInsert, parametros)
@@ -271,95 +374,6 @@ Public Class frmPruebas
         Next
     End Sub
 
-    Private Sub ImportarEventuales()
-
-        ' traer datos de la tabla Eventuales desde Personal_
-        Dim sql = "SELECT * FROM [Eventuales]"
-        Dim dt = DSM.ExecuteQuery(DSM.Personal_, sql, Nothing)
-
-        ' borrar datos en la tabla Eventuales en Personal
-        Dim sqlDelete = "DELETE FROM Eventuales"
-        DSM.Execute(DSM.Personal, sqlDelete, Nothing)
-
-        ' insertar datos en la tabla Eventuales en Personal
-        For Each row As DataRow In dt.Rows
-            Dim sqlInsert = "
-            INSERT INTO Eventuales (
-                Legajo, TipoDto, NroDto, CargoPampa, Cargo, Instituto, Nombre, CorreroE, Sexo, Nacimiento, 
-                Calle, Nro, Localidad, Oficina, Critico, MayorDedicacion, HorasDedicacion, HorasSemanales, HorasDiarias, 
-                Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Secretaria, 
-                Vac2022, Vac2023, Vac2024, Vac2025, Vac2026, Vac2027, Vac2028,
-                Vac2014, Vac2015, Vac2016, Vac2017, Vac2018, Vac2019, Vac2020, Vac2021,
-                MarcaAqui, Telefono, Interno, Celular, Rpv, iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion, Motivo, Consultora
-            ) VALUES (
-                @Legajo, @TipoDto, @NroDto, @CargoPampa, @Cargo, @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento,
-                @Calle, @Nro, @Localidad, @Oficina, @Critico, @MayorDedicacion, @HorasDedicacion, @HorasSemanales, @HorasDiarias,
-                @Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Secretaria,
-                @Vac2022, @Vac2023, @Vac2024, @Vac2025, @Vac2026, @Vac2027, @Vac2028,
-                @Vac2014, @Vac2015, @Vac2016, @Vac2017, @Vac2018, @Vac2019, @Vac2020, @Vac2021,
-                @MarcaAqui, @Telefono, @Interno, @Celular, @Rpv, @iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @Motivo, @Consultora
-            )"
-
-            Dim parametros As New Dictionary(Of String, Object) From {
-                {"@Legajo", row("Legajo")},
-                {"@TipoDto", row("TipoDto")},
-                {"@NroDto", row("NroDto")},
-                {"@CargoPampa", row("CargoPampa")},
-                {"@Cargo", row("Cargo")},
-                {"@Instituto", row("Instituto")},
-                {"@Nombre", row("Nombre")},
-                {"@CorreoE", row("CorreroE")}, ' <- en la tabla está como CorreroE
-                {"@Sexo", row("Sexo")},
-                {"@Nacimiento", If(IsDBNull(row("Nacimiento")) OrElse CDate(row("Nacimiento")) < #1/1/1753#, DBNull.Value, row("Nacimiento"))},
-                {"@Calle", row("Calle")},
-                {"@Nro", row("Nro")},
-                {"@Localidad", row("Localidad")},
-                {"@Oficina", row("Oficina")},
-                {"@Critico", row("Critico")},
-                {"@MayorDedicacion", row("MayorDedicacion")},
-                {"@HorasDedicacion", row("HorasDedicacion")},
-                {"@HorasSemanales", row("HorasSemanales")},
-                {"@HorasDiarias", row("HorasDiarias")},
-                {"@Escalafon", row("Escalafon")},
-                {"@Jefe", row("Jefe")},
-                {"@LicAnual", row("LicAnual")},
-                {"@Caracter", row("Caracter")},
-                {"@Comentario", row("Comentario")},
-                {"@Nomarca", row("Nomarca")},
-                {"@Secretaria", row("Secretaria")},
-                {"@Vac2022", row("Vac2022")},
-                {"@Vac2023", row("Vac2023")},
-                {"@Vac2024", row("Vac2024")},
-                {"@Vac2025", row("Vac2025")},
-                {"@Vac2026", row("Vac2026")},
-                {"@Vac2027", row("Vac2027")},
-                {"@Vac2028", row("Vac2028")},
-                {"@Vac2014", row("Vac2014")},
-                {"@Vac2015", row("Vac2015")},
-                {"@Vac2016", row("Vac2016")},
-                {"@Vac2017", row("Vac2017")},
-                {"@Vac2018", row("Vac2018")},
-                {"@Vac2019", row("Vac2019")},
-                {"@Vac2020", row("Vac2020")},
-                {"@Vac2021", row("Vac2021")},
-                {"@MarcaAqui", row("MarcaAqui")},
-                {"@Telefono", row("Telefono")},
-                {"@Interno", row("Interno")},
-                {"@Celular", row("Celular")},
-                {"@Rpv", row("Rpv")},
-                {"@iNGRESO", row("iNGRESO")},
-                {"@Baja", row("Baja")},
-                {"@CUIL", row("CUIL")},
-                {"@TITULO", row("TITULO")},
-                {"@UltimaActualizacion", row("UltimaActualizacion")},
-                {"@Motivo", row("Motivo")},
-                {"@Consultora", row("Consultora")}
-            }
-
-            DSM.Execute(DSM.Personal, sqlInsert, parametros)
-        Next
-    End Sub
-
     Private Sub ImportarExpediente()
 
         ' 1) Traer datos desde Personal_
@@ -403,6 +417,58 @@ Public Class frmPruebas
             DSM.Execute(DSM.Personal, sqlInsert, parametros)
         Next
     End Sub
+
+    Private Sub ImportarFeriados2025()
+
+        ' 1) Borrar únicamente los feriados del año 2025
+        Dim sqlDelete = "DELETE FROM Feriados WHERE YEAR(Dia) <= 2025"
+        DSM.Execute(DSM.Personal, sqlDelete, Nothing)
+
+        ' 2) Definir feriados 2025 (nacionales + provinciales)
+        Dim feriados As New List(Of Dictionary(Of String, Object)) From {
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 1, 1)}, {"Motivo", "Año Nuevo"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 3, 3)}, {"Motivo", "Carnaval"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 3, 4)}, {"Motivo", "Carnaval"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 3, 24)}, {"Motivo", "Día de la Memoria por la Verdad y la Justicia"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 4, 2)}, {"Motivo", "Día del Veterano y de los Caídos en Malvinas"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 4, 17)}, {"Motivo", "Jueves Santo (no laborable)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 4, 18)}, {"Motivo", "Viernes Santo"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 5, 1)}, {"Motivo", "Día del Trabajador"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 5, 2)}, {"Motivo", "Feriado turístico (no laborable)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 5, 25)}, {"Motivo", "Día de la Revolución de Mayo"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 6, 16)}, {"Motivo", "Paso a la Inmortalidad de Güemes (trasladado)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 6, 20)}, {"Motivo", "Paso a la Inmortalidad de Manuel Belgrano"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 7, 9)}, {"Motivo", "Día de la Independencia"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 8, 15)}, {"Motivo", "Feriado turístico (no laborable)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 8, 17)}, {"Motivo", "Paso a la Inmortalidad de San Martín"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 10, 10)}, {"Motivo", "Feriado turístico (no laborable)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 10, 12)}, {"Motivo", "Día del Respeto a la Diversidad Cultural"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 11, 21)}, {"Motivo", "Feriado turístico (no laborable)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 11, 24)}, {"Motivo", "Día de la Soberanía Nacional (trasladado)"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 12, 8)}, {"Motivo", "Inmaculada Concepción de María"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 12, 25)}, {"Motivo", "Navidad"}, {"Zona", "Todas"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 7, 25)}, {"Motivo", "Patrono Santiago (feriado provincial)"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 9, 12)}, {"Motivo", "Aniversario Ciudad de Neuquén (asueto local)"}, {"Zona", "Neuquen"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 6, 27)}, {"Motivo", "Día del Trabajador del Estado (asueto)"}, {"Zona", "BsAires"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 9, 22)}, {"Motivo", "Día del Empleado de Comercio"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 9, 29)}, {"Motivo", "Día del Empleado de Comercio"}, {"Zona", "Neuquen"}},
+            New Dictionary(Of String, Object) From {{"Dia", New Date(2025, 9, 29)}, {"Motivo", "Día del Empleado de Comercio"}, {"Zona", "BsAires"}}
+        }
+
+        ' 3) Insertar
+        For Each f In feriados
+            Dim sqlInsert = "INSERT INTO Feriados (Dia, Motivo, creado, Zona) VALUES (@Dia, @Motivo, @Creado, @Zona)"
+            Dim p As New Dictionary(Of String, Object) From {
+                {"@Dia", CType(f("Dia"), Date)},
+                {"@Motivo", CStr(f("Motivo"))},
+                {"@Creado", 1},
+                {"@Zona", CStr(f("Zona"))}
+            }
+            DSM.Execute(DSM.Personal, sqlInsert, p)
+        Next
+
+    End Sub
+
 
     Private Sub ImportarGrupoFamiliar()
 
@@ -501,31 +567,36 @@ Public Class frmPruebas
 
     Private Sub ImportarInstitutos()
 
-        ' traer datos de la tabla Institutos desde Personal_
-        Dim sql = "SELECT * FROM [Institutos]"
-        Dim dt = DSM.ExecuteQuery(DSM.Personal_, sql, Nothing)
-
-        ' borrar datos en la tabla Institutos en Personal
+        ' Borrar todos los registros actuales
         Dim sqlDelete = "DELETE FROM Institutos"
         DSM.Execute(DSM.Personal, sqlDelete, Nothing)
 
-        ' insertar datos en la tabla Institutos en Personal
-        For Each row As DataRow In dt.Rows
-            Dim sqlInsert = "
-            INSERT INTO Institutos (
-                id, Descripcion
-            ) VALUES (
-                @id, @Descripcion
-            )"
+        ' Definir los institutos con su id, descripción y zona
+        Dim institutos As New List(Of Dictionary(Of String, Object)) From {
+            New Dictionary(Of String, Object) From {{"id", 1}, {"Descripcion", "Casa Central"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"id", 3}, {"Descripcion", "Autoshop"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"id", 4}, {"Descripcion", "Neuquen"}, {"Zona", "Neuquen"}},
+            New Dictionary(Of String, Object) From {{"id", 6}, {"Descripcion", "Garay"}, {"Zona", "BsAires"}},
+            New Dictionary(Of String, Object) From {{"id", 7}, {"Descripcion", "Zona Franca"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"id", 8}, {"Descripcion", "Alcorta"}, {"Zona", "BsAires"}},
+            New Dictionary(Of String, Object) From {{"id", 9}, {"Descripcion", "Belgrano"}, {"Zona", "BsAires"}},
+            New Dictionary(Of String, Object) From {{"id", 10}, {"Descripcion", "Reconstruccion"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"id", 11}, {"Descripcion", "Halpem"}, {"Zona", "Mendoza"}},
+            New Dictionary(Of String, Object) From {{"id", 2}, {"Descripcion", "(Todas)"}, {"Zona", "Mendoza"}}
+        }
 
+        ' Insertar cada registro
+        For Each inst In institutos
+            Dim sqlInsert = "INSERT INTO Institutos (id, Descripcion, Zona) VALUES (@Id, @Descripcion, @Zona)"
             Dim parametros As New Dictionary(Of String, Object) From {
-                {"@id", row("id")},
-                {"@Descripcion", row("Descripcion")}
+                {"@Id", inst("id")},
+                {"@Descripcion", inst("Descripcion")},
+                {"@Zona", inst("Zona")}
             }
-
             DSM.Execute(DSM.Personal, sqlInsert, parametros)
         Next
     End Sub
+
 
     Private Sub ImportarMeses()
 
@@ -580,11 +651,11 @@ Public Class frmPruebas
     Private Sub ImportarMovimientos()
 
         ' traer datos de la tabla Movimiento desde Personal_
-        Dim sql = "SELECT * FROM [Movimiento] where legajo = 763"
+        Dim sql = "SELECT * FROM [Movimiento]"
         Dim dt = DSM.ExecuteQuery(DSM.Personal_, sql, Nothing)
 
         ' borrar datos en la tabla Movimientos en Personal
-        Dim sqlDelete = "DELETE FROM Movimiento where legajo = 763"
+        Dim sqlDelete = "DELETE FROM Movimiento"
         DSM.Execute(DSM.Personal, sqlDelete, Nothing)
 
         ' insertar datos en la tabla Movimientos en Personal
