@@ -77,10 +77,12 @@ Public Module Relojes
 
         Dim sql = "
             INSERT INTO dbo.Marcaciones (dispositivo, puerto, legajo, fechahora)
-            SELECT @dispositivo, @puerto, @legajo, @fechahora
+            SELECT @dispositivo, @puerto, @legajo, @fechaHora
             WHERE NOT EXISTS (
-                SELECT 1 FROM dbo.Marcaciones WITH (UPDLOCK, HOLDLOCK)
-                WHERE legajo = @legajo AND fechahora = @fechahora
+                SELECT 1
+                FROM dbo.Marcaciones WITH (UPDLOCK, HOLDLOCK)
+                WHERE legajo = @legajo
+                  AND fechahora BETWEEN DATEADD(minute, -5, @fechaHora) AND @fechaHora
             );"
 
         Dim fh As DateTime
@@ -233,6 +235,36 @@ Public Module Relojes
             Return True
         Catch ex As Exception
             Debug.WriteLine("Error al procesar marcaciones: " & ex.Message)
+            Return False
+        End Try
+    End Function
+
+    ' obtener la ultima lectura registrada en la base de datos para este reloj
+    ' valida que haya una sola fila y que no sea null
+    Public Function ObtenerUltimaLectura(reloj As Reloj) As DateTime?
+        Dim sql = "SELECT UltimaLectura FROM dbo.Relojes WHERE Ip = @Ip;"
+        Dim parametros = CmdParams("@Ip", reloj.Ip)
+        Try
+            Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+            If dt.Rows.Count = 1 AndAlso Not IsDBNull(dt.Rows(0)("UltimaLectura")) Then
+                Return Convert.ToDateTime(dt.Rows(0)("UltimaLectura"))
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            Debug.WriteLine("Error al leer ultima lectura: " & ex.Message)
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GuardarUltimaLectura(reloj As Reloj, ahora As DateTime) As Boolean
+        Dim sql = "UPDATE dbo.Relojes SET UltimaLectura = @ahora WHERE Ip = @Ip;"
+        Dim parametros = CmdParams("@Ip", reloj.Ip, "@ahora", ahora)
+        Try
+            DSM.Execute(DSM.Personal, sql, parametros)
+            Return True
+        Catch ex As Exception
+            Debug.WriteLine("Error al guardar ultima lectura: " & ex.Message)
             Return False
         End Try
     End Function

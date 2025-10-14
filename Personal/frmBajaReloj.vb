@@ -150,6 +150,10 @@ Partial Class frmBajaReloj
     ' por ahora no implementado, 
     ' mockea conexion, con un delay de 2 segundos, y luego mestra "conectado"
     Private Sub conectarRelojIndirectoAsync(indice As Integer, Optional cargarMarcaciones As Boolean = False)
+        ' guarda hora actual
+        Dim ahora = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        Dim ultimaLectura = Relojes.ObtenerUltimaLectura(_relojes(indice))
+
         Dim reloj = _relojes(indice)
         If reloj.Conectando Then Return
         reloj.Conectando = True
@@ -182,7 +186,17 @@ Partial Class frmBajaReloj
                         Dim legajo = CStr(row("FILegajo"))
                         legajo = legajo.TrimStart("0"c)
                         Dim fechahora = Convert.ToDateTime(row("FIFecha")).ToString("yyyy-MM-dd HH:mm:ss")
-                        procesadas += Relojes.RegistrarMarcacion(reloj, legajo, fechahora)
+
+                        ' si la fecha es anterior a la última lectura, saltar
+                        Try
+                            Dim fhStr = fechahora
+                            Dim fh = DateTime.ParseExact(fhStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)
+                            procesadas += 1
+                            If fh <= ultimaLectura Then Continue For
+                        Catch
+                        End Try
+
+                        Relojes.RegistrarMarcacion(reloj, legajo, fechahora)
                         If Me.IsHandleCreated Then SafeUI(
                             Sub()
                                 Dim pct = CInt(Math.Floor(procesadas * 100.0 / Math.Max(total, 1)))
@@ -190,7 +204,11 @@ Partial Class frmBajaReloj
                                 ResaltarEstado(indice)
                             End Sub)
                     Next
+
                     Try : Relojes.ProcesarMarcaciones(reloj) : Catch : End Try
+
+                    Try : Relojes.GuardarUltimaLectura(reloj, ahora) : Catch : End Try
+
                     If Me.IsHandleCreated Then SafeUI(
                         Sub()
                             dgvRelojes.Rows(indice).Cells("Estado").Value = $"Importado (indirecto) {procesadas}/{total}"
@@ -207,6 +225,10 @@ Partial Class frmBajaReloj
 
     ' abre un hilo para el reloj indicado y conecta
     Private Sub ConectarRelojDirectoAsync(indice As Integer, Optional cargarMarcaciones As Boolean = False)
+        ' guarda hora actual
+        Dim ahora = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        Dim ultimaLectura = Relojes.ObtenerUltimaLectura(_relojes(indice))
+
         Dim reloj = _relojes(indice)
         If reloj.Conectando Then Return
 
@@ -311,6 +333,14 @@ Partial Class frmBajaReloj
                                             If Not elem.TryGetProperty("id", Nothing) Then Continue For
                                             If Not elem.TryGetProperty("fechaHora", Nothing) Then Continue For
 
+                                            ' si la fecha es anterior a la última lectura, saltar
+                                            Try
+                                                Dim fhStr = elem.GetProperty("fechaHora").GetString()
+                                                Dim fh = DateTime.ParseExact(fhStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)
+                                                If fh <= ultimaLectura Then Continue For
+                                            Catch
+                                            End Try
+
                                             Dim legajo = elem.GetProperty("id").ToString()
                                             Dim fechahoraStr = elem.GetProperty("fechaHora").GetString()
                                             batch += Relojes.RegistrarMarcacion(reloj, legajo, fechahoraStr)
@@ -344,6 +374,8 @@ Partial Class frmBajaReloj
                         End While
 
                         Try : Relojes.ProcesarMarcaciones(reloj) : Catch : End Try
+
+                        Try : Relojes.GuardarUltimaLectura(reloj, ahora) : Catch : End Try
 
                         If Me.IsHandleCreated Then SafeUI(
                             Sub()
