@@ -76,6 +76,7 @@ Partial Class frmResumenAsistencia
         Label22 = New Label()
         GroupBox1 = New GroupBox()
         GroupBox2 = New GroupBox()
+        Label1 = New Label()
         lblLegajo = New Label()
         dtpHasta = New DateTimePicker()
         dtpDesde = New DateTimePicker()
@@ -83,6 +84,7 @@ Partial Class frmResumenAsistencia
         Label23 = New Label()
         Label24 = New Label()
         Label25 = New Label()
+        txtLegajoEventual = New TextBox()
         CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInasistencias, ComponentModel.ISupportInitialize).BeginInit()
         GroupBox1.SuspendLayout()
@@ -202,7 +204,7 @@ Partial Class frmResumenAsistencia
         ' TxtAnio
         ' 
         TxtAnio.Font = New Font("Segoe UI", 9F)
-        TxtAnio.Location = New Point(612, 50)
+        TxtAnio.Location = New Point(560, 48)
         TxtAnio.Margin = New Padding(4, 3, 4, 3)
         TxtAnio.Name = "TxtAnio"
         TxtAnio.Size = New Size(69, 23)
@@ -439,7 +441,7 @@ Partial Class frmResumenAsistencia
         CmbMeses.DropDownStyle = ComboBoxStyle.DropDownList
         CmbMeses.Font = New Font("Segoe UI", 9F)
         CmbMeses.FormattingEnabled = True
-        CmbMeses.Location = New Point(424, 50)
+        CmbMeses.Location = New Point(388, 50)
         CmbMeses.Margin = New Padding(4, 3, 4, 3)
         CmbMeses.Name = "CmbMeses"
         CmbMeses.Size = New Size(124, 23)
@@ -478,7 +480,7 @@ Partial Class frmResumenAsistencia
         ' lblHasta
         ' 
         lblHasta.AutoSize = True
-        lblHasta.Location = New Point(192, 54)
+        lblHasta.Location = New Point(180, 54)
         lblHasta.Margin = New Padding(4, 0, 4, 0)
         lblHasta.Name = "lblHasta"
         lblHasta.Size = New Size(40, 15)
@@ -488,7 +490,7 @@ Partial Class frmResumenAsistencia
         ' lblAnio
         ' 
         lblAnio.AutoSize = True
-        lblAnio.Location = New Point(572, 53)
+        lblAnio.Location = New Point(520, 53)
         lblAnio.Margin = New Padding(4, 0, 4, 0)
         lblAnio.Name = "lblAnio"
         lblAnio.Size = New Size(32, 15)
@@ -712,6 +714,8 @@ Partial Class frmResumenAsistencia
         ' 
         ' GroupBox2
         ' 
+        GroupBox2.Controls.Add(txtLegajoEventual)
+        GroupBox2.Controls.Add(Label1)
         GroupBox2.Controls.Add(lblLegajo)
         GroupBox2.Controls.Add(dtpHasta)
         GroupBox2.Controls.Add(dtpDesde)
@@ -733,6 +737,16 @@ Partial Class frmResumenAsistencia
         GroupBox2.TabIndex = 60
         GroupBox2.TabStop = False
         ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Location = New Point(637, 53)
+        Label1.Margin = New Padding(4, 0, 4, 0)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(93, 15)
+        Label1.TabIndex = 47
+        Label1.Text = "Legajo Eventual:"
+        ' 
         ' lblLegajo
         ' 
         lblLegajo.AutoSize = True
@@ -747,7 +761,7 @@ Partial Class frmResumenAsistencia
         ' 
         dtpHasta.Font = New Font("Segoe UI", 9F)
         dtpHasta.Format = DateTimePickerFormat.Short
-        dtpHasta.Location = New Point(239, 50)
+        dtpHasta.Location = New Point(227, 50)
         dtpHasta.Name = "dtpHasta"
         dtpHasta.Size = New Size(114, 23)
         dtpHasta.TabIndex = 45
@@ -764,7 +778,7 @@ Partial Class frmResumenAsistencia
         ' lblMes
         ' 
         lblMes.AutoSize = True
-        lblMes.Location = New Point(384, 54)
+        lblMes.Location = New Point(348, 54)
         lblMes.Margin = New Padding(4, 0, 4, 0)
         lblMes.Name = "lblMes"
         lblMes.Size = New Size(32, 15)
@@ -799,9 +813,21 @@ Partial Class frmResumenAsistencia
         Label25.Location = New Point(258, 564)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
-        Label25.Size = New Size(91, 15)
+        Label25.Size = New Size(92, 15)
         Label25.TabIndex = 62
         Label25.Text = "Días Trabajados:"
+        ' 
+        ' txtLegajoEventual
+        ' 
+        txtLegajoEventual.BackColor = Color.White
+        txtLegajoEventual.BorderStyle = BorderStyle.FixedSingle
+        txtLegajoEventual.Font = New Font("Segoe UI", 9F)
+        txtLegajoEventual.Location = New Point(738, 48)
+        txtLegajoEventual.Margin = New Padding(4, 3, 4, 3)
+        txtLegajoEventual.Name = "txtLegajoEventual"
+        txtLegajoEventual.ReadOnly = True
+        txtLegajoEventual.Size = New Size(71, 23)
+        txtLegajoEventual.TabIndex = 48
         ' 
         ' frmResumenAsistencia
         ' 
@@ -901,4 +927,6 @@ Partial Class frmResumenAsistencia
     Friend WithEvents lblLegajo As Label
     Friend WithEvents dtpHasta As DateTimePicker
     Friend WithEvents dtpDesde As DateTimePicker
+    Friend WithEvents Label1 As Label
+    Friend WithEvents txtLegajoEventual As TextBox
 End Class

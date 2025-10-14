@@ -193,6 +193,7 @@ Public Class frmResumenAsistencia
                 TxtCaracter.Text = If(row("Caracter") IsNot DBNull.Value, row("Caracter").ToString(), "")
                 TxtInstituto.Text = If(row("Instituto") IsNot DBNull.Value, row("Instituto").ToString(), "")
                 TxtDiasLicencia.Text = If(row("LicAnual") IsNot DBNull.Value, row("LicAnual").ToString(), "0")
+                txtLegajoEventual.Text = If(row("LegajoEventual") IsNot DBNull.Value, row("LegajoEventual").ToString(), "0")
             End If
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos del empleado: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -677,4 +678,6 @@ Public Class frmResumenAsistencia
             CargarEmpleado()
         End If
     End Sub
+
+
 End Class

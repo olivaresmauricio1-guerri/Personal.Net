@@ -248,7 +248,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuFeriados_Click(sender As Object, e As EventArgs) Handles MnuFeriados.Click
-        MessageBox.Show("Función de feriados no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmFeriados.AbrirInstancia(Me)
     End Sub
 
     Private Sub MnuEncargados_Click(sender As Object, e As EventArgs) Handles MnuEncargados.Click

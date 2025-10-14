@@ -204,7 +204,7 @@ Public Module General
             If campoValor <> "" Then combo.ValueMember = campoValor
 
             combo.DataSource = tabla
-            combo.SelectedIndex = -1
+            'combo.SelectedIndex = -1
 
         Catch ex As Exception
             MessageBox.Show($"Error al cargar datos de {nombreTabla}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
