@@ -37,6 +37,7 @@ Public Class frmIngresoHorario
         If _suspenderAccionFiltros OrElse cmbAgentes.SelectedIndex = -1 Then Exit Sub
 
         agenteSeleccionado = CType(cmbAgentes.SelectedItem, DataRowView).Row
+        txtDocumento.Text = agenteSeleccionado("NroDto").ToString()
         MostrarInformacionAgente()
     End Sub
 
@@ -233,14 +234,41 @@ Public Class frmIngresoHorario
     End Sub
 
     Private Sub btnMarcar_Click(sender As Object, e As EventArgs) Handles btnMarcar.Click
+        Try
+            If agenteSeleccionado Is Nothing Then
+                MessageBox.Show("Debe seleccionar un agente.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            If Not ValidarDocumento() Then Return
+
+            CrearMarcacion()
+
+            ' Actualizar la visualización
+            CargarMovimientoDiaActual()
+            MessageBox.Show("Su registro se realizó con éxito. Gracias", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+        Catch ex As Exception
+            MessageBox.Show("Error al procesar marca de horario: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub CrearMarcacion()
         If agenteSeleccionado Is Nothing Then
             MessageBox.Show("Debe seleccionar un agente.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        If Not ValidarDocumento() Then Return
+        Dim fechaSeleccionada As Date = DtpDia.Value.Date
+        Dim horaIngresada As String = txtHora.Text
+        Dim marcacionHora As DateTime = String.Format("{0} {1}", fechaSeleccionada.ToString("yyyy-MM-dd"), horaIngresada)
+        Dim sql = "
+            INSERT INTO dbo.Marcaciones (dispositivo, puerto, legajo, fechahora)
+            VALUES(@dispositivo, @puerto, @legajo, @fechahora)"
+        Dim parametros = CmdParams("@dispositivo", "0.0.0.0", "@puerto", 0, "@legajo", agenteSeleccionado("Legajo"), "@fechahora", marcacionHora)
+        DSM.Execute(DSM.Personal, sql, parametros, True)
 
-        ProcesarMarcaHorario()
+        Try : Relojes.ProcesarMarcaciones() : Catch : End Try
     End Sub
 
     Private Sub DtpDia_ValueChanged(sender As Object, e As EventArgs) Handles DtpDia.ValueChanged

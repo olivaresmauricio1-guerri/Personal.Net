@@ -79,9 +79,9 @@ Partial Class frmIngresoHorario
         cmbAgentes.AutoCompleteSource = AutoCompleteSource.ListItems
         cmbAgentes.Font = New Font("Segoe UI", 9F)
         cmbAgentes.FormattingEnabled = True
-        cmbAgentes.Location = New Point(86, 22)
+        cmbAgentes.Location = New Point(94, 22)
         cmbAgentes.Name = "cmbAgentes"
-        cmbAgentes.Size = New Size(243, 23)
+        cmbAgentes.Size = New Size(235, 23)
         cmbAgentes.TabIndex = 1
         ' 
         ' lblAgente
@@ -98,7 +98,7 @@ Partial Class frmIngresoHorario
         ' 
         txtDocumento.BackColor = Color.White
         txtDocumento.Font = New Font("Segoe UI", 9F)
-        txtDocumento.Location = New Point(86, 51)
+        txtDocumento.Location = New Point(94, 51)
         txtDocumento.Name = "txtDocumento"
         txtDocumento.ReadOnly = True
         txtDocumento.Size = New Size(150, 23)

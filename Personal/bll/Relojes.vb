@@ -104,7 +104,7 @@ Public Module Relojes
     ' - si hay mas de dos marcaciones en el dia, volver a crear otro registro de movimiento con la misma regla
     ' - si las marcaciones son impares, repetir la ultima como salida provisoriamente
     ' - en cada registro de movimiento, calcular HsCumplidas como la diferencia entre la entrada y la salida
-    Public Function ProcesarMarcaciones(reloj As Reloj) As Boolean
+    Public Function ProcesarMarcaciones(Optional reloj As Reloj = Nothing) As Boolean
         Dim sql = "
             SET XACT_ABORT ON;
             SET NOCOUNT ON;
@@ -226,10 +226,10 @@ Public Module Relojes
 
             COMMIT;
             "
-        Dim parametros = CmdParams("@dispositivo", reloj.Ip)
+        ' Dim parametros = CmdParams("@dispositivo", reloj.Ip)
 
         Try
-            DSM.Execute(DSM.Personal, sql, parametros)
+            DSM.Execute(DSM.Personal, sql)
             Return True
         Catch ex As Exception
             Debug.WriteLine("Error al procesar marcaciones: " & ex.Message)

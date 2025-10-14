@@ -2,7 +2,7 @@
 
 Public Class frmPruebas
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'ImportarAgentes()
+        ImportarAgentes()
         'ImportarCaracter()
         'ImportarCategorias()
         'ImportarComentarios()
@@ -18,7 +18,7 @@ Public Class frmPruebas
         'ImportarInstitutos()
         'ImportarMeses()
         'ImportarMinutos()
-        'ImportarMovimientos()
+        ImportarMovimientos()
         'ImportarParametros()
     End Sub
 
@@ -580,11 +580,11 @@ Public Class frmPruebas
     Private Sub ImportarMovimientos()
 
         ' traer datos de la tabla Movimiento desde Personal_
-        Dim sql = "SELECT * FROM [Movimiento]"
+        Dim sql = "SELECT * FROM [Movimiento] where legajo = 763"
         Dim dt = DSM.ExecuteQuery(DSM.Personal_, sql, Nothing)
 
         ' borrar datos en la tabla Movimientos en Personal
-        Dim sqlDelete = "DELETE FROM Movimiento"
+        Dim sqlDelete = "DELETE FROM Movimiento where legajo = 763"
         DSM.Execute(DSM.Personal, sqlDelete, Nothing)
 
         ' insertar datos en la tabla Movimientos en Personal
