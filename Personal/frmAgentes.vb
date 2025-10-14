@@ -142,7 +142,7 @@ Public Class frmAgentes
         FormModoEdicion()
         FormLimpiarSeleccionado()
         txtLegajo.BackColor = Color.Gold
-        txtLegajo.ReadOnly = false
+        txtLegajo.ReadOnly = False
         txtLegajo.Focus()
     End Sub
 
@@ -191,6 +191,12 @@ Public Class frmAgentes
             FormModoConsulta()
             GridBuscar()
             ' ConfiguraColListado()
+            If dgvListado.CurrentRow IsNot Nothing Then
+                filaActual = dgvListado.CurrentRow
+            ElseIf dgvListado.Rows.Count > 0 Then
+                dgvListado.CurrentCell = dgvListado.Rows(0).Cells(0)
+                filaActual = dgvListado.CurrentRow
+            End If
             SeleccionarFila(0)
 
             txtLegajo.BackColor = SystemColors.Control
@@ -549,7 +555,7 @@ Public Class frmAgentes
         Dim legajo As Integer = If(String.IsNullOrEmpty(txtLegajo.Text.Trim), DBNull.Value, Convert.ToInt32(txtLegajo.Text.Trim))
         Dim legajoEventual As Integer = If(String.IsNullOrEmpty(txtLegajoEventual.Text.Trim), 0, Convert.ToInt32(txtLegajoEventual.Text.Trim))
 
-        If cmbCaracter.Text = "Eventual" AndAlso esNuevo Then
+        If (Not esNuevo) Or (cmbCaracter.Text = "Eventual" AndAlso esNuevo) Then
             legajoEventual = legajo
         End If
 
