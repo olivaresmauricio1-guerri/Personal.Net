@@ -746,7 +746,7 @@ Public Class frmAgentes
 
             ' Filtrar activos si corresponde
             If radActivos.Checked Then
-                sql &= " AND (Baja IS NULL OR Baja = '') AND (Caracter <> 'Eventual' OR Caracter IS NULL)"
+                sql &= " AND (Baja IS NULL OR Baja = '') AND (Caracter <> 'Eventual' OR Caracter IS NULL OR Caracter = '')"
             End If
 
             ' Filtrar por eventuales
@@ -1554,5 +1554,9 @@ Public Class frmAgentes
             CmbMotivo.Visible = False
             CmbMotivo.SelectedIndex = -1
         End If
+    End Sub
+
+    Private Sub DgvGrupoFamiliar_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvGrupoFamiliar.CellContentClick
+
     End Sub
 End Class

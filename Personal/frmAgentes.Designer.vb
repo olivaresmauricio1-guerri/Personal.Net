@@ -195,7 +195,7 @@ Partial Class frmAgentes
         tabDatos.Controls.Add(tabGrupoFamiliar)
         tabDatos.Controls.Add(tabComentarios)
         tabDatos.Controls.Add(TabPage1)
-        tabDatos.Location = New Point(10, 248)
+        tabDatos.Location = New Point(10, 177)
         tabDatos.Margin = New Padding(4, 3, 4, 3)
         tabDatos.Name = "tabDatos"
         tabDatos.SelectedIndex = 0
@@ -857,7 +857,7 @@ Partial Class frmAgentes
         Label5.Location = New Point(206, 71)
         Label5.Margin = New Padding(4, 0, 4, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(34, 15)
+        Label5.Size = New Size(35, 15)
         Label5.TabIndex = 71
         Label5.Text = "Sexo:"
         ' 
@@ -894,7 +894,7 @@ Partial Class frmAgentes
         Label20.Location = New Point(9, 188)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
-        Label20.Size = New Size(56, 15)
+        Label20.Size = New Size(55, 15)
         Label20.TabIndex = 45
         Label20.Text = "Teléfono:"
         ' 
@@ -1443,7 +1443,7 @@ Partial Class frmAgentes
         Label28.AutoSize = True
         Label28.Location = New Point(11, 76)
         Label28.Name = "Label28"
-        Label28.Size = New Size(79, 15)
+        Label28.Size = New Size(78, 15)
         Label28.TabIndex = 15
         Label28.Text = "Nro Teléfono:"
         ' 
@@ -1498,7 +1498,7 @@ Partial Class frmAgentes
         Label44.AutoSize = True
         Label44.Location = New Point(11, 23)
         Label44.Name = "Label44"
-        Label44.Size = New Size(34, 15)
+        Label44.Size = New Size(33, 15)
         Label44.TabIndex = 0
         Label44.Text = "Tipo:"
         ' 
@@ -1603,7 +1603,7 @@ Partial Class frmAgentes
         ' 
         chkEncabezados.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         chkEncabezados.AutoSize = True
-        chkEncabezados.Location = New Point(1051, 237)
+        chkEncabezados.Location = New Point(1051, 166)
         chkEncabezados.Margin = New Padding(4, 3, 4, 3)
         chkEncabezados.Name = "chkEncabezados"
         chkEncabezados.Size = New Size(119, 19)
@@ -1616,7 +1616,7 @@ Partial Class frmAgentes
         lnkCopiar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         lnkCopiar.AutoSize = True
         lnkCopiar.LinkColor = Color.Black
-        lnkCopiar.Location = New Point(949, 237)
+        lnkCopiar.Location = New Point(949, 166)
         lnkCopiar.Margin = New Padding(4, 0, 4, 0)
         lnkCopiar.Name = "lnkCopiar"
         lnkCopiar.Size = New Size(94, 15)
@@ -1641,7 +1641,7 @@ Partial Class frmAgentes
         radTodos.AutoSize = True
         radTodos.Location = New Point(788, 6)
         radTodos.Name = "radTodos"
-        radTodos.Size = New Size(57, 19)
+        radTodos.Size = New Size(56, 19)
         radTodos.TabIndex = 4
         radTodos.Text = "Todos"
         radTodos.UseVisualStyleBackColor = True
@@ -1653,7 +1653,7 @@ Partial Class frmAgentes
         lblTotalAgentes.Location = New Point(1018, 9)
         lblTotalAgentes.Margin = New Padding(4, 0, 4, 0)
         lblTotalAgentes.Name = "lblTotalAgentes"
-        lblTotalAgentes.Size = New Size(98, 15)
+        lblTotalAgentes.Size = New Size(97, 15)
         lblTotalAgentes.TabIndex = 5
         lblTotalAgentes.Text = "Total de Agentes:"
         ' 
@@ -1682,7 +1682,7 @@ Partial Class frmAgentes
         dgvListado.Location = New Point(10, 35)
         dgvListado.Margin = New Padding(4, 3, 4, 3)
         dgvListado.Name = "dgvListado"
-        dgvListado.Size = New Size(1161, 196)
+        dgvListado.Size = New Size(1161, 125)
         dgvListado.TabIndex = 2
         ' 
         ' btnSalir
@@ -1693,7 +1693,7 @@ Partial Class frmAgentes
         btnSalir.FlatStyle = FlatStyle.Flat
         btnSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         btnSalir.ForeColor = Color.White
-        btnSalir.Location = New Point(1082, 640)
+        btnSalir.Location = New Point(1082, 569)
         btnSalir.Margin = New Padding(4, 3, 4, 3)
         btnSalir.Name = "btnSalir"
         btnSalir.Size = New Size(88, 30)
@@ -1734,7 +1734,7 @@ Partial Class frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1184, 682)
+        ClientSize = New Size(1184, 611)
         Controls.Add(radEventuales)
         Controls.Add(chkEncabezados)
         Controls.Add(lnkCopiar)

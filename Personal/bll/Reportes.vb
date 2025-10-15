@@ -21,7 +21,8 @@ Public Module Reportes
 
             SELECT
                 -- Total de agentes activos que deben marcar
-                SUM(f.Activo * f.DebeMarcar)                                      AS TotalAgentes,
+                SUM(f.Activo * f.DebeMarcar)                                      AS TotalAgentesQueMarcan,
+                SUM(f.Activo)                                                     AS TotalAgentes,
                 -- De esos, los que marcaron hoy y no estan de vacaciones o con inasistencia
                 SUM(f.Activo * f.DebeMarcar * ISNULL(h.HasHoy,0))                 AS AgentesHoy,
                 -- De esos, los que marcaron hoy y estan de vacaciones o con inasistencia
@@ -36,7 +37,8 @@ Public Module Reportes
             CROSS APPLY (
                 SELECT
                     -- Activo: Baja NULL o cadena vacía
-                    CASE WHEN a.Baja IS NULL OR LTRIM(RTRIM(CAST(a.Baja AS nvarchar(50)))) = '' THEN 1 ELSE 0 END AS Activo,
+                    CASE WHEN (a.Baja IS NULL OR a.Baja = '') AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '') THEN 1 ELSE 0 END AS Activo,
+                    -- CASE WHEN a.Baja IS NULL OR LTRIM(RTRIM(CAST(a.Baja AS nvarchar(50)))) = '' THEN 1 ELSE 0 END AS Activo,
                     -- Debe marcar: Nomarca = 0 (tratando NULL como 0)
                     CASE WHEN ISNULL(a.Nomarca,0) = 0 THEN 1 ELSE 0 END AS DebeMarcar,
                     -- Cumpleaños en el mes actual
@@ -69,6 +71,7 @@ Public Module Reportes
             Using dt = DSM.ExecuteQuery(DSM.Personal, sql)
                 If dt.Rows.Count > 0 Then
                     r("TotalAgentes") = CInt(dt.Rows(0)("TotalAgentes"))
+                    r("TotalAgentesQueMarcan") = CInt(dt.Rows(0)("TotalAgentesQueMarcan"))
                     r("AgentesHoy") = CInt(dt.Rows(0)("AgentesHoy"))
                     r("AgentesSinMarcar") = CInt(dt.Rows(0)("AgentesSinMarcar"))
                     r("Inasistencias") = CInt(dt.Rows(0)("Inasistencias"))

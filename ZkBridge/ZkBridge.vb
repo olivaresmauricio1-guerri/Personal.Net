@@ -121,7 +121,7 @@ Public Class ZkBridge
                     Dim verify, inout, y, mm, d, h, nn, ss, workcode As Integer
                     While _zk.SSR_GetGeneralLogData(m, enroll, verify, inout, y, mm, d, h, nn, ss, workcode)
                         ' Dim fh As New DateTime(y, mm, d, h, nn, Math.Max(0, ss))
-                        Dim fh As New DateTime(y, mm, d, h, nn, ss)
+                        Dim fh As New DateTime(y, mm, d, h, nn, 0)
 
                         logs.Add(New With {
                             .id = If(enroll, ""),

@@ -56,6 +56,7 @@ Public Class MainForm
         Dim reporte = Reportes.ObtenerTotalesAgentes()
         lblDatosAgentes.Text =
             $"Agentes: {reporte("TotalAgentes")}" & vbCrLf &
+            $"Ag.Marcan: {reporte("TotalAgentesQueMarcan")}" & vbCrLf &
             $"Marcaron: {reporte("AgentesHoy")}" & vbCrLf &
             $"Sin marcar: {reporte("AgentesSinMarcar")}" & vbCrLf &
             $"Inas/Vacac: {reporte("Inasistencias")}" & vbCrLf &
