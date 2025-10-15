@@ -712,7 +712,7 @@ Partial Class frmAgentes
         ' 
         ' txtCelular
         ' 
-        txtCelular.Location = New Point(249, 184)
+        txtCelular.Location = New Point(86, 271)
         txtCelular.Margin = New Padding(4, 3, 4, 3)
         txtCelular.Name = "txtCelular"
         txtCelular.Size = New Size(99, 23)
@@ -730,12 +730,12 @@ Partial Class frmAgentes
         ' Label22
         ' 
         Label22.AutoSize = True
-        Label22.Location = New Point(194, 187)
+        Label22.Location = New Point(9, 274)
         Label22.Margin = New Padding(4, 0, 4, 0)
         Label22.Name = "Label22"
-        Label22.Size = New Size(47, 15)
+        Label22.Size = New Size(73, 15)
         Label22.TabIndex = 75
-        Label22.Text = "Celular:"
+        Label22.Text = "Corporativo:"
         ' 
         ' Label7
         ' 
@@ -817,7 +817,7 @@ Partial Class frmAgentes
         ' Label11
         ' 
         Label11.AutoSize = True
-        Label11.Location = New Point(9, 275)
+        Label11.Location = New Point(192, 189)
         Label11.Margin = New Padding(4, 0, 4, 0)
         Label11.Name = "Label11"
         Label11.Size = New Size(59, 15)
@@ -826,10 +826,10 @@ Partial Class frmAgentes
         ' 
         ' txtUrgencias
         ' 
-        txtUrgencias.Location = New Point(86, 271)
+        txtUrgencias.Location = New Point(259, 185)
         txtUrgencias.Margin = New Padding(4, 3, 4, 3)
         txtUrgencias.Name = "txtUrgencias"
-        txtUrgencias.Size = New Size(143, 23)
+        txtUrgencias.Size = New Size(89, 23)
         txtUrgencias.TabIndex = 19
         ' 
         ' txtLegajo
