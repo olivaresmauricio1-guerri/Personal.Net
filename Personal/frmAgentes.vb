@@ -531,11 +531,11 @@ Public Class frmAgentes
 
         sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto, Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, HorasDiarias, " &
-                           "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular,  " &
+                           "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular, Rpv,  " &
                            "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, LegajoEventual) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto,   @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad,  @HorasDiarias, " &
-                           "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular,  " &
+                           "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular, @Urgencias,  " &
                            "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @LegajoEventual)"
 
         Dim parametros = ObtenerParametrosAgente(True)
@@ -549,7 +549,7 @@ Public Class frmAgentes
                            "Nombre=@Nombre, CorreoE=@CorreoE, Sexo=@Sexo, Nacimiento=@Nacimiento, Calle=@Calle, Nro=@Nro, " &
                            "Localidad=@Localidad, HorasDiarias=@HorasDiarias, " &
                            "Escalafon=@Escalafon, Jefe=@Jefe, LicAnual=@LicAnual, Caracter=@Caracter, Comentario=@Comentario, " &
-                           "Nomarca=@Nomarca, Cargo=@Cargo, Telefono=@Telefono, Interno=@Interno, Celular=@Celular, " &
+                           "Nomarca=@Nomarca, Cargo=@Cargo, Telefono=@Telefono, Interno=@Interno, Celular=@Celular, Rpv=@Urgencias, " &
                            "iNGRESO=@iNGRESO, Baja=@Baja, Motivo=@Motivo, CUIL=@CUIL, TITULO=@TITULO, UltimaActualizacion=@UltimaActualizacion, " &
                            "EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion " &
                            "WHERE Legajo=@LegajoEventual"
@@ -597,7 +597,7 @@ Public Class frmAgentes
             {"@Calle", If(String.IsNullOrEmpty(txtCalle.Text.Trim), DBNull.Value, txtCalle.Text.Trim)},
             {"@Nro", If(String.IsNullOrEmpty(txtNro.Text.Trim), DBNull.Value, txtNro.Text.Trim)},
             {"@Localidad", If(String.IsNullOrEmpty(txtLocalidad.Text.Trim), DBNull.Value, txtLocalidad.Text.Trim)},
-            {"@HorasDedicacion", If(String.IsNullOrEmpty(txtUrgencias.Text.Trim), DBNull.Value, txtUrgencias.Text.Trim)},
+            {"@Urgencias", If(String.IsNullOrEmpty(txtUrgencias.Text.Trim), DBNull.Value, txtUrgencias.Text.Trim)},
             {"@HorasDiarias", If(String.IsNullOrEmpty(cmbHorasDiarias.Text.Trim), DBNull.Value, cmbHorasDiarias.Text.Trim)},
             {"@Escalafon", If(String.IsNullOrEmpty(cmbEscalafon.Text.Trim), DBNull.Value, cmbEscalafon.Text.Trim)},
             {"@Jefe", If(String.IsNullOrEmpty(cmbJefe.Text.Trim), DBNull.Value, cmbJefe.Text.Trim)},
@@ -683,6 +683,7 @@ Public Class frmAgentes
             txtTelefono.Text = If(IsDBNull(row("Telefono")), "", row("Telefono").ToString())
             txtInterno.Text = If(IsDBNull(row("Interno")), "", row("Interno").ToString())
             txtCelular.Text = If(IsDBNull(row("Celular")), "", row("Celular").ToString())
+            txtUrgencias.Text = If(IsDBNull(row("Rpv")), "", row("Rpv").ToString())
             txtUltimaActualizacion.Text = If(IsDBNull(row("UltimaActualizacion")), "", row("UltimaActualizacion").ToString())
 
             If Not IsDBNull(row("iNGRESO")) AndAlso row("iNGRESO").ToString().Trim() <> "" Then
