@@ -62,7 +62,7 @@ Partial Class frmDatosAgentes
         tabDatosAgentes.Location = New Point(0, 0)
         tabDatosAgentes.Name = "tabDatosAgentes"
         tabDatosAgentes.SelectedIndex = 0
-        tabDatosAgentes.Size = New Size(737, 756)
+        tabDatosAgentes.Size = New Size(737, 586)
         tabDatosAgentes.TabIndex = 0
         ' 
         ' TabPage1
@@ -71,7 +71,7 @@ Partial Class frmDatosAgentes
         TabPage1.Location = New Point(4, 24)
         TabPage1.Name = "TabPage1"
         TabPage1.Padding = New Padding(3)
-        TabPage1.Size = New Size(617, 728)
+        TabPage1.Size = New Size(729, 558)
         TabPage1.TabIndex = 0
         TabPage1.Text = "Agentes"
         TabPage1.UseVisualStyleBackColor = True
@@ -82,7 +82,7 @@ Partial Class frmDatosAgentes
         dgvAgentes.Dock = DockStyle.Fill
         dgvAgentes.Location = New Point(3, 3)
         dgvAgentes.Name = "dgvAgentes"
-        dgvAgentes.Size = New Size(611, 722)
+        dgvAgentes.Size = New Size(723, 552)
         dgvAgentes.TabIndex = 0
         ' 
         ' TabPage2
@@ -91,7 +91,7 @@ Partial Class frmDatosAgentes
         TabPage2.Location = New Point(4, 24)
         TabPage2.Name = "TabPage2"
         TabPage2.Padding = New Padding(3)
-        TabPage2.Size = New Size(617, 728)
+        TabPage2.Size = New Size(729, 728)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Marcaron"
         TabPage2.UseVisualStyleBackColor = True
@@ -102,7 +102,7 @@ Partial Class frmDatosAgentes
         dgvMarcaron.Dock = DockStyle.Fill
         dgvMarcaron.Location = New Point(3, 3)
         dgvMarcaron.Name = "dgvMarcaron"
-        dgvMarcaron.Size = New Size(611, 722)
+        dgvMarcaron.Size = New Size(723, 722)
         dgvMarcaron.TabIndex = 0
         ' 
         ' TabPage3
@@ -111,7 +111,7 @@ Partial Class frmDatosAgentes
         TabPage3.Location = New Point(4, 24)
         TabPage3.Name = "TabPage3"
         TabPage3.Padding = New Padding(3)
-        TabPage3.Size = New Size(617, 728)
+        TabPage3.Size = New Size(729, 728)
         TabPage3.TabIndex = 2
         TabPage3.Text = "Sin Marcar"
         TabPage3.UseVisualStyleBackColor = True
@@ -122,7 +122,7 @@ Partial Class frmDatosAgentes
         dgvSinMarcar.Dock = DockStyle.Fill
         dgvSinMarcar.Location = New Point(3, 3)
         dgvSinMarcar.Name = "dgvSinMarcar"
-        dgvSinMarcar.Size = New Size(611, 722)
+        dgvSinMarcar.Size = New Size(723, 722)
         dgvSinMarcar.TabIndex = 0
         ' 
         ' TabPage4
@@ -131,7 +131,7 @@ Partial Class frmDatosAgentes
         TabPage4.Location = New Point(4, 24)
         TabPage4.Name = "TabPage4"
         TabPage4.Padding = New Padding(3)
-        TabPage4.Size = New Size(617, 728)
+        TabPage4.Size = New Size(729, 728)
         TabPage4.TabIndex = 3
         TabPage4.Text = "Vacaciones"
         TabPage4.UseVisualStyleBackColor = True
@@ -142,7 +142,7 @@ Partial Class frmDatosAgentes
         dgvVacaciones.Dock = DockStyle.Fill
         dgvVacaciones.Location = New Point(3, 3)
         dgvVacaciones.Name = "dgvVacaciones"
-        dgvVacaciones.Size = New Size(611, 722)
+        dgvVacaciones.Size = New Size(723, 722)
         dgvVacaciones.TabIndex = 0
         ' 
         ' TabPage5
@@ -151,7 +151,7 @@ Partial Class frmDatosAgentes
         TabPage5.Location = New Point(4, 24)
         TabPage5.Name = "TabPage5"
         TabPage5.Padding = New Padding(3)
-        TabPage5.Size = New Size(617, 728)
+        TabPage5.Size = New Size(729, 728)
         TabPage5.TabIndex = 4
         TabPage5.Text = "Cumpleaños del Mes"
         TabPage5.UseVisualStyleBackColor = True
@@ -162,7 +162,7 @@ Partial Class frmDatosAgentes
         dgvCumpleMes.Dock = DockStyle.Fill
         dgvCumpleMes.Location = New Point(3, 3)
         dgvCumpleMes.Name = "dgvCumpleMes"
-        dgvCumpleMes.Size = New Size(611, 722)
+        dgvCumpleMes.Size = New Size(723, 722)
         dgvCumpleMes.TabIndex = 0
         ' 
         ' TabPage6
@@ -188,10 +188,10 @@ Partial Class frmDatosAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(737, 756)
+        ClientSize = New Size(737, 586)
         Controls.Add(tabDatosAgentes)
         MinimizeBox = False
-        MinimumSize = New Size(504, 725)
+        MinimumSize = New Size(504, 400)
         Name = "frmDatosAgentes"
         Text = "Datos de Agentes a la Fecha"
         tabDatosAgentes.ResumeLayout(False)

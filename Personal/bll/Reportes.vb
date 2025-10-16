@@ -498,25 +498,40 @@ END
             ;WITH A AS (
               SELECT 
                 a.Legajo, a.Nombre, a.Instituto, a.Ingreso,
-                CASE 
-                  WHEN a.Ingreso IS NOT NULL
-                   AND a.Ingreso LIKE '[0-3][0-9]/[01][0-9]/[12][0-9][0-9][0-9]'
-                   AND ISDATE(a.Ingreso) = 1
-                  THEN CONVERT(date, a.Ingreso, 103)
-                END AS IngresoDate
+                -- normalizo el string (trim)
+                LTRIM(RTRIM(a.Ingreso)) AS IngresoStr
               FROM Agentes a
               WHERE (a.Baja IS NULL OR a.Baja = '')
                 AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+            ),
+            P AS (
+              SELECT 
+                Legajo, Nombre, Instituto, Ingreso,
+                CASE 
+                  -- Formato dd/MM/yyyy (ej: 02/06/2025)
+                  WHEN IngresoStr LIKE '[0-3][0-9]/[01][0-9]/[12][0-9][0-9][0-9]'
+                       AND ISDATE(IngresoStr) = 1
+                    THEN CONVERT(date, IngresoStr, 103)
+
+                  -- Formato ISO yyyy-MM-dd (ej: 2025-06-03)
+                  WHEN IngresoStr LIKE '[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]'
+                       AND ISDATE(IngresoStr) = 1
+                    THEN CAST(IngresoStr AS date)
+
+                  ELSE NULL
+                END AS IngresoDate
+              FROM A
             )
             SELECT 
               Legajo, Nombre, Instituto, Ingreso
-            FROM A
+            FROM P
             WHERE IngresoDate IS NOT NULL
               AND IngresoDate >= @d180   -- inclusive
               AND IngresoDate <= @d135   -- inclusive
             ORDER BY Legajo;"
         Return DSM.ExecuteQuery(DSM.Personal, sql)
     End Function
+
 
 
 End Module
