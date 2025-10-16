@@ -17,11 +17,14 @@ Partial Class frmBajaReloj
     'NOTA: el Diseñador requiere este procedimiento
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        components = New ComponentModel.Container()
         dgvRelojes = New DataGridView()
-        btnImportarTodo = New Button()
         cmdSalir = New Button()
         btnConectar = New Button()
         cmdImportarSeleccionado = New Button()
+        cmdImportarTodos = New Button()
+        Timer1 = New Timer(components)
+        chkAutoImportar = New CheckBox()
         CType(dgvRelojes, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -40,20 +43,6 @@ Partial Class frmBajaReloj
         dgvRelojes.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvRelojes.Size = New Size(776, 300)
         dgvRelojes.TabIndex = 0
-        ' 
-        ' btnImportarTodo
-        ' 
-        btnImportarTodo.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
-        btnImportarTodo.Cursor = Cursors.Hand
-        btnImportarTodo.FlatStyle = FlatStyle.Flat
-        btnImportarTodo.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnImportarTodo.Location = New Point(558, 332)
-        btnImportarTodo.Name = "btnImportarTodo"
-        btnImportarTodo.Size = New Size(124, 30)
-        btnImportarTodo.TabIndex = 1
-        btnImportarTodo.Text = "Importar Todo"
-        btnImportarTodo.UseVisualStyleBackColor = True
-        btnImportarTodo.Visible = False
         ' 
         ' cmdSalir
         ' 
@@ -89,7 +78,7 @@ Partial Class frmBajaReloj
         cmdImportarSeleccionado.Cursor = Cursors.Hand
         cmdImportarSeleccionado.FlatStyle = FlatStyle.Flat
         cmdImportarSeleccionado.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        cmdImportarSeleccionado.Location = New Point(168, 332)
+        cmdImportarSeleccionado.Location = New Point(307, 332)
         cmdImportarSeleccionado.Name = "cmdImportarSeleccionado"
         cmdImportarSeleccionado.Size = New Size(171, 30)
         cmdImportarSeleccionado.TabIndex = 4
@@ -97,14 +86,42 @@ Partial Class frmBajaReloj
         cmdImportarSeleccionado.UseVisualStyleBackColor = True
         cmdImportarSeleccionado.Visible = False
         ' 
+        ' cmdImportarTodos
+        ' 
+        cmdImportarTodos.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        cmdImportarTodos.Cursor = Cursors.Hand
+        cmdImportarTodos.FlatStyle = FlatStyle.Flat
+        cmdImportarTodos.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        cmdImportarTodos.Location = New Point(168, 332)
+        cmdImportarTodos.Name = "cmdImportarTodos"
+        cmdImportarTodos.Size = New Size(133, 30)
+        cmdImportarTodos.TabIndex = 5
+        cmdImportarTodos.Text = "Importar Todos"
+        cmdImportarTodos.UseVisualStyleBackColor = True
+        ' 
+        ' Timer1
+        ' 
+        Timer1.Interval = 300000
+        ' 
+        ' chkAutoImportar
+        ' 
+        chkAutoImportar.AutoSize = True
+        chkAutoImportar.Location = New Point(523, 339)
+        chkAutoImportar.Name = "chkAutoImportar"
+        chkAutoImportar.Size = New Size(138, 19)
+        chkAutoImportar.TabIndex = 6
+        chkAutoImportar.Text = "Importar Automático"
+        chkAutoImportar.UseVisualStyleBackColor = True
+        ' 
         ' frmBajaReloj
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 374)
+        Controls.Add(chkAutoImportar)
+        Controls.Add(cmdImportarTodos)
         Controls.Add(cmdImportarSeleccionado)
         Controls.Add(cmdSalir)
-        Controls.Add(btnImportarTodo)
         Controls.Add(btnConectar)
         Controls.Add(dgvRelojes)
         MinimizeBox = False
@@ -113,13 +130,16 @@ Partial Class frmBajaReloj
         Text = "Monitoreo de Relojes ZKTeco"
         CType(dgvRelojes, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
+        PerformLayout()
 
     End Sub
 
     Friend WithEvents dgvRelojes As System.Windows.Forms.DataGridView
-    Friend WithEvents btnImportarTodo As System.Windows.Forms.Button
     Friend WithEvents cmdSalir As Button
     Friend WithEvents btnConectar As Button
     Friend WithEvents cmdImportarSeleccionado As Button
+    Friend WithEvents cmdImportarTodos As Button
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents chkAutoImportar As CheckBox
 
 End Class

@@ -23,7 +23,7 @@ Public Module Relojes
     Public Function ObtenerRelojes() As List(Of Reloj)
         Dim relojes As New List(Of Reloj)
 
-        Dim sql = "SELECT RelojId, Nombre, Ip, Puerto, Ubicacion, ClaveCom FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
+        Dim sql = "SELECT RelojId, Nombre, Ip, Puerto, Ubicacion, ClaveCom, UltimaLectura FROM dbo.Relojes WHERE Activo = 1 ORDER BY RelojId;"
         Dim dtRelojes As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, Nothing)
 
         For Each row As DataRow In dtRelojes.Rows
@@ -34,7 +34,7 @@ Public Module Relojes
                 .CommKey = If(IsDBNull(row("ClaveCom")), 0, Convert.ToInt32(row("ClaveCom"))),
                 .Conectado = False,
                 .Ubicacion = CStr(row("Ubicacion")),
-                .UltimaVerif = Nothing
+                .UltimaVerif = CStr(row("UltimaLectura"))
             }
             relojes.Add(reloj)
         Next
@@ -231,6 +231,9 @@ Public Module Relojes
         ' Dim parametros = CmdParams("@dispositivo", reloj.Ip)
 
         Try
+            Debug.WriteLine("Procesando marcaciones.........................................................................")
+            Debug.WriteLine("Procesando marcaciones.........................................................................")
+            Debug.WriteLine("Procesando marcaciones.........................................................................")
             DSM.Execute(DSM.Personal, sql)
             Return True
         Catch ex As Exception

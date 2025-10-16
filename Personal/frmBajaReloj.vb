@@ -6,6 +6,7 @@ Imports System.Threading
 Partial Class frmBajaReloj
 
     Private _relojes As New List(Of Reloj)
+    Private _faltaImportar = 0
 
     Private Shared instancia As frmBajaReloj
     Public Shared Sub AbrirInstancia(mdiParent As Form)
@@ -40,17 +41,24 @@ Partial Class frmBajaReloj
         cmdImportarSeleccionado.Visible = (indiceSeleccionado >= 0 AndAlso indiceSeleccionado < _relojes.Count)
     End Sub
 
-    'Private Sub btnImportarTodo_Click(sender As Object, e As EventArgs) Handles btnImportarTodo.Click
-    '    InicializarGrilla()
-    '    CargarRelojes()
+    Private Sub cmdImportarTodos_Click(sender As Object, e As EventArgs) Handles cmdImportarTodos.Click
+        InicializarGrilla()
+        CargarRelojes()
 
-    '    If Not Funciones.AsegurarRegistroZkBridge() Then
-    '        MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
-    '        Return
-    '    End If
-    '    For i = 0 To _relojes.Count - 1
-    '        ConectarRelojAsync(i, True)
-    '    Next
+        _faltaImportar = _relojes.Count
+
+        If Not Funciones.AsegurarRegistroZkBridge() Then
+            MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        For i = 0 To _relojes.Count - 1
+            ConectarRelojAsync(i, True)
+        Next
+    End Sub
+
+    'Private Sub btnImportarTodo_Click(sender As Object, e As EventArgs) Handles btnImportarTodo.Click
+
     'End Sub
 
     Private Sub cmdImportarSeleccionado_Click(sender As Object, e As EventArgs) Handles cmdImportarSeleccionado.Click
@@ -106,7 +114,7 @@ Partial Class frmBajaReloj
 
         dgvRelojes.Rows.Clear()
         For Each reloj As Reloj In _relojes
-            dgvRelojes.Rows.Add(reloj.Ubicacion, reloj.Nombre, reloj.Ip, reloj.Puerto.ToString(), "—", "—")
+            dgvRelojes.Rows.Add(reloj.Ubicacion, reloj.Nombre, reloj.Ip, reloj.Puerto.ToString(), "Sin conexión", reloj.UltimaVerif)
         Next
 
         dgvRelojes.ClearSelection()
@@ -124,7 +132,7 @@ Partial Class frmBajaReloj
         dgvRelojes.Columns("Puerto").Width = 60
         dgvRelojes.Columns("Ubicacion").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         dgvRelojes.Columns("Estado").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgvRelojes.Columns("Ultima").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgvRelojes.Columns("Ultima").Width = 120
 
         ConfigurarEstiloGrid(dgvRelojes)
     End Sub
@@ -205,7 +213,8 @@ Partial Class frmBajaReloj
                             End Sub)
                     Next
 
-                    Try : Relojes.ProcesarMarcaciones(reloj) : Catch : End Try
+                    _faltaImportar -= 1
+                    Try : CheckProcesarMarcaciones() : Catch : End Try
 
                     Try : Relojes.GuardarUltimaLectura(reloj, ahora) : Catch : End Try
 
@@ -373,7 +382,8 @@ Partial Class frmBajaReloj
                             Try : json = zk.ObtenerLogs(pagina) : Catch : Exit While : End Try
                         End While
 
-                        Try : Relojes.ProcesarMarcaciones(reloj) : Catch : End Try
+                        _faltaImportar -= 1
+                        Try : CheckProcesarMarcaciones() : Catch : End Try
 
                         Try : Relojes.GuardarUltimaLectura(reloj, ahora) : Catch : End Try
 
@@ -422,6 +432,12 @@ Partial Class frmBajaReloj
         th.Start() ' ← ¡no esperamos! la UI sigue
     End Sub
 
+    Private Sub CheckProcesarMarcaciones()
+        ' si quedan relojes por importar, no procesar aún
+        If _faltaImportar > 0 Then Return
+        Try : Relojes.ProcesarMarcaciones() : Catch : End Try
+    End Sub
+
     Private Sub SafeUI(action As Action)
         Try
             If Not Me.IsHandleCreated Then Return
@@ -449,7 +465,7 @@ Partial Class frmBajaReloj
 
     Private Sub ToggleUI(enable As Boolean)
         UI(Sub()
-               btnImportarTodo.Enabled = enable
+               cmdImportarTodos.Enabled = enable
                btnConectar.Enabled = enable
                cmdImportarSeleccionado.Enabled = enable
            End Sub)
@@ -470,5 +486,21 @@ Partial Class frmBajaReloj
         End If
 
         row.DefaultCellStyle.BackColor = colorSel
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Debug.WriteLine($"Timer tick, falta importar {_faltaImportar}")
+
+        If chkAutoImportar.Checked And _faltaImportar = 0 Then
+            cmdImportarTodos.PerformClick()
+        End If
+    End Sub
+
+    Private Sub chkAutoImportar_CheckedChanged(sender As Object, e As EventArgs) Handles chkAutoImportar.CheckedChanged
+        Timer1.Enabled = chkAutoImportar.Checked
+
+        If chkAutoImportar.Checked And _faltaImportar = 0 Then
+            cmdImportarTodos.PerformClick()
+        End If
     End Sub
 End Class
