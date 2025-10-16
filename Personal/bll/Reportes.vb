@@ -6,18 +6,19 @@ Public Module Reportes
     Public Function ObtenerTotalesAgentes() As Dictionary(Of String, Integer)
         Dim r As New Dictionary(Of String, Integer) From {
             {"TotalAgentes", 0},
+            {"TotalAgentesQueMarcan", 0},
             {"AgentesHoy", 0},
             {"AgentesSinMarcar", 0},
             {"Inasistencias", 0},
             {"CumpleMes", 0},
-            {"Ingresaron_5a7m", 0}
+            {"Ingresaron_4a6m", 0}
         }
 
         Dim sql As String = "
-            DECLARE @hoy date      = CAST(GETDATE() AS date);
-            DECLARE @maniana date  = DATEADD(day, 1, @hoy);
-            DECLARE @d7m  date     = DATEADD(month, -7, @hoy);
-            DECLARE @d5m  date     = DATEADD(month, -5, @hoy);
+            DECLARE @hoy   date = CAST(GETDATE() AS date);
+            DECLARE @maniana date = DATEADD(day, 1, @hoy);
+            DECLARE @d180  date = DATEADD(day, -180, @hoy);
+            DECLARE @d135  date = DATEADD(day, -135, @hoy);
 
             SELECT
                 -- Total de agentes activos que deben marcar
@@ -31,27 +32,28 @@ Public Module Reportes
                 SUM(f.Activo * f.DebeMarcar * (1-ISNULL(h.HasHoy,0)))             AS AgentesSinMarcar,
                 -- Agentes activos que cumplen años este mes
                 SUM(f.Activo * f.CumpleMes)                                       AS CumpleMes,
-                -- Agentes activos con fecha de ingreso entre -7 y -5 meses
-                SUM(f.Activo * f.Ingreso5a7)                                      AS Ingresaron_5a7m
+                -- Agentes activos con fecha de ingreso entre -180 y -135 días
+                SUM(f.Activo * f.Ingreso4a6)                                      AS Ingresaron_4a6m
             FROM Agentes a
             CROSS APPLY (
                 SELECT
-                    -- Activo: Baja NULL o cadena vacía
-                    CASE WHEN (a.Baja IS NULL OR a.Baja = '') AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '') THEN 1 ELSE 0 END AS Activo,
-                    -- CASE WHEN a.Baja IS NULL OR LTRIM(RTRIM(CAST(a.Baja AS nvarchar(50)))) = '' THEN 1 ELSE 0 END AS Activo,
+                    -- Activo: Baja NULL o cadena vacía y no 'Eventual'
+                    CASE WHEN (a.Baja IS NULL OR a.Baja = '') 
+                              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+                         THEN 1 ELSE 0 END AS Activo,
                     -- Debe marcar: Nomarca = 0 (tratando NULL como 0)
                     CASE WHEN ISNULL(a.Nomarca,0) = 0 THEN 1 ELSE 0 END AS DebeMarcar,
                     -- Cumpleaños en el mes actual
                     CASE WHEN a.Nacimiento IS NOT NULL
                               AND MONTH(a.Nacimiento) = MONTH(@hoy)
                          THEN 1 ELSE 0 END AS CumpleMes,
-                    -- Ingreso entre hace 7 y 5 meses (inclusive)
+                    -- Ingreso entre hace 180 y 135 días (inclusive)
                     CASE WHEN a.Ingreso IS NOT NULL
                               AND a.Ingreso LIKE '[0-3][0-9]/[01][0-9]/[12][0-9][0-9][0-9]'
                               AND ISDATE(a.Ingreso) = 1
-                              AND CONVERT(date, a.Ingreso, 103) >= @d7m
-                              AND CONVERT(date, a.Ingreso, 103) <= @d5m
-                         THEN 1 ELSE 0 END AS Ingreso5a7
+                              AND CONVERT(date, a.Ingreso, 103) >= @d180
+                              AND CONVERT(date, a.Ingreso, 103) <= @d135
+                         THEN 1 ELSE 0 END AS Ingreso4a6
             ) f
             OUTER APPLY (
                 SELECT TOP 1 1 AS HasHoy
@@ -76,7 +78,7 @@ Public Module Reportes
                     r("AgentesSinMarcar") = CInt(dt.Rows(0)("AgentesSinMarcar"))
                     r("Inasistencias") = CInt(dt.Rows(0)("Inasistencias"))
                     r("CumpleMes") = CInt(dt.Rows(0)("CumpleMes"))
-                    r("Ingresaron_5a7m") = CInt(dt.Rows(0)("Ingresaron_5a7m"))
+                    r("Ingresaron_4a6m") = CInt(dt.Rows(0)("Ingresaron_4a6m"))
                 End If
             End Using
         Catch ex As Exception
@@ -378,4 +380,143 @@ END
                       "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+
+    Public Function ObtenerAgentes()
+        Dim sql As String = "
+            SELECT Legajo, Nombre, Instituto, CUIL, Ingreso, Nomarca
+            FROM Agentes a 
+            WHERE (a.Baja IS NULL OR a.Baja = '') 
+              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+            ORDER BY Legajo"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+    Public Function ObtenerAgentesQueMarcaron() As DataTable
+        Dim sql As String = "
+            DECLARE @hoy date      = CAST(GETDATE() AS date);
+            DECLARE @maniana date  = DATEADD(day, 1, @hoy);
+
+            ;WITH marcas_hoy AS (
+              SELECT 
+                m.Legajo,
+                MIN(m.Entro) AS Entro,
+                MAX(m.Salio) AS Salio
+              FROM Movimiento m
+              WHERE m.MotivoInasistencia IS NULL
+                AND m.Dia >= @hoy AND m.Dia < @maniana
+              GROUP BY m.Legajo
+            )
+            SELECT 
+              a.Legajo, a.Nombre, a.Instituto,
+              mh.Entro, mh.Salio
+            FROM Agentes a
+            INNER JOIN marcas_hoy mh ON mh.Legajo = a.Legajo
+            WHERE (a.Baja IS NULL OR a.Baja = '')
+              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+              AND (a.Nomarca = 0 OR a.Nomarca IS NULL)
+            ORDER BY a.Legajo;"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+    Public Function ObtenerAgentesQueNoMarcaron() As DataTable
+        Dim sql As String = "
+            DECLARE @hoy date      = CAST(GETDATE() AS date);
+            DECLARE @maniana date  = DATEADD(day, 1, @hoy);
+
+            ;WITH marcas_hoy AS (
+              SELECT 
+                m.Legajo,
+                MIN(m.Entro) AS Entro,
+                MAX(m.Salio) AS Salio
+              FROM Movimiento m
+              WHERE m.MotivoInasistencia IS NULL
+                AND m.Dia >= @hoy AND m.Dia < @maniana
+              GROUP BY m.Legajo
+            )
+            SELECT 
+              a.Legajo, a.Nombre, a.Instituto, 
+              CAST(NULL AS datetime) AS Entro,
+              CAST(NULL AS datetime) AS Salio
+            FROM Agentes a
+            LEFT JOIN marcas_hoy mh ON mh.Legajo = a.Legajo
+            WHERE (a.Baja IS NULL OR a.Baja = '')
+              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+              AND (a.Nomarca = 0 OR a.Nomarca IS NULL)
+              AND mh.Legajo IS NULL
+            ORDER BY a.Legajo;"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+    Public Function ObtenerAgentesDeVacaciones() As DataTable
+        Dim sql As String = "
+            DECLARE @hoy date      = CAST(GETDATE() AS date);
+            DECLARE @maniana date  = DATEADD(day, 1, @hoy);
+
+            ;WITH vacaciones_hoy AS (
+              SELECT 
+                m.Legajo,
+                MIN(m.Entro) AS Entro,
+                MAX(m.Salio) AS Salio,
+                MIN(m.MotivoInasistencia) AS Motivo
+              FROM Movimiento m
+              WHERE m.MotivoInasistencia IS NOT NULL
+                AND m.Dia >= @hoy AND m.Dia < @maniana
+              GROUP BY m.Legajo
+            )
+            SELECT 
+              a.Legajo, a.Nombre, a.Instituto, vh.Motivo as MotivoInasistencia
+            FROM Agentes a
+            INNER JOIN vacaciones_hoy vh ON vh.Legajo = a.Legajo
+            WHERE (a.Baja IS NULL OR a.Baja = '')
+              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+              AND (a.Nomarca = 0 OR a.Nomarca IS NULL)
+            ORDER BY a.Legajo;"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+    Public Function ObtenerAgentesCumplenMes() As DataTable
+        Dim sql As String = "
+            DECLARE @hoy date      = CAST(GETDATE() AS date);
+            SELECT 
+              a.Legajo, a.Nombre, a.Instituto, DAY(a.Nacimiento) AS Nacimiento
+            FROM Agentes a
+            WHERE (a.Baja IS NULL OR a.Baja = '')
+              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+              AND a.Nacimiento IS NOT NULL
+              AND MONTH(a.Nacimiento) = MONTH(@hoy)
+            ORDER BY a.Legajo;"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+    Public Function ObtenerAgentesIngresaron6m() As DataTable
+        Dim sql As String = "
+            DECLARE @hoy  date = CAST(GETDATE() AS date);
+            DECLARE @d180 date = DATEADD(day, -180, @hoy);
+            DECLARE @d135 date = DATEADD(day, -135, @hoy);
+
+            ;WITH A AS (
+              SELECT 
+                a.Legajo, a.Nombre, a.Instituto, a.Ingreso,
+                CASE 
+                  WHEN a.Ingreso IS NOT NULL
+                   AND a.Ingreso LIKE '[0-3][0-9]/[01][0-9]/[12][0-9][0-9][0-9]'
+                   AND ISDATE(a.Ingreso) = 1
+                  THEN CONVERT(date, a.Ingreso, 103)
+                END AS IngresoDate
+              FROM Agentes a
+              WHERE (a.Baja IS NULL OR a.Baja = '')
+                AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+            )
+            SELECT 
+              Legajo, Nombre, Instituto, Ingreso
+            FROM A
+            WHERE IngresoDate IS NOT NULL
+              AND IngresoDate >= @d180   -- inclusive
+              AND IngresoDate <= @d135   -- inclusive
+            ORDER BY Legajo;"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+
 End Module

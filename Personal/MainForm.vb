@@ -61,7 +61,7 @@ Public Class MainForm
             $"Sin marcar: {reporte("AgentesSinMarcar")}" & vbCrLf &
             $"Inas/Vacac: {reporte("Inasistencias")}" & vbCrLf &
             $"Cumpleaños: {reporte("CumpleMes")}" & vbCrLf &
-            $"Ingreso 6m: {reporte("Ingresaron_5a7m")}"
+            $"Ingreso 6m: {reporte("Ingresaron_4a6m")}"
     End Sub
 
     ' Eventos del menú Configuración
@@ -283,5 +283,14 @@ Public Class MainForm
 
     Private Sub MainForm_MdiChildActivate(sender As Object, e As EventArgs) Handles MyBase.MdiChildActivate
 
+    End Sub
+
+    Private Sub pnlDatosAgentes_Click(sender As Object, e As EventArgs) Handles pnlDatosAgentes.Click
+        frmDatosAgentes.AbrirInstancia(Me)
+        MostrarDatosAgentes()
+    End Sub
+
+    Private Sub lblDatosAgentes_Click(sender As Object, e As EventArgs) Handles lblDatosAgentes.Click
+        frmDatosAgentes.AbrirInstancia(Me)
     End Sub
 End Class

@@ -640,9 +640,10 @@ Partial Class MainForm
         pnlDatosAgentes.BackColor = Color.Gainsboro
         pnlDatosAgentes.BorderStyle = BorderStyle.Fixed3D
         pnlDatosAgentes.Controls.Add(lblDatosAgentes)
-        pnlDatosAgentes.Location = New Point(952, 334)
+        pnlDatosAgentes.Cursor = Cursors.Hand
+        pnlDatosAgentes.Location = New Point(952, 319)
         pnlDatosAgentes.Name = "pnlDatosAgentes"
-        pnlDatosAgentes.Size = New Size(129, 100)
+        pnlDatosAgentes.Size = New Size(129, 115)
         pnlDatosAgentes.TabIndex = 3
         ' 
         ' lblDatosAgentes
