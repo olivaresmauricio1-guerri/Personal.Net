@@ -389,7 +389,7 @@ Partial Class frmAgentes
         txtUltimaActualizacion.Location = New Point(84, 154)
         txtUltimaActualizacion.Margin = New Padding(4, 3, 4, 3)
         txtUltimaActualizacion.Name = "txtUltimaActualizacion"
-        txtUltimaActualizacion.Size = New Size(94, 23)
+        txtUltimaActualizacion.Size = New Size(188, 23)
         txtUltimaActualizacion.TabIndex = 34
         ' 
         ' Label23

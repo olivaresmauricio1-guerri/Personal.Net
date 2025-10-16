@@ -737,6 +737,23 @@ Public Class frmAgentes
         End If
     End Sub
 
+    Private Sub dtpBaja_ValueChanged(sender As Object, e As EventArgs) Handles dtpBaja.ValueChanged
+        Dim baja = If(dtpBaja.Value = dtpBaja.MinDate, DBNull.Value, dtpBaja.Value)
+        If Not IsDBNull(baja) Then
+            chkBaja.Checked = True
+            dtpBaja.Visible = True
+            dtpBaja.Format = DateTimePickerFormat.Custom
+            dtpBaja.CustomFormat = "dd/MM/yyyy"  ' Formato normal de fecha
+            dtpBaja.Value = Convert.ToDateTime(baja)
+        Else
+            chkBaja.Checked = False
+            dtpBaja.Visible = False
+            dtpBaja.Format = DateTimePickerFormat.Custom
+            dtpBaja.CustomFormat = " "  ' Espacio en blanco = no muestra nada
+            dtpBaja.Value = dtpBaja.MinDate
+        End If
+    End Sub
+
     Private Sub GridBuscar()
         ' SeleccionarFila(0)
 
@@ -1001,11 +1018,11 @@ Public Class frmAgentes
 
     Private Sub HabilitarControles(habilitar As Boolean)
         ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
-        SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
+        Funciones.SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
                            txtCalle, txtNro, txtLocalidad,
                            txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                            txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
-                           txtInterno, txtCelular, txtUltimaActualizacion, dtpIngreso, dtpBaja, txtTitulo,
+                           txtInterno, txtCelular, txtUltimaActualizacion, dtpIngreso, chkBaja, dtpBaja, txtTitulo,
                             cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad)
     End Sub
     Private Sub dtpNacimientoFamiliar_ValueChanged(sender As Object, e As EventArgs) Handles dtpNacimientoFamiliar.ValueChanged
