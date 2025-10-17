@@ -679,7 +679,7 @@ Public Class frmInasistenciasJustificadas
             End If
             Dim legajo As Integer = Convert.ToInt32(CmbAgente.SelectedValue)
 
-            Vacaciones.ActualizarVacacionesPorAgente(legajo)
+            ' Vacaciones.ActualizarVacacionesPorAgente(legajo)
 
 
             ' Consulta para obtener las licencias del agente

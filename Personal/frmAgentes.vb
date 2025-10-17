@@ -981,8 +981,7 @@ Public Class frmAgentes
             Dim años As Integer = fechaActual.Year - fechaIngreso.Year
 
             ' Ajustar si aún no ha pasado el aniversario este año
-            If fechaActual.Month < fechaIngreso.Month OrElse
-           (fechaActual.Month = fechaIngreso.Month AndAlso fechaActual.Day < fechaIngreso.Day) Then
+            If fechaActual.Month < fechaIngreso.Month OrElse (fechaActual.Month = fechaIngreso.Month AndAlso fechaActual.Day < fechaIngreso.Day) Then
                 años -= 1
             End If
 
@@ -1011,8 +1010,14 @@ Public Class frmAgentes
                     txtAntiguedad.Text = meses.ToString() & " meses"
                 End If
             End If
+
+            lblAntiguedadCorregida.Text = ""
+            Dim AjusteAntiguedad As Integer = filaActual.Cells("AjusteAntiguedad").Value
+            If (AjusteAntiguedad <> 0) Then
+                lblAntiguedadCorregida.Text = "Antigüedad Corregida: " & (años + AjusteAntiguedad).ToString() & " años"
+            End If
         Else
-            txtAntiguedad.Text = "Fecha futura"
+                txtAntiguedad.Text = "Fecha futura"
         End If
     End Sub
 

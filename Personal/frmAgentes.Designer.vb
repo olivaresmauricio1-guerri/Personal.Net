@@ -165,6 +165,7 @@ Partial Class frmAgentes
         lblSucursal = New Label()
         cmbSucursal = New ComboBox()
         radEventuales = New RadioButton()
+        lblAntiguedadCorregida = New Label()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -239,6 +240,7 @@ Partial Class frmAgentes
         ' 
         ' Panel3Col
         ' 
+        Panel3Col.Controls.Add(lblAntiguedadCorregida)
         Panel3Col.Controls.Add(chkBaja)
         Panel3Col.Controls.Add(txtAntiguedad)
         Panel3Col.Controls.Add(Label10)
@@ -1730,6 +1732,15 @@ Partial Class frmAgentes
         radEventuales.Text = "Eventuales"
         radEventuales.UseVisualStyleBackColor = True
         ' 
+        ' lblAntiguedadCorregida
+        ' 
+        lblAntiguedadCorregida.AutoSize = True
+        lblAntiguedadCorregida.Location = New Point(182, 41)
+        lblAntiguedadCorregida.Margin = New Padding(4, 0, 4, 0)
+        lblAntiguedadCorregida.Name = "lblAntiguedadCorregida"
+        lblAntiguedadCorregida.Size = New Size(0, 15)
+        lblAntiguedadCorregida.TabIndex = 76
+        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -1930,5 +1941,6 @@ Partial Class frmAgentes
     Friend WithEvents txtLegajoEventual As TextBox
     Friend WithEvents lblLegajoEventual As Label
     Friend WithEvents chkBaja As CheckBox
+    Friend WithEvents lblAntiguedadCorregida As Label
 
 End Class

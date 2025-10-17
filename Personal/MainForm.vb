@@ -195,7 +195,7 @@ Public Class MainForm
     End Sub
 
     Private Sub MnuVacaciones_Click(sender As Object, e As EventArgs) Handles MnuVacaciones.Click
-        MessageBox.Show("Función de vacaciones no implementada", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        frmVacaciones.AbrirInstancia(Me)
     End Sub
 
     ' Eventos del menú Consultas
