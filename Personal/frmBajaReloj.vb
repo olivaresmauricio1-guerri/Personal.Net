@@ -74,6 +74,7 @@ Partial Class frmBajaReloj
             MessageBox.Show("No se pudo registrar el componente ZKBridge. Verifique que tiene permisos de administrador.", "Registro COM", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
+        _faltaImportar = 1
         ConectarRelojAsync(indiceSeleccionado, True)
     End Sub
 
@@ -436,6 +437,7 @@ Partial Class frmBajaReloj
         ' si quedan relojes por importar, no procesar aún
         If _faltaImportar > 0 Then Return
         Try : Relojes.ProcesarMarcaciones() : Catch : End Try
+        Try : Reportes.ActualizarMovimientosPorFeriados() : Catch : End Try
     End Sub
 
     Private Sub SafeUI(action As Action)

@@ -89,7 +89,6 @@ Public Module Reportes
         Return r
     End Function
 
-
     ' por cada agente, si debe marcar o no, consolea si hoy lo hizo o no
     Public Sub DebugDebeMarcar()
         Dim sql As String = "
@@ -128,8 +127,6 @@ Public Module Reportes
         End Try
 
     End Sub
-
-
 
     Public Sub ListadoHorario(desde As Date, hasta As Date, idSucursal As Integer, txtSucursal As String, soloTarde As Boolean)
         Try
@@ -181,8 +178,6 @@ Public Module Reportes
                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
-
-
 
     Public Sub ListadoMensualPorSucursal(desde As Date, hasta As Date, idSucursal As Integer, txtSucursal As String, soloNegativos As Boolean)
 
@@ -381,7 +376,6 @@ END
         End Try
     End Sub
 
-
     Public Function ObtenerAgentes()
         Dim sql As String = "
             SELECT Legajo, Nombre, Instituto, CUIL, Ingreso, Nomarca
@@ -532,6 +526,55 @@ END
         Return DSM.ExecuteQuery(DSM.Personal, sql)
     End Function
 
+    Public Sub ActualizarMovimientosPorFeriados()
+        Dim sql As String = "
+            SET NOCOUNT ON;
 
+            DECLARE @hoy   date = CAST(GETDATE() AS date);
+            DECLARE @desde date = DATEADD(month, -12, @hoy);
+
+            INSERT INTO Movimiento
+              (Legajo, Instituto, Dia, Entro, Salio, HsCumplidas, MotivoInasistencia, Comentario, SinFicha, Autorizo, NoPromedia, Nopromedianada)
+            SELECT
+              a.Legajo,
+              a.Instituto,
+              f.Dia,
+              f.Dia AS Entro,
+              f.Dia AS Salio,
+              '00:00' AS HsCumplidas,
+              'Feriado: ' + LTRIM(RTRIM(f.Motivo)) AS MotivoInasistencia,
+              '' AS Comentario,
+              0    AS SinFicha,
+              NULL AS Autorizo,
+              0    AS NoPromedia,
+              0    AS Nopromedianada
+            FROM Agentes a
+            LEFT JOIN Institutos i
+              ON a.Instituto = i.Descripcion
+            INNER JOIN Feriados f
+              ON f.Dia >= @desde AND f.Dia <= @hoy
+             AND (
+                  -- misma zona
+                  (f.Zona IS NOT NULL AND i.Zona IS NOT NULL AND f.Zona = i.Zona)
+                  -- o feriados generales/nacionales (ajustá los valores si usás otro texto)
+                  OR f.Zona IN ('TODAS', 'GENERAL', 'NACIONAL')
+                  -- o ambos nulos (si manejan zona nula como global)
+                  OR (f.Zona IS NULL AND i.Zona IS NULL)
+                )
+            WHERE
+              (a.Baja IS NULL OR a.Baja = '')
+              AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+              -- si querés considerar sólo quienes deben marcar:
+              AND ISNULL(a.Nomarca, 0) = 0
+              -- evitar duplicados: no insertar si ya hay movimiento ese día
+              AND NOT EXISTS (
+                SELECT 1
+                FROM Movimiento m
+                WHERE m.Legajo = a.Legajo
+                  AND CAST(m.Dia AS date) = f.Dia
+              );
+          "
+        DSM.Execute(DSM.Personal, sql, Nothing, True)
+    End Sub
 
 End Module

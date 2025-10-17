@@ -434,73 +434,73 @@ Partial Class MainForm
         ' MnuAreas
         ' 
         MnuAreas.Name = "MnuAreas"
-        MnuAreas.Size = New Size(180, 22)
+        MnuAreas.Size = New Size(171, 22)
         MnuAreas.Text = "&Áreas"
         ' 
         ' ToolStripSeparator16
         ' 
         ToolStripSeparator16.Name = "ToolStripSeparator16"
-        ToolStripSeparator16.Size = New Size(177, 6)
+        ToolStripSeparator16.Size = New Size(168, 6)
         ' 
         ' MnuCategorias
         ' 
         MnuCategorias.Name = "MnuCategorias"
-        MnuCategorias.Size = New Size(180, 22)
+        MnuCategorias.Size = New Size(171, 22)
         MnuCategorias.Text = "&Categorías"
         ' 
         ' ToolStripSeparator17
         ' 
         ToolStripSeparator17.Name = "ToolStripSeparator17"
-        ToolStripSeparator17.Size = New Size(177, 6)
+        ToolStripSeparator17.Size = New Size(168, 6)
         ' 
         ' MnuFeriados
         ' 
         MnuFeriados.Name = "MnuFeriados"
-        MnuFeriados.Size = New Size(180, 22)
+        MnuFeriados.Size = New Size(171, 22)
         MnuFeriados.Text = "&Feriados"
         ' 
         ' ToolStripSeparator18
         ' 
         ToolStripSeparator18.Name = "ToolStripSeparator18"
-        ToolStripSeparator18.Size = New Size(177, 6)
+        ToolStripSeparator18.Size = New Size(168, 6)
         ' 
         ' MnuEncargados
         ' 
         MnuEncargados.Name = "MnuEncargados"
-        MnuEncargados.Size = New Size(180, 22)
+        MnuEncargados.Size = New Size(171, 22)
         MnuEncargados.Text = "Encargados"
         ' 
         ' ToolStripSeparator19
         ' 
         ToolStripSeparator19.Name = "ToolStripSeparator19"
-        ToolStripSeparator19.Size = New Size(177, 6)
+        ToolStripSeparator19.Size = New Size(168, 6)
         ' 
         ' MnuSucursales
         ' 
         MnuSucursales.Name = "MnuSucursales"
-        MnuSucursales.Size = New Size(180, 22)
+        MnuSucursales.Size = New Size(171, 22)
         MnuSucursales.Text = "&Sucursales"
         ' 
         ' ToolStripSeparator20
         ' 
         ToolStripSeparator20.Name = "ToolStripSeparator20"
-        ToolStripSeparator20.Size = New Size(177, 6)
+        ToolStripSeparator20.Size = New Size(168, 6)
         ' 
         ' MnuTiposInasistencias
         ' 
         MnuTiposInasistencias.Name = "MnuTiposInasistencias"
-        MnuTiposInasistencias.Size = New Size(180, 22)
+        MnuTiposInasistencias.Size = New Size(171, 22)
         MnuTiposInasistencias.Text = "&Tipos Inasistencias"
         ' 
         ' ToolStripSeparator21
         ' 
         ToolStripSeparator21.Name = "ToolStripSeparator21"
-        ToolStripSeparator21.Size = New Size(177, 6)
+        ToolStripSeparator21.Size = New Size(168, 6)
         ' 
         ' MnuTipoActividad
         ' 
         MnuTipoActividad.Name = "MnuTipoActividad"
-        MnuTipoActividad.Size = New Size(180, 22)
+        MnuTipoActividad.Size = New Size(171, 22)
         MnuTipoActividad.Text = "&Tipo Actividad"
         ' 
         ' MnuSeguridad
