@@ -105,4 +105,16 @@ Public Module Vacaciones
         Dim parametros = If(Legajo > 0, CmdParams("@Legajo", Legajo), Nothing)
         Return DSM.ExecuteQuery(DSM.Personal, sql, parametros)
     End Function
+
+    ' obtiene el saldo de vacaciones del año en curso para un legajo y de todos los años anteriores
+    ' devuelve un array de pares año-saldo
+    Public Function ObtenerSaldosVacaciones(Legajo As Integer) As DataTable
+        Dim sql As String = "
+            SELECT * FROM Licencia
+            WHERE Legajo = @Legajo AND Motivo LIKE 'VACACIONES%' AND diasRestantes > 0"
+        Dim parametros = CmdParams("@Legajo", Legajo)
+        Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+        Dim count = dt.Rows.Count
+        Return dt
+    End Function
 End Module

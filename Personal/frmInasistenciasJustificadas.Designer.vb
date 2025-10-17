@@ -44,13 +44,11 @@ Partial Class frmInasistenciasJustificadas
         DgvListado = New DataGridView()
         CmbAgente = New ComboBox()
         Label3 = New Label()
-        dgvLicencia = New DataGridView()
         TableLayoutPanel1.SuspendLayout()
         Panel1.SuspendLayout()
         Panel5.SuspendLayout()
         GroupBox2.SuspendLayout()
         CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
-        CType(dgvLicencia, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' TableLayoutPanel1
@@ -64,8 +62,8 @@ Partial Class frmInasistenciasJustificadas
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 3
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 330F))
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 180F))
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 55F))
         TableLayoutPanel1.Size = New Size(859, 571)
         TableLayoutPanel1.TabIndex = 0
@@ -85,11 +83,12 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' CmdSalir
         ' 
+        CmdSalir.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         CmdSalir.BackColor = Color.IndianRed
         CmdSalir.FlatStyle = FlatStyle.Flat
         CmdSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         CmdSalir.ForeColor = Color.White
-        CmdSalir.Location = New Point(460, 6)
+        CmdSalir.Location = New Point(756, 6)
         CmdSalir.Name = "CmdSalir"
         CmdSalir.Size = New Size(88, 30)
         CmdSalir.TabIndex = 10
@@ -153,17 +152,18 @@ Partial Class frmInasistenciasJustificadas
         Panel5.Controls.Add(CmbTipoInasistencia)
         Panel5.Controls.Add(Label4)
         Panel5.Dock = DockStyle.Fill
-        Panel5.Location = New Point(3, 333)
+        Panel5.Location = New Point(3, 339)
         Panel5.Name = "Panel5"
-        Panel5.Size = New Size(853, 180)
+        Panel5.Size = New Size(853, 174)
         Panel5.TabIndex = 9
         ' 
         ' LblSaldo
         ' 
+        LblSaldo.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         LblSaldo.AutoSize = True
         LblSaldo.Font = New Font("Microsoft Sans Serif", 7.8F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         LblSaldo.ForeColor = Color.Blue
-        LblSaldo.Location = New Point(286, 72)
+        LblSaldo.Location = New Point(209, 41)
         LblSaldo.Name = "LblSaldo"
         LblSaldo.Size = New Size(51, 13)
         LblSaldo.TabIndex = 21
@@ -171,10 +171,11 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' ChkCorridos
         ' 
+        ChkCorridos.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         ChkCorridos.AutoSize = True
         ChkCorridos.Checked = True
         ChkCorridos.CheckState = CheckState.Checked
-        ChkCorridos.Location = New Point(175, 70)
+        ChkCorridos.Location = New Point(175, 64)
         ChkCorridos.Name = "ChkCorridos"
         ChkCorridos.Size = New Size(96, 19)
         ChkCorridos.TabIndex = 6
@@ -183,8 +184,8 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' TxtComentario
         ' 
-        TxtComentario.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-        TxtComentario.Location = New Point(88, 99)
+        TxtComentario.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        TxtComentario.Location = New Point(88, 93)
         TxtComentario.Multiline = True
         TxtComentario.Name = "TxtComentario"
         TxtComentario.ScrollBars = ScrollBars.Vertical
@@ -193,8 +194,9 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' Label7
         ' 
+        Label7.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         Label7.AutoSize = True
-        Label7.Location = New Point(5, 101)
+        Label7.Location = New Point(5, 95)
         Label7.Name = "Label7"
         Label7.Size = New Size(73, 15)
         Label7.TabIndex = 18
@@ -202,7 +204,8 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' TxtDias
         ' 
-        TxtDias.Location = New Point(88, 70)
+        TxtDias.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        TxtDias.Location = New Point(88, 64)
         TxtDias.Name = "TxtDias"
         TxtDias.Size = New Size(70, 23)
         TxtDias.TabIndex = 5
@@ -210,8 +213,9 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' Label6
         ' 
+        Label6.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         Label6.AutoSize = True
-        Label6.Location = New Point(5, 73)
+        Label6.Location = New Point(5, 67)
         Label6.Name = "Label6"
         Label6.Size = New Size(32, 15)
         Label6.TabIndex = 16
@@ -219,16 +223,18 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' DtpFecha
         ' 
+        DtpFecha.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         DtpFecha.Format = DateTimePickerFormat.Short
-        DtpFecha.Location = New Point(88, 42)
+        DtpFecha.Location = New Point(88, 36)
         DtpFecha.Name = "DtpFecha"
         DtpFecha.Size = New Size(106, 23)
         DtpFecha.TabIndex = 4
         ' 
         ' Label5
         ' 
+        Label5.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         Label5.AutoSize = True
-        Label5.Location = New Point(5, 47)
+        Label5.Location = New Point(5, 41)
         Label5.Name = "Label5"
         Label5.Size = New Size(41, 15)
         Label5.TabIndex = 14
@@ -236,17 +242,18 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' CmbTipoInasistencia
         ' 
-        CmbTipoInasistencia.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        CmbTipoInasistencia.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         CmbTipoInasistencia.FormattingEnabled = True
-        CmbTipoInasistencia.Location = New Point(88, 10)
+        CmbTipoInasistencia.Location = New Point(88, 4)
         CmbTipoInasistencia.Name = "CmbTipoInasistencia"
         CmbTipoInasistencia.Size = New Size(756, 23)
         CmbTipoInasistencia.TabIndex = 3
         ' 
         ' Label4
         ' 
+        Label4.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         Label4.AutoSize = True
-        Label4.Location = New Point(5, 12)
+        Label4.Location = New Point(5, 6)
         Label4.Name = "Label4"
         Label4.Size = New Size(48, 15)
         Label4.TabIndex = 12
@@ -254,24 +261,24 @@ Partial Class frmInasistenciasJustificadas
         ' 
         ' GroupBox2
         ' 
-        GroupBox2.Controls.Add(dgvLicencia)
+        GroupBox2.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         GroupBox2.Controls.Add(DgvListado)
         GroupBox2.Controls.Add(CmbAgente)
         GroupBox2.Controls.Add(Label3)
-        GroupBox2.Dock = DockStyle.Fill
         GroupBox2.Location = New Point(3, 3)
         GroupBox2.Name = "GroupBox2"
-        GroupBox2.Size = New Size(853, 324)
+        GroupBox2.Size = New Size(853, 330)
         GroupBox2.TabIndex = 5
         GroupBox2.TabStop = False
         GroupBox2.Text = "Historial de Inasistencia"
         ' 
         ' DgvListado
         ' 
+        DgvListado.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         DgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DgvListado.Location = New Point(6, 64)
         DgvListado.Name = "DgvListado"
-        DgvListado.Size = New Size(549, 254)
+        DgvListado.Size = New Size(838, 260)
         DgvListado.TabIndex = 2
         ' 
         ' CmbAgente
@@ -294,22 +301,12 @@ Partial Class frmInasistenciasJustificadas
         Label3.TabIndex = 0
         Label3.Text = "Agente:"
         ' 
-        ' dgvLicencia
-        ' 
-        dgvLicencia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dgvLicencia.Location = New Point(561, 64)
-        dgvLicencia.Name = "dgvLicencia"
-        dgvLicencia.Size = New Size(283, 254)
-        dgvLicencia.TabIndex = 3
-        ' 
         ' frmInasistenciasJustificadas
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(859, 571)
         Controls.Add(TableLayoutPanel1)
-        FormBorderStyle = FormBorderStyle.FixedSingle
-        MaximizeBox = False
         MinimizeBox = False
         Name = "frmInasistenciasJustificadas"
         StartPosition = FormStartPosition.CenterScreen
@@ -321,7 +318,6 @@ Partial Class frmInasistenciasJustificadas
         GroupBox2.ResumeLayout(False)
         GroupBox2.PerformLayout()
         CType(DgvListado, ComponentModel.ISupportInitialize).EndInit()
-        CType(dgvLicencia, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
 
     End Sub
@@ -348,5 +344,4 @@ Partial Class frmInasistenciasJustificadas
     Friend WithEvents CmbTipoInasistencia As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents DgvListado As DataGridView
-    Friend WithEvents dgvLicencia As DataGridView
 End Class

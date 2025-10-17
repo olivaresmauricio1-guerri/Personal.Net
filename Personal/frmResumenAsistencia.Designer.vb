@@ -43,14 +43,6 @@ Partial Class frmResumenAsistencia
         TxtObligacionMensual = New TextBox()
         TxtDiasLicencia = New TextBox()
         TxtComentarios = New TextBox()
-        TxtVac2019 = New TextBox()
-        TxtVac2020 = New TextBox()
-        TxtVac2021 = New TextBox()
-        TxtVac2022 = New TextBox()
-        TxtVac2023 = New TextBox()
-        TxtVac2024 = New TextBox()
-        TxtVac2025 = New TextBox()
-        TxtVac2026 = New TextBox()
         CmbMeses = New ComboBox()
         CmbNombres = New ComboBox()
         Label2 = New Label()
@@ -65,17 +57,10 @@ Partial Class frmResumenAsistencia
         Label11 = New Label()
         Label12 = New Label()
         Label13 = New Label()
-        Label14 = New Label()
-        Label15 = New Label()
-        Label16 = New Label()
-        Label17 = New Label()
-        Label18 = New Label()
-        Label19 = New Label()
-        Label20 = New Label()
-        Label21 = New Label()
-        Label22 = New Label()
+        LblSaldo = New Label()
         GroupBox1 = New GroupBox()
         GroupBox2 = New GroupBox()
+        txtLegajoEventual = New TextBox()
         Label1 = New Label()
         lblLegajo = New Label()
         dtpHasta = New DateTimePicker()
@@ -84,7 +69,6 @@ Partial Class frmResumenAsistencia
         Label23 = New Label()
         Label24 = New Label()
         Label25 = New Label()
-        txtLegajoEventual = New TextBox()
         CType(DgvListado, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInasistencias, ComponentModel.ISupportInitialize).BeginInit()
         GroupBox1.SuspendLayout()
@@ -348,94 +332,6 @@ Partial Class frmResumenAsistencia
         TxtComentarios.Size = New Size(231, 57)
         TxtComentarios.TabIndex = 26
         ' 
-        ' TxtVac2019
-        ' 
-        TxtVac2019.BackColor = SystemColors.Window
-        TxtVac2019.Font = New Font("Segoe UI", 9F)
-        TxtVac2019.Location = New Point(151, 106)
-        TxtVac2019.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2019.Name = "TxtVac2019"
-        TxtVac2019.ReadOnly = True
-        TxtVac2019.Size = New Size(58, 23)
-        TxtVac2019.TabIndex = 27
-        ' 
-        ' TxtVac2020
-        ' 
-        TxtVac2020.BackColor = SystemColors.Window
-        TxtVac2020.Font = New Font("Segoe UI", 9F)
-        TxtVac2020.Location = New Point(221, 106)
-        TxtVac2020.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2020.Name = "TxtVac2020"
-        TxtVac2020.ReadOnly = True
-        TxtVac2020.Size = New Size(58, 23)
-        TxtVac2020.TabIndex = 28
-        ' 
-        ' TxtVac2021
-        ' 
-        TxtVac2021.BackColor = SystemColors.Window
-        TxtVac2021.Font = New Font("Segoe UI", 9F)
-        TxtVac2021.Location = New Point(291, 106)
-        TxtVac2021.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2021.Name = "TxtVac2021"
-        TxtVac2021.ReadOnly = True
-        TxtVac2021.Size = New Size(58, 23)
-        TxtVac2021.TabIndex = 29
-        ' 
-        ' TxtVac2022
-        ' 
-        TxtVac2022.BackColor = SystemColors.Window
-        TxtVac2022.Font = New Font("Segoe UI", 9F)
-        TxtVac2022.Location = New Point(361, 106)
-        TxtVac2022.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2022.Name = "TxtVac2022"
-        TxtVac2022.ReadOnly = True
-        TxtVac2022.Size = New Size(58, 23)
-        TxtVac2022.TabIndex = 30
-        ' 
-        ' TxtVac2023
-        ' 
-        TxtVac2023.BackColor = SystemColors.Window
-        TxtVac2023.Font = New Font("Segoe UI", 9F)
-        TxtVac2023.Location = New Point(431, 106)
-        TxtVac2023.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2023.Name = "TxtVac2023"
-        TxtVac2023.ReadOnly = True
-        TxtVac2023.Size = New Size(58, 23)
-        TxtVac2023.TabIndex = 31
-        ' 
-        ' TxtVac2024
-        ' 
-        TxtVac2024.BackColor = SystemColors.Window
-        TxtVac2024.Font = New Font("Segoe UI", 9F)
-        TxtVac2024.Location = New Point(501, 106)
-        TxtVac2024.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2024.Name = "TxtVac2024"
-        TxtVac2024.ReadOnly = True
-        TxtVac2024.Size = New Size(58, 23)
-        TxtVac2024.TabIndex = 32
-        ' 
-        ' TxtVac2025
-        ' 
-        TxtVac2025.BackColor = SystemColors.Window
-        TxtVac2025.Font = New Font("Segoe UI", 9F)
-        TxtVac2025.Location = New Point(571, 106)
-        TxtVac2025.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2025.Name = "TxtVac2025"
-        TxtVac2025.ReadOnly = True
-        TxtVac2025.Size = New Size(58, 23)
-        TxtVac2025.TabIndex = 33
-        ' 
-        ' TxtVac2026
-        ' 
-        TxtVac2026.BackColor = SystemColors.Window
-        TxtVac2026.Font = New Font("Segoe UI", 9F)
-        TxtVac2026.Location = New Point(641, 106)
-        TxtVac2026.Margin = New Padding(4, 3, 4, 3)
-        TxtVac2026.Name = "TxtVac2026"
-        TxtVac2026.ReadOnly = True
-        TxtVac2026.Size = New Size(58, 23)
-        TxtVac2026.TabIndex = 34
-        ' 
         ' CmbMeses
         ' 
         CmbMeses.DropDownStyle = ComboBoxStyle.DropDownList
@@ -577,95 +473,15 @@ Partial Class frmResumenAsistencia
         Label13.TabIndex = 49
         Label13.Text = "Días de Licencia Anual:"
         ' 
-        ' Label14
+        ' LblSaldo
         ' 
-        Label14.AutoSize = True
-        Label14.Location = New Point(14, 110)
-        Label14.Margin = New Padding(4, 0, 4, 0)
-        Label14.Name = "Label14"
-        Label14.Size = New Size(100, 15)
-        Label14.TabIndex = 50
-        Label14.Text = "Saldo Vacaciones:"
-        ' 
-        ' Label15
-        ' 
-        Label15.AutoSize = True
-        Label15.Location = New Point(151, 132)
-        Label15.Margin = New Padding(4, 0, 4, 0)
-        Label15.Name = "Label15"
-        Label15.Size = New Size(31, 15)
-        Label15.TabIndex = 51
-        Label15.Text = "2019"
-        ' 
-        ' Label16
-        ' 
-        Label16.AutoSize = True
-        Label16.Location = New Point(221, 132)
-        Label16.Margin = New Padding(4, 0, 4, 0)
-        Label16.Name = "Label16"
-        Label16.Size = New Size(31, 15)
-        Label16.TabIndex = 52
-        Label16.Text = "2020"
-        ' 
-        ' Label17
-        ' 
-        Label17.AutoSize = True
-        Label17.Location = New Point(291, 132)
-        Label17.Margin = New Padding(4, 0, 4, 0)
-        Label17.Name = "Label17"
-        Label17.Size = New Size(31, 15)
-        Label17.TabIndex = 53
-        Label17.Text = "2021"
-        ' 
-        ' Label18
-        ' 
-        Label18.AutoSize = True
-        Label18.Location = New Point(361, 132)
-        Label18.Margin = New Padding(4, 0, 4, 0)
-        Label18.Name = "Label18"
-        Label18.Size = New Size(31, 15)
-        Label18.TabIndex = 54
-        Label18.Text = "2022"
-        ' 
-        ' Label19
-        ' 
-        Label19.AutoSize = True
-        Label19.Location = New Point(431, 132)
-        Label19.Margin = New Padding(4, 0, 4, 0)
-        Label19.Name = "Label19"
-        Label19.Size = New Size(31, 15)
-        Label19.TabIndex = 55
-        Label19.Text = "2023"
-        ' 
-        ' Label20
-        ' 
-        Label20.AutoSize = True
-        Label20.Location = New Point(501, 132)
-        Label20.Margin = New Padding(4, 0, 4, 0)
-        Label20.Name = "Label20"
-        Label20.Size = New Size(31, 15)
-        Label20.TabIndex = 56
-        Label20.Text = "2024"
-        ' 
-        ' Label21
-        ' 
-        Label21.AutoSize = True
-        Label21.Location = New Point(571, 132)
-        Label21.Margin = New Padding(4, 0, 4, 0)
-        Label21.Name = "Label21"
-        Label21.Size = New Size(31, 15)
-        Label21.TabIndex = 57
-        Label21.Text = "2025"
-        ' 
-        ' Label22
-        ' 
-        Label22.AutoSize = True
-        Label22.Location = New Point(641, 132)
-        Label22.Margin = New Padding(4, 0, 4, 0)
-        Label22.Name = "Label22"
-        Label22.Size = New Size(31, 15)
-        Label22.TabIndex = 58
-        Label22.Text = "2026"
+        LblSaldo.AutoSize = True
+        LblSaldo.Location = New Point(14, 110)
+        LblSaldo.Margin = New Padding(4, 0, 4, 0)
+        LblSaldo.Name = "LblSaldo"
+        LblSaldo.Size = New Size(100, 15)
+        LblSaldo.TabIndex = 50
+        LblSaldo.Text = "Saldo Vacaciones:"
         ' 
         ' GroupBox1
         ' 
@@ -686,23 +502,7 @@ Partial Class frmResumenAsistencia
         GroupBox1.Controls.Add(TxtObligacionMensual)
         GroupBox1.Controls.Add(Label13)
         GroupBox1.Controls.Add(TxtDiasLicencia)
-        GroupBox1.Controls.Add(Label14)
-        GroupBox1.Controls.Add(TxtVac2019)
-        GroupBox1.Controls.Add(Label15)
-        GroupBox1.Controls.Add(TxtVac2020)
-        GroupBox1.Controls.Add(Label16)
-        GroupBox1.Controls.Add(TxtVac2021)
-        GroupBox1.Controls.Add(Label17)
-        GroupBox1.Controls.Add(TxtVac2022)
-        GroupBox1.Controls.Add(Label18)
-        GroupBox1.Controls.Add(TxtVac2023)
-        GroupBox1.Controls.Add(Label19)
-        GroupBox1.Controls.Add(TxtVac2024)
-        GroupBox1.Controls.Add(Label20)
-        GroupBox1.Controls.Add(TxtVac2025)
-        GroupBox1.Controls.Add(Label21)
-        GroupBox1.Controls.Add(TxtVac2026)
-        GroupBox1.Controls.Add(Label22)
+        GroupBox1.Controls.Add(LblSaldo)
         GroupBox1.ForeColor = Color.Black
         GroupBox1.Location = New Point(8, 85)
         GroupBox1.Margin = New Padding(4, 3, 4, 3)
@@ -736,6 +536,18 @@ Partial Class frmResumenAsistencia
         GroupBox2.Size = New Size(817, 83)
         GroupBox2.TabIndex = 60
         GroupBox2.TabStop = False
+        ' 
+        ' txtLegajoEventual
+        ' 
+        txtLegajoEventual.BackColor = Color.White
+        txtLegajoEventual.BorderStyle = BorderStyle.FixedSingle
+        txtLegajoEventual.Font = New Font("Segoe UI", 9F)
+        txtLegajoEventual.Location = New Point(738, 48)
+        txtLegajoEventual.Margin = New Padding(4, 3, 4, 3)
+        txtLegajoEventual.Name = "txtLegajoEventual"
+        txtLegajoEventual.ReadOnly = True
+        txtLegajoEventual.Size = New Size(71, 23)
+        txtLegajoEventual.TabIndex = 48
         ' 
         ' Label1
         ' 
@@ -813,21 +625,9 @@ Partial Class frmResumenAsistencia
         Label25.Location = New Point(258, 564)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
-        Label25.Size = New Size(92, 15)
+        Label25.Size = New Size(91, 15)
         Label25.TabIndex = 62
         Label25.Text = "Días Trabajados:"
-        ' 
-        ' txtLegajoEventual
-        ' 
-        txtLegajoEventual.BackColor = Color.White
-        txtLegajoEventual.BorderStyle = BorderStyle.FixedSingle
-        txtLegajoEventual.Font = New Font("Segoe UI", 9F)
-        txtLegajoEventual.Location = New Point(738, 48)
-        txtLegajoEventual.Margin = New Padding(4, 3, 4, 3)
-        txtLegajoEventual.Name = "txtLegajoEventual"
-        txtLegajoEventual.ReadOnly = True
-        txtLegajoEventual.Size = New Size(71, 23)
-        txtLegajoEventual.TabIndex = 48
         ' 
         ' frmResumenAsistencia
         ' 
@@ -909,7 +709,7 @@ Partial Class frmResumenAsistencia
     Friend WithEvents Label11 As Label
     Friend WithEvents Label12 As Label
     Friend WithEvents Label13 As Label
-    Friend WithEvents Label14 As Label
+    Friend WithEvents LblSaldo As Label
     Friend WithEvents Label15 As Label
     Friend WithEvents Label16 As Label
     Friend WithEvents Label17 As Label

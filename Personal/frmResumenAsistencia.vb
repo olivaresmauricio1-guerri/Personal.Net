@@ -177,6 +177,17 @@ Public Class frmResumenAsistencia
         CargarDatosEmpleado(legajo)
         verResumen()
 
+        ActualizarSaldoVacaciones(legajo)
+    End Sub
+
+    Private Sub ActualizarSaldoVacaciones(legajo As Integer)
+        Dim saldos = Vacaciones.ObtenerSaldosVacaciones(legajo)
+        Dim saldoTexto As String = "Saldo Vacaciones: "
+        For Each fila As DataRow In saldos.Rows
+            saldoTexto &= $"{fila("Motivo")}: {fila("diasRestantes")}, "
+        Next
+
+        LblSaldo.Text = saldoTexto
     End Sub
 
     ' Cargar datos del empleado seleccionado
@@ -359,6 +370,9 @@ Public Class frmResumenAsistencia
 
             GridConfigurarColumnas()
             ConfigurarEstiloGrid(DgvListado)
+
+            DgvListado.MultiSelect = True
+            DgvListado.SelectionMode = DataGridViewSelectionMode.CellSelect
 
 
         Catch ex As Exception
@@ -624,40 +638,40 @@ Public Class frmResumenAsistencia
         End Try
     End Sub
 
-    Private Sub CopiarDataGrid(dgv As DataGridView)
-        Try
-            If dgv.SelectedRows.Count > 0 Then
-                Dim texto As String = ""
+    'Private Sub CopiarDataGrid(dgv As DataGridView)
+    '    Try
+    '        If dgv.SelectedRows.Count > 0 Then
+    '            Dim texto As String = ""
 
-                ' Agregar encabezados si están visibles
-                If chkEncabezados.Checked Then
-                    For Each col As DataGridViewColumn In dgv.Columns
-                        If col.Visible Then
-                            texto += col.HeaderText + vbTab
-                        End If
-                    Next
-                    texto = texto.TrimEnd(vbTab) + vbCrLf
-                End If
+    '            ' Agregar encabezados si están visibles
+    '            If chkEncabezados.Checked Then
+    '                For Each col As DataGridViewColumn In dgv.Columns
+    '                    If col.Visible Then
+    '                        texto += col.HeaderText + vbTab
+    '                    End If
+    '                Next
+    '                texto = texto.TrimEnd(vbTab) + vbCrLf
+    '            End If
 
-                ' Agregar filas seleccionadas
-                For Each fila As DataGridViewRow In dgv.SelectedRows
-                    For Each col As DataGridViewColumn In dgv.Columns
-                        If col.Visible Then
-                            texto += If(fila.Cells(col.Index).Value?.ToString(), "") + vbTab
-                        End If
-                    Next
-                    texto = texto.TrimEnd(vbTab) + vbCrLf
-                Next
+    '            ' Agregar filas seleccionadas
+    '            For Each fila As DataGridViewRow In dgv.SelectedRows
+    '                For Each col As DataGridViewColumn In dgv.Columns
+    '                    If col.Visible Then
+    '                        texto += If(fila.Cells(col.Index).Value?.ToString(), "") + vbTab
+    '                    End If
+    '                Next
+    '                texto = texto.TrimEnd(vbTab) + vbCrLf
+    '            Next
 
-                Clipboard.SetText(texto)
-                MessageBox.Show("Datos copiados al portapapeles.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Else
-                MessageBox.Show("Debe seleccionar al menos una fila.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Error al copiar: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
+    '            Clipboard.SetText(texto)
+    '            MessageBox.Show("Datos copiados al portapapeles.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    '        Else
+    '            MessageBox.Show("Debe seleccionar al menos una fila.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    '        End If
+    '    Catch ex As Exception
+    '        MessageBox.Show("Error al copiar: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+    'End Sub
 
 
     Private Sub DgvInasistencias_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvInasistencias.CellContentClick
