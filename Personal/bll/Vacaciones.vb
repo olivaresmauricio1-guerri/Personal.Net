@@ -125,7 +125,7 @@ Public Module Vacaciones
     Public Function ObtenerSaldosVacaciones(Legajo As Integer) As DataTable
         Dim sql As String = "
             SELECT * FROM Licencia
-            WHERE Legajo = @Legajo AND Motivo LIKE 'VACACIONES%' AND diasRestantes > 0"
+            WHERE Legajo = @Legajo AND Motivo LIKE 'VACACIONES%' AND diasRestantes <> 0"
         Dim parametros = CmdParams("@Legajo", Legajo)
         Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
         Dim count = dt.Rows.Count
