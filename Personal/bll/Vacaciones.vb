@@ -106,6 +106,20 @@ Public Module Vacaciones
         Return DSM.ExecuteQuery(DSM.Personal, sql, parametros)
     End Function
 
+    ' obtiene de las vacacioes disponibles para un legajo en el año en curso
+    Public Function ObtenerDiasDisponiblesVacaciones(Legajo As Integer) As Integer
+        Dim sql As String = "
+            SELECT diasDisponibles FROM Licencia
+            WHERE Legajo = @Legajo AND Motivo = @Motivo"
+        Dim parametros = CmdParams("@Legajo", Legajo, "@Motivo", $"VACACIONES {Date.Now.Year}")
+        Dim dt As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+        If dt.Rows.Count > 0 Then
+            Return CInt(dt.Rows(0)("diasDisponibles"))
+        Else
+            Return 0
+        End If
+    End Function
+
     ' obtiene el saldo de vacaciones del año en curso para un legajo y de todos los años anteriores
     ' devuelve un array de pares año-saldo
     Public Function ObtenerSaldosVacaciones(Legajo As Integer) As DataTable

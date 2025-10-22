@@ -674,9 +674,11 @@ Public Class frmAgentes
             cmbHorasDiarias.Text = If(IsDBNull(row("HorasDiarias")), "", row("HorasDiarias").ToString())
             cmbEscalafon.Text = If(IsDBNull(row("Escalafon")), "", row("Escalafon").ToString())
             cmbJefe.Text = If(IsDBNull(row("Jefe")), "", row("Jefe").ToString())
-            txtLicAnual.Text = If(IsDBNull(row("LicAnual")), "", row("LicAnual").ToString())
             cmbCaracter.Text = If(IsDBNull(row("Caracter")), "", row("Caracter").ToString())
             txtComentario.Text = If(IsDBNull(row("Comentario")), "", row("Comentario").ToString())
+
+            Dim licAnual = Vacaciones.ObtenerDiasDisponiblesVacaciones(txtLegajo.Text)
+            txtLicAnual.Text = licAnual
 
             chkNomarca.Checked = If(IsDBNull(row("Nomarca")), False, Convert.ToBoolean(row("Nomarca")))
             cmbCategoria.Text = If(IsDBNull(row("Cargo")), "", row("Cargo").ToString())
@@ -734,6 +736,8 @@ Public Class frmAgentes
             Else
                 pctFoto.Image = Nothing ' O una imagen por defecto desde recursos
             End If
+
+            ActualizarSaldoVacaciones()
         End If
     End Sub
 
@@ -1017,7 +1021,7 @@ Public Class frmAgentes
                 lblAntiguedadCorregida.Text = "Antigüedad Corregida: " & (años + AjusteAntiguedad).ToString() & " años"
             End If
         Else
-                txtAntiguedad.Text = "Fecha futura"
+            txtAntiguedad.Text = "Fecha futura"
         End If
     End Sub
 
@@ -1026,9 +1030,10 @@ Public Class frmAgentes
         Funciones.SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
                            txtCalle, txtNro, txtLocalidad,
                            txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
-                           txtLicAnual, cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
+                            cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
                            txtInterno, txtCelular, txtUltimaActualizacion, dtpIngreso, chkBaja, dtpBaja, txtTitulo,
                             cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad)
+        'txtLicAnual, 
     End Sub
     Private Sub dtpNacimientoFamiliar_ValueChanged(sender As Object, e As EventArgs) Handles dtpNacimientoFamiliar.ValueChanged
 
@@ -1579,7 +1584,37 @@ Public Class frmAgentes
         End If
     End Sub
 
-    Private Sub DgvGrupoFamiliar_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvGrupoFamiliar.CellContentClick
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnSaldoVacaciones.Click
+        If filaActual Is Nothing Then
+            lblSaldoVacaciones.Text = "Saldo: "
+            lblSaldoVacaciones.ForeColor = Color.Blue
+            Return
+        End If
 
+        Dim legajo = filaActual.Cells("Legajo").Value
+        Dim saldos = Vacaciones.ObtenerSaldosVacaciones(legajo)
+        Dim saldoTexto As String = "Saldo: " & vbCrLf & vbCrLf
+        For Each fila As DataRow In saldos.Rows
+            saldoTexto &= $"{fila("Motivo")}: {fila("diasRestantes")}, " & vbCrLf
+        Next
+        MessageBox.Show(saldoTexto, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    End Sub
+
+
+    Private Sub ActualizarSaldoVacaciones()
+        If filaActual Is Nothing Then
+            lblSaldoVacaciones.Text = "Saldo: "
+            lblSaldoVacaciones.ForeColor = Color.Blue
+            Return
+        End If
+
+        Dim legajo = filaActual.Cells("Legajo").Value
+        Dim saldos = Vacaciones.ObtenerSaldosVacaciones(legajo)
+        Dim saldoTotal = 0
+        For Each fila As DataRow In saldos.Rows
+            saldoTotal += Convert.ToInt32(fila("diasRestantes"))
+        Next
+
+        lblSaldoVacaciones.Text = "Saldo: " & saldoTotal.ToString() & " días"
     End Sub
 End Class

@@ -26,6 +26,9 @@ Partial Class frmAgentes
         tabDatosAgente = New TabPage()
         tlpDatosAgente = New TableLayoutPanel()
         Panel3Col = New Panel()
+        btnSaldoVacaciones = New Button()
+        lblSaldoVacaciones = New Label()
+        lblAntiguedadCorregida = New Label()
         chkBaja = New CheckBox()
         txtAntiguedad = New TextBox()
         Label10 = New Label()
@@ -165,7 +168,6 @@ Partial Class frmAgentes
         lblSucursal = New Label()
         cmbSucursal = New ComboBox()
         radEventuales = New RadioButton()
-        lblAntiguedadCorregida = New Label()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -240,6 +242,8 @@ Partial Class frmAgentes
         ' 
         ' Panel3Col
         ' 
+        Panel3Col.Controls.Add(btnSaldoVacaciones)
+        Panel3Col.Controls.Add(lblSaldoVacaciones)
         Panel3Col.Controls.Add(lblAntiguedadCorregida)
         Panel3Col.Controls.Add(chkBaja)
         Panel3Col.Controls.Add(txtAntiguedad)
@@ -264,10 +268,39 @@ Partial Class frmAgentes
         Panel3Col.Size = New Size(351, 302)
         Panel3Col.TabIndex = 2
         ' 
+        ' btnSaldoVacaciones
+        ' 
+        btnSaldoVacaciones.Cursor = Cursors.Hand
+        btnSaldoVacaciones.Location = New Point(275, 66)
+        btnSaldoVacaciones.Name = "btnSaldoVacaciones"
+        btnSaldoVacaciones.Size = New Size(32, 23)
+        btnSaldoVacaciones.TabIndex = 78
+        btnSaldoVacaciones.Text = "?"
+        btnSaldoVacaciones.UseVisualStyleBackColor = True
+        ' 
+        ' lblSaldoVacaciones
+        ' 
+        lblSaldoVacaciones.AutoSize = True
+        lblSaldoVacaciones.Location = New Point(190, 71)
+        lblSaldoVacaciones.Margin = New Padding(4, 0, 4, 0)
+        lblSaldoVacaciones.Name = "lblSaldoVacaciones"
+        lblSaldoVacaciones.Size = New Size(71, 15)
+        lblSaldoVacaciones.TabIndex = 77
+        lblSaldoVacaciones.Text = "Saldo: _ dias"
+        ' 
+        ' lblAntiguedadCorregida
+        ' 
+        lblAntiguedadCorregida.AutoSize = True
+        lblAntiguedadCorregida.Location = New Point(190, 42)
+        lblAntiguedadCorregida.Margin = New Padding(4, 0, 4, 0)
+        lblAntiguedadCorregida.Name = "lblAntiguedadCorregida"
+        lblAntiguedadCorregida.Size = New Size(0, 15)
+        lblAntiguedadCorregida.TabIndex = 76
+        ' 
         ' chkBaja
         ' 
         chkBaja.AutoSize = True
-        chkBaja.Location = New Point(84, 102)
+        chkBaja.Location = New Point(98, 130)
         chkBaja.Name = "chkBaja"
         chkBaja.Size = New Size(15, 14)
         chkBaja.TabIndex = 75
@@ -275,7 +308,7 @@ Partial Class frmAgentes
         ' 
         ' txtAntiguedad
         ' 
-        txtAntiguedad.Location = New Point(259, 9)
+        txtAntiguedad.Location = New Point(98, 37)
         txtAntiguedad.Margin = New Padding(4, 3, 4, 3)
         txtAntiguedad.Name = "txtAntiguedad"
         txtAntiguedad.Size = New Size(84, 23)
@@ -284,7 +317,7 @@ Partial Class frmAgentes
         ' Label10
         ' 
         Label10.AutoSize = True
-        Label10.Location = New Point(182, 13)
+        Label10.Location = New Point(9, 42)
         Label10.Margin = New Padding(4, 0, 4, 0)
         Label10.Name = "Label10"
         Label10.Size = New Size(72, 15)
@@ -294,7 +327,7 @@ Partial Class frmAgentes
         ' dtpBaja
         ' 
         dtpBaja.Format = DateTimePickerFormat.Short
-        dtpBaja.Location = New Point(106, 97)
+        dtpBaja.Location = New Point(120, 125)
         dtpBaja.Margin = New Padding(4, 3, 4, 3)
         dtpBaja.Name = "dtpBaja"
         dtpBaja.Size = New Size(104, 23)
@@ -304,7 +337,7 @@ Partial Class frmAgentes
         ' dtpIngreso
         ' 
         dtpIngreso.Format = DateTimePickerFormat.Short
-        dtpIngreso.Location = New Point(84, 9)
+        dtpIngreso.Location = New Point(98, 8)
         dtpIngreso.Margin = New Padding(4, 3, 4, 3)
         dtpIngreso.Name = "dtpIngreso"
         dtpIngreso.Size = New Size(90, 23)
@@ -313,7 +346,7 @@ Partial Class frmAgentes
         ' Label12
         ' 
         Label12.AutoSize = True
-        Label12.Location = New Point(9, 130)
+        Label12.Location = New Point(9, 159)
         Label12.Margin = New Padding(4, 0, 4, 0)
         Label12.Name = "Label12"
         Label12.Size = New Size(48, 15)
@@ -323,7 +356,7 @@ Partial Class frmAgentes
         ' CmbMotivo
         ' 
         CmbMotivo.FormattingEnabled = True
-        CmbMotivo.Location = New Point(84, 126)
+        CmbMotivo.Location = New Point(98, 154)
         CmbMotivo.Margin = New Padding(4, 3, 4, 3)
         CmbMotivo.Name = "CmbMotivo"
         CmbMotivo.Size = New Size(188, 23)
@@ -331,7 +364,7 @@ Partial Class frmAgentes
         ' 
         ' txtFechaJubilacion
         ' 
-        txtFechaJubilacion.Location = New Point(84, 68)
+        txtFechaJubilacion.Location = New Point(98, 94)
         txtFechaJubilacion.Margin = New Padding(4, 3, 4, 3)
         txtFechaJubilacion.Name = "txtFechaJubilacion"
         txtFechaJubilacion.Size = New Size(88, 23)
@@ -340,7 +373,7 @@ Partial Class frmAgentes
         ' Label25
         ' 
         Label25.AutoSize = True
-        Label25.Location = New Point(9, 101)
+        Label25.Location = New Point(9, 130)
         Label25.Margin = New Padding(4, 0, 4, 0)
         Label25.Name = "Label25"
         Label25.Size = New Size(32, 15)
@@ -349,7 +382,8 @@ Partial Class frmAgentes
         ' 
         ' txtLicAnual
         ' 
-        txtLicAnual.Location = New Point(84, 38)
+        txtLicAnual.Enabled = False
+        txtLicAnual.Location = New Point(98, 66)
         txtLicAnual.Margin = New Padding(4, 3, 4, 3)
         txtLicAnual.Name = "txtLicAnual"
         txtLicAnual.Size = New Size(59, 23)
@@ -358,7 +392,7 @@ Partial Class frmAgentes
         ' Label30
         ' 
         Label30.AutoSize = True
-        Label30.Location = New Point(9, 72)
+        Label30.Location = New Point(9, 99)
         Label30.Margin = New Padding(4, 0, 4, 0)
         Label30.Name = "Label30"
         Label30.Size = New Size(70, 15)
@@ -368,27 +402,27 @@ Partial Class frmAgentes
         ' txtComentario
         ' 
         txtComentario.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-        txtComentario.Location = New Point(9, 213)
+        txtComentario.Location = New Point(9, 235)
         txtComentario.Margin = New Padding(4, 3, 4, 3)
         txtComentario.Multiline = True
         txtComentario.Name = "txtComentario"
         txtComentario.ScrollBars = ScrollBars.Both
-        txtComentario.Size = New Size(334, 81)
+        txtComentario.Size = New Size(334, 59)
         txtComentario.TabIndex = 36
         ' 
         ' Label16
         ' 
         Label16.AutoSize = True
-        Label16.Location = New Point(9, 42)
+        Label16.Location = New Point(9, 71)
         Label16.Margin = New Padding(4, 0, 4, 0)
         Label16.Name = "Label16"
-        Label16.Size = New Size(53, 15)
+        Label16.Size = New Size(87, 15)
         Label16.TabIndex = 36
-        Label16.Text = "Días Lic.:"
+        Label16.Text = "Días Lic. Anual:"
         ' 
         ' txtUltimaActualizacion
         ' 
-        txtUltimaActualizacion.Location = New Point(84, 154)
+        txtUltimaActualizacion.Location = New Point(98, 182)
         txtUltimaActualizacion.Margin = New Padding(4, 3, 4, 3)
         txtUltimaActualizacion.Name = "txtUltimaActualizacion"
         txtUltimaActualizacion.Size = New Size(188, 23)
@@ -397,7 +431,7 @@ Partial Class frmAgentes
         ' Label23
         ' 
         Label23.AutoSize = True
-        Label23.Location = New Point(9, 158)
+        Label23.Location = New Point(9, 187)
         Label23.Margin = New Padding(4, 0, 4, 0)
         Label23.Name = "Label23"
         Label23.Size = New Size(76, 15)
@@ -417,7 +451,7 @@ Partial Class frmAgentes
         ' Label18
         ' 
         Label18.AutoSize = True
-        Label18.Location = New Point(9, 188)
+        Label18.Location = New Point(9, 217)
         Label18.Margin = New Padding(4, 0, 4, 0)
         Label18.Name = "Label18"
         Label18.Size = New Size(73, 15)
@@ -1732,15 +1766,6 @@ Partial Class frmAgentes
         radEventuales.Text = "Eventuales"
         radEventuales.UseVisualStyleBackColor = True
         ' 
-        ' lblAntiguedadCorregida
-        ' 
-        lblAntiguedadCorregida.AutoSize = True
-        lblAntiguedadCorregida.Location = New Point(182, 41)
-        lblAntiguedadCorregida.Margin = New Padding(4, 0, 4, 0)
-        lblAntiguedadCorregida.Name = "lblAntiguedadCorregida"
-        lblAntiguedadCorregida.Size = New Size(0, 15)
-        lblAntiguedadCorregida.TabIndex = 76
-        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -1942,5 +1967,7 @@ Partial Class frmAgentes
     Friend WithEvents lblLegajoEventual As Label
     Friend WithEvents chkBaja As CheckBox
     Friend WithEvents lblAntiguedadCorregida As Label
+    Friend WithEvents btnSaldoVacaciones As Button
+    Friend WithEvents lblSaldoVacaciones As Label
 
 End Class
