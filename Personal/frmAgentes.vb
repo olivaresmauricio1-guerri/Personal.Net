@@ -39,7 +39,6 @@ Public Class frmAgentes
         _suspenderAccionFiltros = True
         CargarComboBoxes()
         FormModoConsulta()
-        ConfiguraColListado()
         GridBuscar()
         ConfiguraColListado()
         ConfiguraColComentario()
@@ -801,6 +800,8 @@ Public Class frmAgentes
             dgvListado.DataSource = dt
             lblTotalAgentes.Text = "Total de Empleados: " & dt.Rows.Count.ToString()
 
+            ConfiguraColListado()
+
             ' SeleccionarFila(0)
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -930,6 +931,8 @@ Public Class frmAgentes
         DgvGrupoFamiliar.DataSource = Nothing
         DgvComentarios.DataSource = Nothing
         DgvEquipamiento.DataSource = Nothing
+
+        ConfiguraColListado()
     End Sub
 
     Private Sub FormObtenerSeleccionado()
@@ -1192,7 +1195,7 @@ Public Class frmAgentes
 
                 dgvListado.Columns("Instituto").Visible = True
                 dgvListado.Columns("Instituto").HeaderText = "Sucursal"
-                dgvListado.Columns("Instituto").Width = 150
+                dgvListado.Columns("Instituto").Width = 80
                 dgvListado.Columns("Instituto").DisplayIndex = 3
 
                 dgvListado.Columns("Telefono").Visible = True
@@ -1205,21 +1208,26 @@ Public Class frmAgentes
                 dgvListado.Columns("Celular").Width = 110
                 dgvListado.Columns("Celular").DisplayIndex = 5
 
+                dgvListado.Columns("RPV").Visible = True
+                dgvListado.Columns("RPV").HeaderText = "Urgencias"
+                dgvListado.Columns("RPV").Width = 130
+                dgvListado.Columns("RPV").DisplayIndex = 6
+
                 dgvListado.Columns("Interno").Visible = True
                 dgvListado.Columns("Interno").HeaderText = "Interno"
                 dgvListado.Columns("Interno").Width = 60
                 dgvListado.Columns("Interno").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-                dgvListado.Columns("Interno").DisplayIndex = 6
+                dgvListado.Columns("Interno").DisplayIndex = 7
 
                 dgvListado.Columns("CorreoE").Visible = True
                 dgvListado.Columns("CorreoE").HeaderText = "E-Mail"
                 dgvListado.Columns("CorreoE").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                dgvListado.Columns("CorreoE").DisplayIndex = 7
+                dgvListado.Columns("CorreoE").DisplayIndex = 8
 
                 dgvListado.Columns("Caracter").Visible = True
                 dgvListado.Columns("Caracter").HeaderText = "Caracter"
                 dgvListado.Columns("Caracter").Width = 120
-                dgvListado.Columns("Caracter").DisplayIndex = 8
+                dgvListado.Columns("Caracter").DisplayIndex = 9
 
             End If
         Catch ex As Exception
