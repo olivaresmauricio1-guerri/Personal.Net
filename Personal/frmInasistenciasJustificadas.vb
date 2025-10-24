@@ -41,8 +41,8 @@ Public Class frmInasistenciasJustificadas
             DtpFecha.Value = DateTime.Now
             TxtDias.Text = "1"
             TxtComentario.Text = String.Empty
-            ChkCorridos.Checked = False
-            LblSaldo.Text = "Saldo: "
+            ChkCorridos.Checked = True
+            ' LblSaldo.Text = "Saldo: "
         Catch ex As Exception
             MessageBox.Show($"Error al preparar el formulario para agregar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -311,12 +311,12 @@ Public Class frmInasistenciasJustificadas
             If motivoDescripcion.ToUpper().Contains("VACACIONES") Then
                 Dim legajo = Convert.ToInt32(CmbAgente.SelectedValue)
                 Dim dias = Convert.ToInt32(TxtDias.Text.Trim())
-                Dim saldoActual = ObtenerSaldoVacaciones(legajo)
+                'Dim saldoActual = ObtenerSaldoVacaciones(legajo)
 
-                If dias > saldoActual Then
-                    MessageBox.Show($"No hay suficiente saldo de vacaciones. Saldo disponible: {saldoActual} días.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    Return False
-                End If
+                'If dias > saldoActual Then
+                '    MessageBox.Show($"No hay suficiente saldo de vacaciones. Saldo disponible: {saldoActual} días.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                '    Return False
+                'End If
             End If
 
             Return True
@@ -335,12 +335,14 @@ Public Class frmInasistenciasJustificadas
 
         Dim legajo = Convert.ToInt32(CmbAgente.SelectedValue)
         Dim saldos = Vacaciones.ObtenerSaldosVacaciones(legajo)
-        Dim saldoTexto As String = "Saldo: "
+        Dim saldoTotal = 0
+        Dim saldoTexto As String = ""
         For Each fila As DataRow In saldos.Rows
             saldoTexto &= $"{fila("Motivo")}: {fila("diasRestantes")}, "
+            saldoTotal += Convert.ToInt32(fila("diasRestantes"))
         Next
 
-        LblSaldo.Text = saldoTexto
+        LblSaldo.Text = "[ Saldo: " & saldoTotal & " ] " & saldoTexto
     End Sub
 
 
@@ -462,13 +464,19 @@ Public Class frmInasistenciasJustificadas
             DSM.Execute(DSM.Personal, sqlComentario, parametrosComentario, True)
 
             ' Si es vacaciones, descontar del saldo de vacaciones
-            If motivoDescripcion.ToUpper().Contains("VACACIONES") Then
-                Dim anoActual = DateTime.Now.Year
-                Dim campoVacaciones = $"vac{anoActual}"
+            'If motivoDescripcion.ToUpper().Contains("VACACIONES") Then
+            '    Dim anoActual = DateTime.Now.Year
+            '    Dim campoVacaciones = $"vac{anoActual}"
 
-                Dim sqlActualizar = $"UPDATE Agentes SET {campoVacaciones} = ISNULL({campoVacaciones}, 0) - @Dias WHERE Legajo = @Legajo"
-                Dim parametrosActualizar = CmdParams("@Dias", dias, "@Legajo", legajo)
-                DSM.Execute(DSM.Personal, sqlActualizar, parametrosActualizar, True)
+            '    Dim sqlActualizar = $"UPDATE Agentes SET {campoVacaciones} = ISNULL({campoVacaciones}, 0) - @Dias WHERE Legajo = @Legajo"
+            '    Dim parametrosActualizar = CmdParams("@Dias", dias, "@Legajo", legajo)
+            '    DSM.Execute(DSM.Personal, sqlActualizar, parametrosActualizar, True)
+            'End If
+
+            If motivoDescripcion.ToUpper().Contains("VACACIONES") Then
+                Dim sqlUpdateLicencia = "UPDATE Licencia SET diasRestantes = diasRestantes - @Dias WHERE Legajo = @Legajo AND Motivo = @Motivo"
+                Dim parametrosUpdateLicencia = CmdParams("@Dias", dias, "@Legajo", legajo, "@Motivo", motivoDescripcion)
+                DSM.Execute(DSM.Personal, sqlUpdateLicencia, parametrosUpdateLicencia, True)
             End If
 
             ImprimirFicha(idExpte)
@@ -550,26 +558,25 @@ Public Class frmInasistenciasJustificadas
     Private Sub ImprimirFicha(Id As Integer)
         If Id > 0 Then
             ' Actualizar datos adicionales del expediente si es necesario
-            Dim sqlUpdate As String = "UPDATE Expediente " &
-            "SET Expediente.Articulo = Inasistencias.Articulo, " &
-            "Expediente.Inciso = Inasistencias.Inciso, " &
-            "Expediente.Decreto = Inasistencias.Decreto, " &
-            "Expediente.Secretaria = Agentes.Secretaria, " &
-            "Expediente.Insti = Agentes.Instituto, " &
-            "Expediente.ListaR = 1 " &
-            "FROM Expediente " &
-            "INNER JOIN Inasistencias ON Expediente.Motivo = Inasistencias.Descripcion " &
-            "INNER JOIN Agentes ON Expediente.Legajo = Agentes.Legajo " &
-            "WHERE Expediente.ID = @IdExpte"
+            'Dim sqlUpdate As String = "UPDATE Expediente " &
+            '    "SET Expediente.Articulo = Inasistencias.Articulo, " &
+            '    "Expediente.Inciso = Inasistencias.Inciso, " &
+            '    "Expediente.Decreto = Inasistencias.Decreto, " &
+            '    "Expediente.Secretaria = Agentes.Secretaria, " &
+            '    "Expediente.Insti = Agentes.Instituto, " &
+            '    "Expediente.ListaR = 1 " &
+            '    "FROM Expediente " &
+            '    "INNER JOIN Inasistencias ON Expediente.Motivo = Inasistencias.Descripcion " &
+            '    "INNER JOIN Agentes ON Expediente.Legajo = Agentes.Legajo " &
+            '    "WHERE Expediente.ID = @IdExpte"
 
-            Dim parametrosUpdate As Dictionary(Of String, Object) = CmdParams("@IdExpte", Id)
-            DSM.Execute(DSM.Personal, sqlUpdate, parametrosUpdate, True)
+            'Dim parametrosUpdate As Dictionary(Of String, Object) = CmdParams("@IdExpte", Id)
+            'DSM.Execute(DSM.Personal, sqlUpdate, parametrosUpdate, True)
 
             ' Imprimir el reporte
             Process.Start(General.ReportesPath, "Personal ficha RecordSelectionFormula {Expediente.Id}=" & Id)
 
         End If
-
     End Sub
 
     'Private Sub ConfigurarColLicencia()

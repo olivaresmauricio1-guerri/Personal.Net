@@ -1592,7 +1592,7 @@ Public Class frmAgentes
         End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnSaldoVacaciones.Click
+    Private Sub btnSaldoVacaciones_Click(sender As Object, e As EventArgs) Handles btnSaldoVacaciones.Click
         If filaActual Is Nothing Then
             lblSaldoVacaciones.Text = "Saldo: "
             lblSaldoVacaciones.ForeColor = Color.Blue
