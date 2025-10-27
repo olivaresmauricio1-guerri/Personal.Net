@@ -532,16 +532,22 @@ Public Class frmInasistenciasJustificadas
             Dim parametrosComentario = CmdParams("@Legajo", legajo, "@Fecha", fecha, "@Motivo", motivoInasistencia)
             DSM.Execute(DSM.Personal, sqlComentario, parametrosComentario, True)
 
+            If esVacaciones Then
+                Dim sqlUpdateLicencia = "UPDATE Licencia SET diasRestantes = diasRestantes + @Dias WHERE Legajo = @Legajo AND Motivo = @Motivo"
+                Dim parametrosUpdateLicencia = CmdParams("@Dias", dias, "@Legajo", legajo, "@Motivo", motivoInasistencia)
+                DSM.Execute(DSM.Personal, sqlUpdateLicencia, parametrosUpdateLicencia, True)
+            End If
+
 
             ' Restaurar saldo de vacaciones si es necesario
-            If esVacaciones Then
-                Dim anoActual = DateTime.Now.Year
-                Dim campoVacaciones = $"vac{anoActual}"
+            'If esVacaciones Then
+            '    Dim anoActual = DateTime.Now.Year
+            '    Dim campoVacaciones = $"vac{anoActual}"
 
-                Dim sqlRestaurar = $"UPDATE Agentes SET {campoVacaciones} = ISNULL({campoVacaciones}, 0) + @Dias WHERE Legajo = @Legajo"
-                Dim parametrosRestaurar = CmdParams("@Dias", dias, "@Legajo", legajo)
-                DSM.Execute(DSM.Personal, sqlRestaurar, parametrosRestaurar, True)
-            End If
+            '    Dim sqlRestaurar = $"UPDATE Agentes SET {campoVacaciones} = ISNULL({campoVacaciones}, 0) + @Dias WHERE Legajo = @Legajo"
+            '    Dim parametrosRestaurar = CmdParams("@Dias", dias, "@Legajo", legajo)
+            '    DSM.Execute(DSM.Personal, sqlRestaurar, parametrosRestaurar, True)
+            'End If
 
             MessageBox.Show($"Inasistencia eliminada correctamente", "Correcto", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
