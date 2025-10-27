@@ -46,7 +46,8 @@ Public Class frmBuscaFalta
 
     Private Sub RefrescarListado()
         Dim desde = NormalizarFecha(dtpDesde.Value.Date)
-        Dim hasta = NormalizarFecha(dtpHasta.Value.Date)
+        ' hasta: lo menor entre la fecha seleccionada y ayer
+        Dim hasta = NormalizarFecha(If(dtpHasta.Value.Date < Date.Today, dtpHasta.Value.Date, Date.Today.AddDays(-1)))
         Dim sucursal = If(cmbInstituto.SelectedValue IsNot Nothing, cmbInstituto.SelectedValue.ToString(), String.Empty)
 
         _faltas = Inasistencias.BuscarFaltas(desde, hasta, sucursal)
