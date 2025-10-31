@@ -25,6 +25,7 @@ Public Class frmHorario
         Dim hoy = DateTime.Today
         dtpDesde.Value = New DateTime(hoy.Year, hoy.Month, 1)
         dtpHasta.Value = New DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month))
+        radNormal.Checked = True
     End Sub
 
     Private Sub cmdVer_Click(sender As Object, e As EventArgs) Handles cmdVer.Click
