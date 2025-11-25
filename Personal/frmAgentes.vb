@@ -63,7 +63,13 @@ Public Class frmAgentes
         GridBuscar()
         ConfiguraColListado()
     End Sub
-
+    Private Sub CmbCate_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbCate.SelectedIndexChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+        GridBuscar()
+        ConfiguraColListado()
+    End Sub
     Private Sub radActivos_CheckedChanged(sender As Object, e As EventArgs) Handles radActivos.CheckedChanged
         If _suspenderAccionFiltros Then Exit Sub
         FormModoConsulta()
@@ -781,6 +787,12 @@ Public Class frmAgentes
                 parametros.AddRange(New Object() {"@Sucursal", sucursal})
             End If
 
+            Dim categoria As String = CmbCate.Text.Trim()
+            If Not String.IsNullOrEmpty(categoria) And categoria <> "(Todas)" Then
+                sql &= " AND Cargo = @Cargo"
+                parametros.AddRange(New Object() {"@Cargo", categoria})
+            End If
+
             ' Filtro por búsqueda en varias columnas
             If Not String.IsNullOrEmpty(texto) Then
                 sql &= " AND (Nombre LIKE @Nombre OR NroDto LIKE @DNI OR Legajo LIKE @Legajo)"
@@ -1474,6 +1486,9 @@ Public Class frmAgentes
             ' Configurar ComboBoxes con valores fijos
             ConfigurarComboBoxesFijos()
 
+            ' Cargar Categorias para filtrado
+            CargarCombos(CmbCate, "Categorias", "Descripcion", "Descripcion")
+
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos de los ComboBoxes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -1625,4 +1640,6 @@ Public Class frmAgentes
 
         lblSaldoVacaciones.Text = "Saldo: " & saldoTotal.ToString() & " días"
     End Sub
+
+
 End Class

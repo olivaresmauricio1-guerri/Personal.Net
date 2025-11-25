@@ -168,6 +168,8 @@ Partial Class frmAgentes
         lblSucursal = New Label()
         cmbSucursal = New ComboBox()
         radEventuales = New RadioButton()
+        CmbCate = New ComboBox()
+        Label1 = New Label()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -893,7 +895,7 @@ Partial Class frmAgentes
         Label5.Location = New Point(206, 71)
         Label5.Margin = New Padding(4, 0, 4, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(35, 15)
+        Label5.Size = New Size(34, 15)
         Label5.TabIndex = 71
         Label5.Text = "Sexo:"
         ' 
@@ -930,7 +932,7 @@ Partial Class frmAgentes
         Label20.Location = New Point(9, 188)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
-        Label20.Size = New Size(55, 15)
+        Label20.Size = New Size(56, 15)
         Label20.TabIndex = 45
         Label20.Text = "Teléfono:"
         ' 
@@ -1479,7 +1481,7 @@ Partial Class frmAgentes
         Label28.AutoSize = True
         Label28.Location = New Point(11, 76)
         Label28.Name = "Label28"
-        Label28.Size = New Size(78, 15)
+        Label28.Size = New Size(79, 15)
         Label28.TabIndex = 15
         Label28.Text = "Nro Teléfono:"
         ' 
@@ -1534,7 +1536,7 @@ Partial Class frmAgentes
         Label44.AutoSize = True
         Label44.Location = New Point(11, 23)
         Label44.Name = "Label44"
-        Label44.Size = New Size(33, 15)
+        Label44.Size = New Size(34, 15)
         Label44.TabIndex = 0
         Label44.Text = "Tipo:"
         ' 
@@ -1664,7 +1666,7 @@ Partial Class frmAgentes
         ' 
         radActivos.AutoSize = True
         radActivos.Checked = True
-        radActivos.Location = New Point(718, 6)
+        radActivos.Location = New Point(805, 7)
         radActivos.Name = "radActivos"
         radActivos.Size = New Size(64, 19)
         radActivos.TabIndex = 3
@@ -1675,9 +1677,9 @@ Partial Class frmAgentes
         ' radTodos
         ' 
         radTodos.AutoSize = True
-        radTodos.Location = New Point(788, 6)
+        radTodos.Location = New Point(875, 7)
         radTodos.Name = "radTodos"
-        radTodos.Size = New Size(56, 19)
+        radTodos.Size = New Size(57, 19)
         radTodos.TabIndex = 4
         radTodos.Text = "Todos"
         radTodos.UseVisualStyleBackColor = True
@@ -1689,7 +1691,7 @@ Partial Class frmAgentes
         lblTotalAgentes.Location = New Point(1018, 9)
         lblTotalAgentes.Margin = New Padding(4, 0, 4, 0)
         lblTotalAgentes.Name = "lblTotalAgentes"
-        lblTotalAgentes.Size = New Size(97, 15)
+        lblTotalAgentes.Size = New Size(98, 15)
         lblTotalAgentes.TabIndex = 5
         lblTotalAgentes.Text = "Total de Agentes:"
         ' 
@@ -1740,7 +1742,7 @@ Partial Class frmAgentes
         ' lblSucursal
         ' 
         lblSucursal.AutoSize = True
-        lblSucursal.Location = New Point(412, 9)
+        lblSucursal.Location = New Point(400, 9)
         lblSucursal.Margin = New Padding(4, 0, 4, 0)
         lblSucursal.Name = "lblSucursal"
         lblSucursal.Size = New Size(54, 15)
@@ -1751,26 +1753,47 @@ Partial Class frmAgentes
         ' 
         cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList
         cmbSucursal.FormattingEnabled = True
-        cmbSucursal.Location = New Point(473, 5)
+        cmbSucursal.Location = New Point(461, 5)
         cmbSucursal.Name = "cmbSucursal"
-        cmbSucursal.Size = New Size(221, 23)
+        cmbSucursal.Size = New Size(121, 23)
         cmbSucursal.TabIndex = 2
         ' 
         ' radEventuales
         ' 
         radEventuales.AutoSize = True
-        radEventuales.Location = New Point(851, 7)
+        radEventuales.Location = New Point(938, 8)
         radEventuales.Name = "radEventuales"
         radEventuales.Size = New Size(81, 19)
         radEventuales.TabIndex = 42
         radEventuales.Text = "Eventuales"
         radEventuales.UseVisualStyleBackColor = True
         ' 
+        ' CmbCate
+        ' 
+        CmbCate.DropDownStyle = ComboBoxStyle.DropDownList
+        CmbCate.FormattingEnabled = True
+        CmbCate.Location = New Point(657, 6)
+        CmbCate.Name = "CmbCate"
+        CmbCate.Size = New Size(132, 23)
+        CmbCate.TabIndex = 43
+        ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Location = New Point(589, 10)
+        Label1.Margin = New Padding(4, 0, 4, 0)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(61, 15)
+        Label1.TabIndex = 44
+        Label1.Text = "Categoría:"
+        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1184, 611)
+        Controls.Add(CmbCate)
+        Controls.Add(Label1)
         Controls.Add(radEventuales)
         Controls.Add(chkEncabezados)
         Controls.Add(lnkCopiar)
@@ -1969,5 +1992,7 @@ Partial Class frmAgentes
     Friend WithEvents lblAntiguedadCorregida As Label
     Friend WithEvents btnSaldoVacaciones As Button
     Friend WithEvents lblSaldoVacaciones As Label
+    Friend WithEvents CmbCate As ComboBox
+    Friend WithEvents Label1 As Label
 
 End Class
