@@ -542,7 +542,7 @@ END
               f.Dia AS Entro,
               f.Dia AS Salio,
               '00:00' AS HsCumplidas,
-              'Feriado: ' + LTRIM(RTRIM(f.Motivo)) AS MotivoInasistencia,
+              LEFT('Feriado: ' + LTRIM(RTRIM(f.Motivo)), 50) AS MotivoInasistencia,
               '' AS Comentario,
               0    AS SinFicha,
               NULL AS Autorizo,
