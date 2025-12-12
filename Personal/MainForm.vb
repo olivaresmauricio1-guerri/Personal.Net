@@ -61,7 +61,8 @@ Public Class MainForm
             $"Sin marcar: {reporte("AgentesSinMarcar")}" & vbCrLf &
             $"Inas/Vacac: {reporte("Inasistencias")}" & vbCrLf &
             $"Cumpleaños: {reporte("CumpleMes")}" & vbCrLf &
-            $"Ingreso 6m: {reporte("Ingresaron_4a6m")}"
+            $"Ingreso 6m: {reporte("Ingresaron_4a6m")}" & vbCrLf &
+            $"Edad 65: {reporte("Edad_64a65")}"
     End Sub
 
     ' Eventos del menú Configuración

@@ -11,7 +11,8 @@ Public Module Reportes
             {"AgentesSinMarcar", 0},
             {"Inasistencias", 0},
             {"CumpleMes", 0},
-            {"Ingresaron_4a6m", 0}
+            {"Ingresaron_4a6m", 0},
+            {"Edad_64a65", 0}
         }
 
         Dim sql As String = "
@@ -33,7 +34,9 @@ Public Module Reportes
                 -- Agentes activos que cumplen años este mes
                 SUM(f.Activo * f.CumpleMes)                                       AS CumpleMes,
                 -- Agentes activos con fecha de ingreso entre -180 y -135 días
-                SUM(f.Activo * f.Ingreso4a6)                                      AS Ingresaron_4a6m
+                SUM(f.Activo * f.Ingreso4a6)                                      AS Ingresaron_4a6m,
+                -- Agentes activos con edad entre 64 y 65 años
+                SUM(f.Activo * f.Edad_64a65)                                      AS Edad_64a65
             FROM Agentes a
             CROSS APPLY (
                 SELECT
@@ -41,19 +44,27 @@ Public Module Reportes
                     CASE WHEN (a.Baja IS NULL OR a.Baja = '') 
                               AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
                          THEN 1 ELSE 0 END AS Activo,
+
                     -- Debe marcar: Nomarca = 0 (tratando NULL como 0)
                     CASE WHEN ISNULL(a.Nomarca,0) = 0 THEN 1 ELSE 0 END AS DebeMarcar,
+
                     -- Cumpleaños en el mes actual
                     CASE WHEN a.Nacimiento IS NOT NULL
                               AND MONTH(a.Nacimiento) = MONTH(@hoy)
                          THEN 1 ELSE 0 END AS CumpleMes,
+
                     -- Ingreso entre hace 180 y 135 días (inclusive)
                     CASE WHEN a.Ingreso IS NOT NULL
                               AND a.Ingreso LIKE '[0-3][0-9]/[01][0-9]/[12][0-9][0-9][0-9]'
                               AND ISDATE(a.Ingreso) = 1
                               AND CONVERT(date, a.Ingreso, 103) >= @d180
                               AND CONVERT(date, a.Ingreso, 103) <= @d135
-                         THEN 1 ELSE 0 END AS Ingreso4a6
+                         THEN 1 ELSE 0 END AS Ingreso4a6,
+
+                    -- Edad entre 64 y 65 años
+                    CASE WHEN a.Nacimiento IS NOT NULL
+                              AND DATEDIFF(year, a.Nacimiento, @hoy) BETWEEN 64 AND 65
+                         THEN 1 ELSE 0 END AS Edad_64a65
             ) f
             OUTER APPLY (
                 SELECT TOP 1 1 AS HasHoy
@@ -79,6 +90,7 @@ Public Module Reportes
                     r("Inasistencias") = CInt(dt.Rows(0)("Inasistencias"))
                     r("CumpleMes") = CInt(dt.Rows(0)("CumpleMes"))
                     r("Ingresaron_4a6m") = CInt(dt.Rows(0)("Ingresaron_4a6m"))
+                    r("Edad_64a65") = CInt(dt.Rows(0)("Edad_64a65"))
                 End If
             End Using
         Catch ex As Exception
@@ -522,6 +534,29 @@ END
             WHERE IngresoDate IS NOT NULL
               AND IngresoDate >= @d180   -- inclusive
               AND IngresoDate <= @d135   -- inclusive
+            ORDER BY Legajo;"
+        Return DSM.ExecuteQuery(DSM.Personal, sql)
+    End Function
+
+    Public Function ObtenerAgentesEdadProxJub() As DataTable
+        Dim sql As String = "
+            DECLARE @hoy date = CAST(GETDATE() AS date);
+            ;WITH A AS (
+              SELECT 
+                a.Legajo, a.Nombre, a.Instituto, a.Nacimiento,
+                CASE 
+                  WHEN a.Nacimiento IS NOT NULL
+                       AND DATEDIFF(year, a.Nacimiento, @hoy) BETWEEN 64 AND 65
+                    THEN DATEDIFF(year, a.Nacimiento, @hoy)
+                  ELSE NULL
+                END AS Edad
+              FROM Agentes a
+              WHERE (a.Baja IS NULL OR a.Baja = '') AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
+            )
+            SELECT 
+              Legajo, Nombre, Instituto, Nacimiento, Edad
+            FROM A
+            WHERE Edad IS NOT NULL
             ORDER BY Legajo;"
         Return DSM.ExecuteQuery(DSM.Personal, sql)
     End Function

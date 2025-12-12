@@ -35,6 +35,8 @@ Partial Class frmDatosAgentes
         dgvCumpleMes = New DataGridView()
         TabPage6 = New TabPage()
         dgvIngreso6m = New DataGridView()
+        TabPage7 = New TabPage()
+        dgvEdad65 = New DataGridView()
         tabDatosAgentes.SuspendLayout()
         TabPage1.SuspendLayout()
         CType(dgvAgentes, ComponentModel.ISupportInitialize).BeginInit()
@@ -48,6 +50,8 @@ Partial Class frmDatosAgentes
         CType(dgvCumpleMes, ComponentModel.ISupportInitialize).BeginInit()
         TabPage6.SuspendLayout()
         CType(dgvIngreso6m, ComponentModel.ISupportInitialize).BeginInit()
+        TabPage7.SuspendLayout()
+        CType(dgvEdad65, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' tabDatosAgentes
@@ -58,6 +62,7 @@ Partial Class frmDatosAgentes
         tabDatosAgentes.Controls.Add(TabPage4)
         tabDatosAgentes.Controls.Add(TabPage5)
         tabDatosAgentes.Controls.Add(TabPage6)
+        tabDatosAgentes.Controls.Add(TabPage7)
         tabDatosAgentes.Dock = DockStyle.Fill
         tabDatosAgentes.Location = New Point(0, 0)
         tabDatosAgentes.Name = "tabDatosAgentes"
@@ -91,7 +96,7 @@ Partial Class frmDatosAgentes
         TabPage2.Location = New Point(4, 24)
         TabPage2.Name = "TabPage2"
         TabPage2.Padding = New Padding(3)
-        TabPage2.Size = New Size(729, 728)
+        TabPage2.Size = New Size(729, 558)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Marcaron"
         TabPage2.UseVisualStyleBackColor = True
@@ -102,7 +107,7 @@ Partial Class frmDatosAgentes
         dgvMarcaron.Dock = DockStyle.Fill
         dgvMarcaron.Location = New Point(3, 3)
         dgvMarcaron.Name = "dgvMarcaron"
-        dgvMarcaron.Size = New Size(723, 722)
+        dgvMarcaron.Size = New Size(723, 552)
         dgvMarcaron.TabIndex = 0
         ' 
         ' TabPage3
@@ -111,7 +116,7 @@ Partial Class frmDatosAgentes
         TabPage3.Location = New Point(4, 24)
         TabPage3.Name = "TabPage3"
         TabPage3.Padding = New Padding(3)
-        TabPage3.Size = New Size(729, 728)
+        TabPage3.Size = New Size(729, 558)
         TabPage3.TabIndex = 2
         TabPage3.Text = "Sin Marcar"
         TabPage3.UseVisualStyleBackColor = True
@@ -122,7 +127,7 @@ Partial Class frmDatosAgentes
         dgvSinMarcar.Dock = DockStyle.Fill
         dgvSinMarcar.Location = New Point(3, 3)
         dgvSinMarcar.Name = "dgvSinMarcar"
-        dgvSinMarcar.Size = New Size(723, 722)
+        dgvSinMarcar.Size = New Size(723, 552)
         dgvSinMarcar.TabIndex = 0
         ' 
         ' TabPage4
@@ -131,7 +136,7 @@ Partial Class frmDatosAgentes
         TabPage4.Location = New Point(4, 24)
         TabPage4.Name = "TabPage4"
         TabPage4.Padding = New Padding(3)
-        TabPage4.Size = New Size(729, 728)
+        TabPage4.Size = New Size(729, 558)
         TabPage4.TabIndex = 3
         TabPage4.Text = "Vacaciones"
         TabPage4.UseVisualStyleBackColor = True
@@ -142,7 +147,7 @@ Partial Class frmDatosAgentes
         dgvVacaciones.Dock = DockStyle.Fill
         dgvVacaciones.Location = New Point(3, 3)
         dgvVacaciones.Name = "dgvVacaciones"
-        dgvVacaciones.Size = New Size(723, 722)
+        dgvVacaciones.Size = New Size(723, 552)
         dgvVacaciones.TabIndex = 0
         ' 
         ' TabPage5
@@ -151,7 +156,7 @@ Partial Class frmDatosAgentes
         TabPage5.Location = New Point(4, 24)
         TabPage5.Name = "TabPage5"
         TabPage5.Padding = New Padding(3)
-        TabPage5.Size = New Size(729, 728)
+        TabPage5.Size = New Size(729, 558)
         TabPage5.TabIndex = 4
         TabPage5.Text = "Cumpleaños del Mes"
         TabPage5.UseVisualStyleBackColor = True
@@ -162,7 +167,7 @@ Partial Class frmDatosAgentes
         dgvCumpleMes.Dock = DockStyle.Fill
         dgvCumpleMes.Location = New Point(3, 3)
         dgvCumpleMes.Name = "dgvCumpleMes"
-        dgvCumpleMes.Size = New Size(723, 722)
+        dgvCumpleMes.Size = New Size(723, 552)
         dgvCumpleMes.TabIndex = 0
         ' 
         ' TabPage6
@@ -170,7 +175,7 @@ Partial Class frmDatosAgentes
         TabPage6.Controls.Add(dgvIngreso6m)
         TabPage6.Location = New Point(4, 24)
         TabPage6.Name = "TabPage6"
-        TabPage6.Size = New Size(729, 728)
+        TabPage6.Size = New Size(729, 558)
         TabPage6.TabIndex = 5
         TabPage6.Text = "Ingreso 6m"
         TabPage6.UseVisualStyleBackColor = True
@@ -181,8 +186,28 @@ Partial Class frmDatosAgentes
         dgvIngreso6m.Dock = DockStyle.Fill
         dgvIngreso6m.Location = New Point(0, 0)
         dgvIngreso6m.Name = "dgvIngreso6m"
-        dgvIngreso6m.Size = New Size(729, 728)
+        dgvIngreso6m.Size = New Size(729, 558)
         dgvIngreso6m.TabIndex = 1
+        ' 
+        ' TabPage7
+        ' 
+        TabPage7.Controls.Add(dgvEdad65)
+        TabPage7.Location = New Point(4, 24)
+        TabPage7.Name = "TabPage7"
+        TabPage7.Padding = New Padding(3)
+        TabPage7.Size = New Size(729, 558)
+        TabPage7.TabIndex = 6
+        TabPage7.Text = "Cerca Edad 65"
+        TabPage7.UseVisualStyleBackColor = True
+        ' 
+        ' dgvEdad65
+        ' 
+        dgvEdad65.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvEdad65.Dock = DockStyle.Fill
+        dgvEdad65.Location = New Point(3, 3)
+        dgvEdad65.Name = "dgvEdad65"
+        dgvEdad65.Size = New Size(723, 552)
+        dgvEdad65.TabIndex = 2
         ' 
         ' frmDatosAgentes
         ' 
@@ -207,6 +232,8 @@ Partial Class frmDatosAgentes
         CType(dgvCumpleMes, ComponentModel.ISupportInitialize).EndInit()
         TabPage6.ResumeLayout(False)
         CType(dgvIngreso6m, ComponentModel.ISupportInitialize).EndInit()
+        TabPage7.ResumeLayout(False)
+        CType(dgvEdad65, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub
 
@@ -223,4 +250,6 @@ Partial Class frmDatosAgentes
     Friend WithEvents dgvCumpleMes As DataGridView
     Friend WithEvents TabPage6 As TabPage
     Friend WithEvents dgvIngreso6m As DataGridView
+    Friend WithEvents TabPage7 As TabPage
+    Friend WithEvents dgvEdad65 As DataGridView
 End Class

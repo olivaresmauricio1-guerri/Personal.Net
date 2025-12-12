@@ -641,9 +641,9 @@ Partial Class MainForm
         pnlDatosAgentes.BorderStyle = BorderStyle.Fixed3D
         pnlDatosAgentes.Controls.Add(lblDatosAgentes)
         pnlDatosAgentes.Cursor = Cursors.Hand
-        pnlDatosAgentes.Location = New Point(952, 319)
+        pnlDatosAgentes.Location = New Point(952, 299)
         pnlDatosAgentes.Name = "pnlDatosAgentes"
-        pnlDatosAgentes.Size = New Size(129, 115)
+        pnlDatosAgentes.Size = New Size(129, 135)
         pnlDatosAgentes.TabIndex = 3
         ' 
         ' lblDatosAgentes

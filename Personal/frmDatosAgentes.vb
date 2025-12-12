@@ -26,6 +26,7 @@
         MostrarVacaciones()
         MostrarCumpleMes()
         MostrarIngreso6m()
+        MostrarAgentesEdadProxJub()
     End Sub
 
     'Private Sub tabDatosAgentes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabDatosAgentes.SelectedIndexChanged
@@ -86,6 +87,13 @@
         ConfigurarGrid(dgvIngreso6m)
     End Sub
 
+    Private Sub MostrarAgentesEdadProxJub()
+        Dim dt As DataTable = Reportes.ObtenerAgentesEdadProxJub()
+        dgvEdad65.DataSource = dt
+        TabPage7.Text = "Edad Próx. Jub. (" & dt.Rows.Count & ")"
+        ConfigurarGrid(dgvEdad65)
+    End Sub
+
     Private Sub ConfigurarGrid(grid As DataGridView)
         grid.ReadOnly = True
         grid.AllowUserToAddRows = False
@@ -129,8 +137,10 @@
         End If
 
         If grid.Columns.Contains("Nacimiento") Then
-            grid.Columns("Nacimiento").HeaderText = "Día"
-            grid.Columns("Nacimiento").Width = 50
+            grid.Columns("Nacimiento").HeaderText = "Nacimiento"
+            grid.Columns("Nacimiento").DefaultCellStyle.Format = "dd/MM/yyyy"
+            grid.Columns("Nacimiento").Width = 80
+            grid.Columns("Nacimiento").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         End If
 
         Funciones.ConfigurarEstiloGrid(grid)
