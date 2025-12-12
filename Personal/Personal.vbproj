@@ -11,6 +11,12 @@
 	  <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<AssemblyVersion>1.0.0.3</AssemblyVersion>
+		<FileVersion>1.0.0.3</FileVersion>
+		<InformationalVersion>1.0.0</InformationalVersion>
+	</PropertyGroup>
+
   <ItemGroup>
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
