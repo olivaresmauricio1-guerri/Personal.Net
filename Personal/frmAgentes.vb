@@ -589,6 +589,11 @@ Public Class frmAgentes
             legajoEventual = filaActual.Cells("Legajo").Value
         End If
 
+        Dim baja As String = ""
+        If (Not esNuevo) Then
+            baja = If(Not chkBaja.Checked OrElse dtpBaja.Value = dtpBaja.MinDate, "", dtpBaja.Value.ToString().Substring(0, 10))
+        End If
+
         Return New Dictionary(Of String, Object) From {
             {"@Legajo", legajo},
             {"@LegajoEventual", legajoEventual},
@@ -615,7 +620,7 @@ Public Class frmAgentes
             {"@Interno", If(String.IsNullOrEmpty(txtInterno.Text.Trim), DBNull.Value, txtInterno.Text.Trim)},
             {"@Celular", If(String.IsNullOrEmpty(txtCelular.Text.Trim), DBNull.Value, txtCelular.Text.Trim)},
             {"@iNGRESO", If(dtpIngreso.Value = dtpIngreso.MinDate, DBNull.Value, dtpIngreso.Value)},
-            {"@Baja", If(Not chkBaja.Checked OrElse dtpBaja.Value = dtpBaja.MinDate, DBNull.Value, dtpBaja.Value)},
+            {"@Baja", baja},
             {"@CUIL", If(String.IsNullOrEmpty(txtCUIL.Text.Trim), DBNull.Value, txtCUIL.Text.Trim)},
             {"@TITULO", If(String.IsNullOrEmpty(txtTitulo.Text.Trim), DBNull.Value, txtTitulo.Text.Trim)},
             {"@UltimaActualizacion", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},
@@ -693,11 +698,6 @@ Public Class frmAgentes
             txtUrgencias.Text = If(IsDBNull(row("Rpv")), "", row("Rpv").ToString())
             txtUltimaActualizacion.Text = If(IsDBNull(row("UltimaActualizacion")), "", row("UltimaActualizacion").ToString())
 
-            If Not IsDBNull(row("iNGRESO")) AndAlso row("iNGRESO").ToString().Trim() <> "" Then
-                dtpIngreso.Value = Convert.ToDateTime(row("iNGRESO"))
-                CalcularAntiguedad()
-            End If
-
             If Not IsDBNull(row("Baja")) AndAlso row("Baja").ToString().Trim() <> "" Then
                 chkBaja.Checked = True
                 dtpBaja.Visible = True
@@ -719,6 +719,11 @@ Public Class frmAgentes
 
                 CmbMotivo.Visible = False
                 CmbMotivo.Text = If(IsDBNull(row("Motivo")), "", row("Motivo").ToString())
+            End If
+
+            If Not IsDBNull(row("iNGRESO")) AndAlso row("iNGRESO").ToString().Trim() <> "" Then
+                dtpIngreso.Value = Convert.ToDateTime(row("iNGRESO"))
+                CalcularAntiguedad()
             End If
 
             txtCUIL.Text = If(IsDBNull(row("CUIL")), "", row("CUIL").ToString())
@@ -887,47 +892,59 @@ Public Class frmAgentes
 
     ' Métodos auxiliares
     Private Sub LimpiarFormulario()
-        ' Limpiar campos de texto
+
+        ' datos del agente
         txtLegajo.Clear()
+        txtLegajoEventual.Clear()
         txtNombre.Clear()
-        txtCorreoE.Clear()
+        dtpNacimiento.Value = DateTime.Now
+        cmbSexo.SelectedIndex = -1
+        cmbTipoDto.SelectedIndex = -1
+        txtNroDto.Clear()
         txtCalle.Clear()
         txtNro.Clear()
         txtLocalidad.Clear()
-
-        txtUrgencias.Clear()
-
-        txtLicAnual.Clear()
-        txtComentario.Clear()
         txtTelefono.Clear()
-        txtInterno.Clear()
+        txtUrgencias.Clear()
+        txtTitulo.Clear()
+        txtCorreoE.Clear()
         txtCelular.Clear()
-        txtUltimaActualizacion.Clear()
 
         txtCUIL.Clear()
-        txtTitulo.Clear()
-        txtFechaJubilacion.Clear()
-        txtNroDto.Clear()
-        txtAntiguedad.Clear()
-
-        pctFoto.Image = Nothing
-
-        ' Limpiar ComboBoxes
+        cmbCategoria.SelectedIndex = -1
+        cmbCaracter.SelectedIndex = -1
         cmbInstituto.SelectedIndex = -1
-        cmbSexo.SelectedIndex = -1
-        cmbHorasDiarias.SelectedIndex = -1
         cmbEscalafon.SelectedIndex = -1
         cmbJefe.SelectedIndex = -1
-        cmbCaracter.SelectedIndex = -1
-        cmbCategoria.SelectedIndex = -1
+        cmbHorasDiarias.SelectedIndex = -1
         cmbEstadoParental.SelectedIndex = -1
-        cmbTipoDto.SelectedIndex = -1
+        txtInterno.Clear()
 
-        ' Limpiar CheckBoxes
+        dtpIngreso.Value = DateTime.Now
+        txtAntiguedad.Clear()
+        txtLicAnual.Clear()
+        txtFechaJubilacion.Clear()
+        chkBaja.Checked = False
+        dtpBaja.Value = dtpBaja.MinDate
+        CmbMotivo.SelectedIndex = -1
+        txtUltimaActualizacion.Clear()
+        txtComentario.Clear()
+
+        pctFoto.Image = Nothing
         chkNomarca.Checked = False
 
-        ' Resetear DateTimePicker
-        dtpNacimiento.Value = DateTime.Now
+        ' limpiar grupo familiar
+        txtNombreFamiliar.Clear()
+        cmbParentesco.SelectedIndex = -1
+        dtpNacimientoFamiliar.Value = DateTime.Now
+        txtOcupacionFamiliar.Clear()
+        cmbNivelEstudio.SelectedIndex = -1
+        txtEdadFamiliar.Clear()
+
+        ' Limpiar campos de comentarios
+        txtComentaComentario.Clear()
+        cmbMotivoComentario.SelectedIndex = -1
+        dtpFechaComentario.Value = DateTime.Now
 
         ' Limpiar campos de equipamiento
         cmbTipoEquipamiento.SelectedIndex = -1
@@ -935,9 +952,9 @@ Public Class frmAgentes
         txtModeloEquipamiento.Clear()
         txtNroSerieEquipamiento.Clear()
         txtIMEIEquipamiento.Clear()
-        txtObservacionesEquipamiento.Clear()
-        txtNroTelEquipoamiento.Clear()
         dtpFechaEquipamiento.Value = DateTime.Now
+        txtNroTelEquipoamiento.Clear()
+        txtObservacionesEquipamiento.Clear()
 
         ' Limpiar DataGridViews
         DgvGrupoFamiliar.DataSource = Nothing
@@ -994,7 +1011,8 @@ Public Class frmAgentes
     Private Sub CalcularAntiguedad()
         If dtpIngreso.Value <= DateTime.Now Then
             Dim fechaIngreso As DateTime = dtpIngreso.Value
-            Dim fechaActual As DateTime = DateTime.Now
+            ' si tiene fecha de baja, usar esa fecha para el cálculo, sino la fecha actual
+            Dim fechaActual As DateTime = If(chkBaja.Checked AndAlso dtpBaja.Value > dtpBaja.MinDate, dtpBaja.Value, DateTime.Now)
 
             ' Calcular años completos
             Dim años As Integer = fechaActual.Year - fechaIngreso.Year
@@ -1488,6 +1506,12 @@ Public Class frmAgentes
 
             ' Cargar Categorias para filtrado
             CargarCombos(CmbCate, "Categorias", "Descripcion", "Descripcion")
+            Dim dt As DataTable = CType(CmbCate.DataSource, DataTable)
+            Dim nuevaFila As DataRow = dt.NewRow()
+            nuevaFila("Descripcion") = "(Todas)"
+            dt.Rows.InsertAt(nuevaFila, 0)
+            CmbCate.DataSource = dt
+            CmbCate.SelectedIndex = 0
 
         Catch ex As Exception
             MessageBox.Show("Error al cargar datos de los ComboBoxes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)

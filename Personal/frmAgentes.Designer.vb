@@ -895,7 +895,7 @@ Partial Class frmAgentes
         Label5.Location = New Point(206, 71)
         Label5.Margin = New Padding(4, 0, 4, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(34, 15)
+        Label5.Size = New Size(35, 15)
         Label5.TabIndex = 71
         Label5.Text = "Sexo:"
         ' 
@@ -932,7 +932,7 @@ Partial Class frmAgentes
         Label20.Location = New Point(9, 188)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
-        Label20.Size = New Size(56, 15)
+        Label20.Size = New Size(55, 15)
         Label20.TabIndex = 45
         Label20.Text = "Teléfono:"
         ' 
@@ -1481,7 +1481,7 @@ Partial Class frmAgentes
         Label28.AutoSize = True
         Label28.Location = New Point(11, 76)
         Label28.Name = "Label28"
-        Label28.Size = New Size(79, 15)
+        Label28.Size = New Size(78, 15)
         Label28.TabIndex = 15
         Label28.Text = "Nro Teléfono:"
         ' 
@@ -1536,7 +1536,7 @@ Partial Class frmAgentes
         Label44.AutoSize = True
         Label44.Location = New Point(11, 23)
         Label44.Name = "Label44"
-        Label44.Size = New Size(34, 15)
+        Label44.Size = New Size(33, 15)
         Label44.TabIndex = 0
         Label44.Text = "Tipo:"
         ' 
@@ -1679,7 +1679,7 @@ Partial Class frmAgentes
         radTodos.AutoSize = True
         radTodos.Location = New Point(875, 7)
         radTodos.Name = "radTodos"
-        radTodos.Size = New Size(57, 19)
+        radTodos.Size = New Size(56, 19)
         radTodos.TabIndex = 4
         radTodos.Text = "Todos"
         radTodos.UseVisualStyleBackColor = True
@@ -1691,7 +1691,7 @@ Partial Class frmAgentes
         lblTotalAgentes.Location = New Point(1018, 9)
         lblTotalAgentes.Margin = New Padding(4, 0, 4, 0)
         lblTotalAgentes.Name = "lblTotalAgentes"
-        lblTotalAgentes.Size = New Size(98, 15)
+        lblTotalAgentes.Size = New Size(97, 15)
         lblTotalAgentes.TabIndex = 5
         lblTotalAgentes.Text = "Total de Agentes:"
         ' 
