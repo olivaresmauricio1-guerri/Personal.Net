@@ -255,6 +255,7 @@ Public Class frmInasistenciasJustificadas
             Dim fecha = DtpFecha.Value.Date
             Dim dias = Convert.ToInt32(TxtDias.Text.Trim)
             Dim corridos = ChkCorridos.Checked
+            Dim motivo = CmbTipoInasistencia.Text
 
             ' Calcular días según el tipo
             Dim diasCalculados = CalcularDias(fecha, dias, corridos)
@@ -263,8 +264,8 @@ Public Class frmInasistenciasJustificadas
             For i As Integer = 0 To diasCalculados - 1
                 Dim fechaActual As Date = fecha.AddDays(i)
 
-                Dim sql = "SELECT COUNT(*) FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha"
-                Dim parametros = CmdParams("@Legajo", legajo, "@Fecha", fechaActual)
+                Dim sql = "SELECT COUNT(*) FROM Movimiento WHERE Legajo = @Legajo AND Dia = @Fecha AND MotivoInasistencia = @motivo"
+                Dim parametros = CmdParams("@Legajo", legajo, "@Fecha", fechaActual, "@motivo", motivo)
 
                 ' Si estamos editando, excluir los registros actuales
                 If filaActual IsNot Nothing Then
@@ -428,7 +429,7 @@ Public Class frmInasistenciasJustificadas
             ' Insertar en tabla Movimiento - un registro por cada día de inasistencia
             Dim horaEntrada As DateTime = fecha.Date.AddHours(8) ' 08:00:00
             Dim horaSalida As DateTime = fecha.Date.AddHours(8)   ' 08:00:00
-            Dim horasCumplidas As TimeSpan = TimeSpan.Zero       ' 0 horas trabajadas
+            Dim horasCumplidas As String = "00:00"       ' 0 horas trabajadas
 
             Dim sqlMovimiento = "INSERT INTO Movimiento (Legajo, Instituto, Dia, Entro, Salio, HsCumplidas, MotivoInasistencia, Comentario, Nopromedianada, SinFicha, NoPromedia) VALUES (@Legajo, @Instituto, @Dia, @Entro, @Salio, @HsCumplidas, @MotivoInasistencia, @Comentario, 0, 0, 0)"
 
