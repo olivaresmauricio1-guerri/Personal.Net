@@ -537,11 +537,11 @@ Public Class frmAgentes
         sql = "INSERT INTO Agentes (Legajo, TipoDto, NroDto, Instituto, Nombre, CorreoE, Sexo, Nacimiento, " &
                            "Calle, Nro, Localidad, HorasDiarias, " &
                            "Escalafon, Jefe, LicAnual, Caracter, Comentario, Nomarca, Cargo, Telefono, Interno, Celular, Rpv,  " &
-                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, LegajoEventual) " &
+                           "iNGRESO, Baja, CUIL, TITULO, UltimaActualizacion,  EstadoParental, FechaJubilacion, LegajoEventual, Sindicato) " &
                            "VALUES (@Legajo, @TipoDto, @NroDto,   @Instituto, @Nombre, @CorreoE, @Sexo, @Nacimiento, " &
                            "@Calle, @Nro, @Localidad,  @HorasDiarias, " &
                            "@Escalafon, @Jefe, @LicAnual, @Caracter, @Comentario, @Nomarca, @Cargo, @Telefono, @Interno, @Celular, @Urgencias,  " &
-                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @LegajoEventual)"
+                           "@iNGRESO, @Baja, @CUIL, @TITULO, @UltimaActualizacion, @EstadoParental, @FechaJubilacion, @LegajoEventual, @Sindicato)"
 
         Dim parametros = ObtenerParametrosAgente(True)
         DSM.Execute(DSM.Personal, sql, parametros, True)
@@ -556,7 +556,7 @@ Public Class frmAgentes
                            "Escalafon=@Escalafon, Jefe=@Jefe, LicAnual=@LicAnual, Caracter=@Caracter, Comentario=@Comentario, " &
                            "Nomarca=@Nomarca, Cargo=@Cargo, Telefono=@Telefono, Interno=@Interno, Celular=@Celular, Rpv=@Urgencias, " &
                            "iNGRESO=@iNGRESO, Baja=@Baja, Motivo=@Motivo, CUIL=@CUIL, TITULO=@TITULO, UltimaActualizacion=@UltimaActualizacion, " &
-                           "EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion " &
+                           "EstadoParental=@EstadoParental, FechaJubilacion=@FechaJubilacion, Sindicato=@Sindicato " &
                            "WHERE Legajo=@LegajoEventual"
         Try
             Dim parametros = ObtenerParametrosAgente()
@@ -626,7 +626,8 @@ Public Class frmAgentes
             {"@UltimaActualizacion", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},
             {"@EstadoParental", If(String.IsNullOrEmpty(cmbEstadoParental.Text.Trim), DBNull.Value, cmbEstadoParental.Text.Trim)},
             {"@Motivo", If(Not chkBaja.Checked OrElse String.IsNullOrEmpty(CmbMotivo.Text.Trim), DBNull.Value, CmbMotivo.Text.Trim)},
-            {"@FechaJubilacion", If(String.IsNullOrEmpty(txtFechaJubilacion.Text.Trim), DBNull.Value, txtFechaJubilacion.Text.Trim)}
+            {"@FechaJubilacion", If(String.IsNullOrEmpty(txtFechaJubilacion.Text.Trim), DBNull.Value, txtFechaJubilacion.Text.Trim)},
+            {"@Sindicato", chkSindicato.Checked}
         }
     End Function
 
@@ -733,7 +734,7 @@ Public Class frmAgentes
             txtFechaJubilacion.Text = If(IsDBNull(row("FechaJubilacion")), "", row("FechaJubilacion").ToString())
             cmbTipoDto.Text = If(IsDBNull(row("TipoDto")), "", row("TipoDto").ToString())
             txtNroDto.Text = If(IsDBNull(row("NroDto")), "", row("NroDto").ToString())
-
+            chkSindicato.Checked = If(IsDBNull(row("Sindicato")), False, Convert.ToBoolean(row("Sindicato")))
 
             'pctFoto.Image = Image.FromFile("F:\Imagenes\LEG_" & txtLegajo.Text.Trim & ".jpg")
             Dim rutaFoto As String = "F:\Imagenes\LEG_" & txtLegajo.Text.Trim & ".jpg"
@@ -1065,7 +1066,7 @@ Public Class frmAgentes
                            txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
                             cmbCaracter, txtComentario, chkNomarca, cmbCategoria, txtTelefono,
                            txtInterno, txtCelular, txtUltimaActualizacion, dtpIngreso, chkBaja, dtpBaja, txtTitulo,
-                            cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad)
+                            cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad, chkSindicato)
         'txtLicAnual, 
     End Sub
     Private Sub dtpNacimientoFamiliar_ValueChanged(sender As Object, e As EventArgs) Handles dtpNacimientoFamiliar.ValueChanged

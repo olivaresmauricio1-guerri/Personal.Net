@@ -170,6 +170,7 @@ Partial Class frmAgentes
         radEventuales = New RadioButton()
         CmbCate = New ComboBox()
         Label1 = New Label()
+        chkSindicato = New CheckBox()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -244,6 +245,7 @@ Partial Class frmAgentes
         ' 
         ' Panel3Col
         ' 
+        Panel3Col.Controls.Add(chkSindicato)
         Panel3Col.Controls.Add(btnSaldoVacaciones)
         Panel3Col.Controls.Add(lblSaldoVacaciones)
         Panel3Col.Controls.Add(lblAntiguedadCorregida)
@@ -895,7 +897,7 @@ Partial Class frmAgentes
         Label5.Location = New Point(206, 71)
         Label5.Margin = New Padding(4, 0, 4, 0)
         Label5.Name = "Label5"
-        Label5.Size = New Size(35, 15)
+        Label5.Size = New Size(34, 15)
         Label5.TabIndex = 71
         Label5.Text = "Sexo:"
         ' 
@@ -932,7 +934,7 @@ Partial Class frmAgentes
         Label20.Location = New Point(9, 188)
         Label20.Margin = New Padding(4, 0, 4, 0)
         Label20.Name = "Label20"
-        Label20.Size = New Size(55, 15)
+        Label20.Size = New Size(56, 15)
         Label20.TabIndex = 45
         Label20.Text = "Teléfono:"
         ' 
@@ -1481,7 +1483,7 @@ Partial Class frmAgentes
         Label28.AutoSize = True
         Label28.Location = New Point(11, 76)
         Label28.Name = "Label28"
-        Label28.Size = New Size(78, 15)
+        Label28.Size = New Size(79, 15)
         Label28.TabIndex = 15
         Label28.Text = "Nro Teléfono:"
         ' 
@@ -1536,7 +1538,7 @@ Partial Class frmAgentes
         Label44.AutoSize = True
         Label44.Location = New Point(11, 23)
         Label44.Name = "Label44"
-        Label44.Size = New Size(33, 15)
+        Label44.Size = New Size(34, 15)
         Label44.TabIndex = 0
         Label44.Text = "Tipo:"
         ' 
@@ -1679,7 +1681,7 @@ Partial Class frmAgentes
         radTodos.AutoSize = True
         radTodos.Location = New Point(875, 7)
         radTodos.Name = "radTodos"
-        radTodos.Size = New Size(56, 19)
+        radTodos.Size = New Size(57, 19)
         radTodos.TabIndex = 4
         radTodos.Text = "Todos"
         radTodos.UseVisualStyleBackColor = True
@@ -1691,7 +1693,7 @@ Partial Class frmAgentes
         lblTotalAgentes.Location = New Point(1018, 9)
         lblTotalAgentes.Margin = New Padding(4, 0, 4, 0)
         lblTotalAgentes.Name = "lblTotalAgentes"
-        lblTotalAgentes.Size = New Size(97, 15)
+        lblTotalAgentes.Size = New Size(98, 15)
         lblTotalAgentes.TabIndex = 5
         lblTotalAgentes.Text = "Total de Agentes:"
         ' 
@@ -1786,6 +1788,16 @@ Partial Class frmAgentes
         Label1.Size = New Size(61, 15)
         Label1.TabIndex = 44
         Label1.Text = "Categoría:"
+        ' 
+        ' chkSindicato
+        ' 
+        chkSindicato.AutoSize = True
+        chkSindicato.Location = New Point(199, 11)
+        chkSindicato.Name = "chkSindicato"
+        chkSindicato.Size = New Size(119, 19)
+        chkSindicato.TabIndex = 79
+        chkSindicato.Text = "Afiliado Sindicato"
+        chkSindicato.UseVisualStyleBackColor = True
         ' 
         ' frmAgentes
         ' 
@@ -1994,5 +2006,6 @@ Partial Class frmAgentes
     Friend WithEvents lblSaldoVacaciones As Label
     Friend WithEvents CmbCate As ComboBox
     Friend WithEvents Label1 As Label
+    Friend WithEvents chkSindicato As CheckBox
 
 End Class
