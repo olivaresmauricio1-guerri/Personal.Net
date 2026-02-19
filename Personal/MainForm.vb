@@ -294,4 +294,6 @@ Public Class MainForm
     Private Sub lblDatosAgentes_Click(sender As Object, e As EventArgs) Handles lblDatosAgentes.Click
         frmDatosAgentes.AbrirInstancia(Me)
     End Sub
+
+
 End Class

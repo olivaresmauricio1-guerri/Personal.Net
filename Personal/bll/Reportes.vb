@@ -485,7 +485,7 @@ END
         Dim sql As String = "
             DECLARE @hoy date      = CAST(GETDATE() AS date);
             SELECT 
-              a.Legajo, a.Nombre, a.Instituto, DAY(a.Nacimiento) AS Nacimiento
+              a.Legajo, a.Nombre, a.Instituto, a.Nacimiento AS Nacimiento
             FROM Agentes a
             WHERE (a.Baja IS NULL OR a.Baja = '')
               AND (a.Caracter <> 'Eventual' OR a.Caracter IS NULL OR a.Caracter = '')
