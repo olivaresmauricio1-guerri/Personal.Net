@@ -26,6 +26,7 @@ Partial Class frmAgentes
         tabDatosAgente = New TabPage()
         tlpDatosAgente = New TableLayoutPanel()
         Panel3Col = New Panel()
+        chkSindicato = New CheckBox()
         btnSaldoVacaciones = New Button()
         lblSaldoVacaciones = New Label()
         lblAntiguedadCorregida = New Label()
@@ -170,7 +171,6 @@ Partial Class frmAgentes
         radEventuales = New RadioButton()
         CmbCate = New ComboBox()
         Label1 = New Label()
-        chkSindicato = New CheckBox()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -271,6 +271,16 @@ Partial Class frmAgentes
         Panel3Col.Name = "Panel3Col"
         Panel3Col.Size = New Size(351, 302)
         Panel3Col.TabIndex = 2
+        ' 
+        ' chkSindicato
+        ' 
+        chkSindicato.AutoSize = True
+        chkSindicato.Location = New Point(199, 11)
+        chkSindicato.Name = "chkSindicato"
+        chkSindicato.Size = New Size(119, 19)
+        chkSindicato.TabIndex = 79
+        chkSindicato.Text = "Afiliado Sindicato"
+        chkSindicato.UseVisualStyleBackColor = True
         ' 
         ' btnSaldoVacaciones
         ' 
@@ -811,6 +821,7 @@ Partial Class frmAgentes
         dtpNacimiento.Format = DateTimePickerFormat.Short
         dtpNacimiento.Location = New Point(86, 67)
         dtpNacimiento.Margin = New Padding(4, 3, 4, 3)
+        dtpNacimiento.MinDate = New Date(1900, 1, 1, 0, 0, 0, 0)
         dtpNacimiento.Name = "dtpNacimiento"
         dtpNacimiento.Size = New Size(96, 23)
         dtpNacimiento.TabIndex = 8
@@ -1788,16 +1799,6 @@ Partial Class frmAgentes
         Label1.Size = New Size(61, 15)
         Label1.TabIndex = 44
         Label1.Text = "Categoría:"
-        ' 
-        ' chkSindicato
-        ' 
-        chkSindicato.AutoSize = True
-        chkSindicato.Location = New Point(199, 11)
-        chkSindicato.Name = "chkSindicato"
-        chkSindicato.Size = New Size(119, 19)
-        chkSindicato.TabIndex = 79
-        chkSindicato.Text = "Afiliado Sindicato"
-        chkSindicato.UseVisualStyleBackColor = True
         ' 
         ' frmAgentes
         ' 

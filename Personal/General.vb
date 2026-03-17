@@ -181,14 +181,18 @@ Public Module General
     '        MessageBox.Show($"Error al cargar datos de {nombreTabla}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '    End Try
     'End Sub
-    Public Sub CargarCombos(combo As ComboBox, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "", Optional where As String = "")
+    Public Sub CargarCombos(combo As ComboBox, nombreTabla As String, campoOrden As String, campoMostrar As String, Optional campoValor As String = "", Optional where As String = "", Optional suc As Integer = 0)
         Try
             ' Armamos la consulta base
             Dim sql As String = "SELECT * FROM " & nombreTabla
 
             ' Si viene un where, lo concatenamos
             If Not String.IsNullOrWhiteSpace(where) Then
-                sql &= " WHERE " & where
+                sql &= " WHERE (" & where & ")"
+            End If
+
+            If suc = 3 Then
+                sql &= " AND Instituto IN ('Alcorta',  'Belgrano',  'Garay')"
             End If
 
             ' Orden

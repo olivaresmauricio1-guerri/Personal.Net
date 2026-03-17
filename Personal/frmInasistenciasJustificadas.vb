@@ -187,7 +187,7 @@ Public Class frmInasistenciasJustificadas
         Try
 
             ' Cargar Agentes
-            CargarCombos(CmbAgente, "Agentes", "Nombre", "Nombre", "Legajo", "Baja IS NULL OR Baja = ''")
+            CargarCombos(CmbAgente, "Agentes", "Nombre", "Nombre", "Legajo", "Baja IS NULL OR Baja = ''", SucursalActual)
 
             ' Cargar Motivos de Desvinculacion
             CargarCombos(CmbTipoInasistencia, "Inasistencias", "Descripcion", "Descripcion", "Codigo")

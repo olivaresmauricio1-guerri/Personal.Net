@@ -12,11 +12,11 @@ Public Class frmAgentes
     Private filaActualIndice As Integer = -1
     Private Shared instancia As frmAgentes
 
-    ' Variables para gestión de grupo familiar
+    ' Variables para gestiï¿½n de grupo familiar
     Private filaGrupoActual As DataGridViewRow
     Private filaGrupoActualIndice As Integer = -1
 
-    ' Variables para gestión de comentarios
+    ' Variables para gestiï¿½n de comentarios
     Private filaComentarioActual As DataGridViewRow
     Private filaComentarioActualIndice As Integer = -1
 
@@ -44,6 +44,7 @@ Public Class frmAgentes
         ConfiguraColComentario()
         ConfiguraColFamilia()
         ConfiguraColEquipamiento()
+        ModificaAgente()
         _suspenderAccionFiltros = False
         Me.KeyPreview = True
     End Sub
@@ -159,7 +160,7 @@ Public Class frmAgentes
     Private Sub CmdBorrar_Click(sender As Object, e As EventArgs) Handles btnBorrar.Click
         If filaActual Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar este agente?", "Confirmar borrado", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+        If MessageBox.Show("ï¿½Estï¿½ seguro de que desea eliminar este agente?", "Confirmar borrado", MessageBoxButtons.YesNo) = DialogResult.Yes Then
             Dim legajo = Convert.ToInt32(filaActual.Cells("Legajo").Value)
 
             ' Eliminar registros relacionados primero
@@ -264,7 +265,7 @@ Public Class frmAgentes
     Private Sub btnEliminarFamiliar_Click(sender As Object, e As EventArgs) Handles btnEliminarFamiliar.Click
         If DgvGrupoFamiliar.CurrentRow Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar este familiar?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If MessageBox.Show("ï¿½Estï¿½ seguro de que desea eliminar este familiar?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim Principal = Convert.ToInt32(DgvGrupoFamiliar.CurrentRow.Cells("Id").Value)
             Dim sql = "DELETE FROM GrupoFamiliar WHERE Id = @Id"
             Dim parametros = CmdParams("@Id", Principal)
@@ -305,7 +306,7 @@ Public Class frmAgentes
     Private Sub btnEliminarComentario_Click(sender As Object, e As EventArgs) Handles btnEliminarComentario.Click
         If DgvComentarios.CurrentRow Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar este comentario?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If MessageBox.Show("ï¿½Estï¿½ seguro de que desea eliminar este comentario?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim Principal = Convert.ToInt32(DgvComentarios.CurrentRow.Cells("IdComentario").Value)
             Dim sql = "DELETE FROM Comentarios WHERE IdComentario = @Id"
             Dim parametros = CmdParams("@Id", Principal)
@@ -355,7 +356,7 @@ Public Class frmAgentes
     Private Sub btnEliminarEquipamiento_Click(sender As Object, e As EventArgs) Handles btnEliminarEquipamiento.Click
         If DgvEquipamiento.CurrentRow Is Nothing Then Return
 
-        If MessageBox.Show("¿Está seguro de que desea eliminar este equipamiento?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If MessageBox.Show("ï¿½Estï¿½ seguro de que desea eliminar este equipamiento?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim Principal = Convert.ToInt32(DgvEquipamiento.CurrentRow.Cells("Id").Value)
             Dim sql = "DELETE FROM Equipamiento WHERE Id = @Id"
             Dim parametros = CmdParams("@Id", Principal)
@@ -370,12 +371,12 @@ Public Class frmAgentes
 
     Private Sub txtNroDto_LostFocus(sender As Object, e As EventArgs) Handles txtNroDto.LostFocus
         ' Validar DNI
-        If Len(txtNroDto.Text) < 7 Then
-            MessageBox.Show("Debe ingresar un DNI válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            txtNroDto.Focus()
-            Return
-        End If
-        If cmbTipoDto.Text = "DNI" Then
+        'If Len(txtNroDto.Text) < 7 Then
+        '    MessageBox.Show("Debe ingresar un DNI vï¿½lido.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '    txtNroDto.Focus()
+        '    Return
+        'End If
+        If cmbTipoDto.Text = "DNI" And Len(txtNroDto.Text) >= 7 Then
             Dim cuil As String = ObtenerCUIL(txtNroDto.Text, cmbSexo.Text.ToUpper)
             txtCUIL.Text = If(cuil.Length = 11, $"{cuil.Substring(0, 2)}-{cuil.Substring(2, 8)}-{cuil.Substring(10, 1)}", cuil)
         End If
@@ -386,47 +387,53 @@ Public Class frmAgentes
     Private Sub chkEncabezados_CheckedChanged(sender As Object, e As EventArgs)
         dgvListado.Focus()
     End Sub
-    ' Métodos de validación
+    ' Mï¿½todos de validaciï¿½n
     Private Function ValidarDatos() As Boolean
         ' Validar Legajo
         If String.IsNullOrEmpty(txtLegajo.Text.Trim) Then
-            MessageBox.Show("El campo Legajo no puede estar vacío.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El campo Legajo no puede estar vacï¿½o.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtLegajo.Focus()
             Return False
         End If
 
-        ' Validar que el legajo sea numérico
+        ' Validar que el legajo sea numï¿½rico
         Dim legajo As Integer
         If Not Integer.TryParse(txtLegajo.Text.Trim, legajo) Then
-            MessageBox.Show("El Legajo debe ser un número válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El Legajo debe ser un nï¿½mero vï¿½lido.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtLegajo.Focus()
             Return False
         End If
 
         ' Validar Nombre
         If String.IsNullOrEmpty(txtNombre.Text.Trim) Then
-            MessageBox.Show("El campo Nombre no puede estar vacío.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El campo Nombre no puede estar vacï¿½o.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtNombre.Focus()
             Return False
         End If
 
         ' Validar Instituto
         If String.IsNullOrEmpty(cmbInstituto.Text.Trim) Then
-            MessageBox.Show("Debe seleccionar una Sucursal.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Debe seleccionar una Sucursal.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbInstituto.Focus()
             Return False
         End If
 
         ' Validar Caracter
         If String.IsNullOrEmpty(cmbCaracter.Text.Trim) Then
-            MessageBox.Show("Debe seleccionar un Caracter.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Debe seleccionar un Caracter.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbCaracter.Focus()
             Return False
         End If
 
+        If dtpNacimiento.Value = dtpNacimiento.MinDate Then
+            MessageBox.Show("Debe seleccionar una fecha de nacimiento vï¿½lida.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            dtpNacimiento.Focus()
+            Return False
+        End If
+
         ' Validar DNI
-        If String.IsNullOrEmpty(txtNroDto.Text.Trim) Then
-            MessageBox.Show("El campo DNI no puede estar vacío.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If String.IsNullOrEmpty(txtNroDto.Text.Trim) Or Len(txtNroDto.Text) < 7 Then
+            MessageBox.Show("Debe ingresar un DNI vï¿½lido.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtNroDto.Focus()
             Return False
         End If
@@ -434,12 +441,12 @@ Public Class frmAgentes
         ' Validar fecha de baja si chkBaja esta seleccionado   
         If chkBaja.Checked Then
             If dtpBaja.Value = Date.MinValue Then
-                MessageBox.Show("Seleccione una fecha de baja válida.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show("Seleccione una fecha de baja vï¿½lida.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 dtpBaja.Focus()
                 Return False
             End If
             If String.IsNullOrEmpty(CmbMotivo.Text.Trim) Then
-                MessageBox.Show("Seleccione un motivo de baja.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show("Seleccione un motivo de baja.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 CmbMotivo.Focus()
                 Return False
             End If
@@ -450,25 +457,25 @@ Public Class frmAgentes
     Private Function ValidarDatosFamiliar() As Boolean
 
         If String.IsNullOrEmpty(txtNombreFamiliar.Text.Trim()) Then
-            MessageBox.Show("Ingrese un valor para el campo Nombre.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Ingrese un valor para el campo Nombre.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtNombreFamiliar.Focus()
             Return False
         End If
 
         If dtpNacimientoFamiliar.Value = Date.MinValue Then
-            MessageBox.Show("Seleccione una fecha de nacimiento válida.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione una fecha de nacimiento vï¿½lida.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             dtpNacimientoFamiliar.Focus()
             Return False
         End If
 
         If Not IsNumeric(txtEdadFamiliar.Text.Trim()) Then
-            MessageBox.Show("Ingrese un valor numérico para la Edad.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Ingrese un valor numï¿½rico para la Edad.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtEdadFamiliar.Focus()
             Return False
         End If
 
         If String.IsNullOrEmpty(cmbParentesco.Text.Trim()) Then
-            MessageBox.Show("Seleccione un valor para el campo Parentesco.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione un valor para el campo Parentesco.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbParentesco.Focus()
             Return False
         End If
@@ -477,13 +484,13 @@ Public Class frmAgentes
     Private Function ValidarDatosComentarios() As Boolean
 
         If String.IsNullOrEmpty(txtComentaComentario.Text.Trim()) Then
-            MessageBox.Show("Ingrese un valor para el campo Comentario.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Ingrese un valor para el campo Comentario.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtNombreFamiliar.Focus()
             Return False
         End If
 
         If String.IsNullOrEmpty(cmbMotivoComentario.Text.Trim()) Then
-            MessageBox.Show("Seleccione un valor para el campo Motivo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione un valor para el campo Motivo.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbParentesco.Focus()
             Return False
         End If
@@ -492,25 +499,25 @@ Public Class frmAgentes
 
     Private Function ValidarDatosEquipamiento() As Boolean
         If String.IsNullOrEmpty(cmbTipoEquipamiento.Text.Trim()) Then
-            MessageBox.Show("Seleccione un valor para el campo Tipo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione un valor para el campo Tipo.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbTipoEquipamiento.Focus()
             Return False
         End If
 
         If String.IsNullOrEmpty(txtMarcaEquipamiento.Text.Trim()) Then
-            MessageBox.Show("Ingrese un valor para el campo Marca.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Ingrese un valor para el campo Marca.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtMarcaEquipamiento.Focus()
             Return False
         End If
 
         If String.IsNullOrEmpty(txtModeloEquipamiento.Text.Trim()) Then
-            MessageBox.Show("Ingrese un valor para el campo Modelo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Ingrese un valor para el campo Modelo.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtModeloEquipamiento.Focus()
             Return False
         End If
 
         If dtpFechaEquipamiento.Value = Date.MinValue Then
-            MessageBox.Show("Seleccione una fecha válida.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione una fecha vï¿½lida.", "Validaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             dtpFechaEquipamiento.Focus()
             Return False
         End If
@@ -518,7 +525,7 @@ Public Class frmAgentes
         Return True
     End Function
 
-    ' Métodos CRUD para Agentes
+    ' Mï¿½todos CRUD para Agentes
     Private Sub InsertarNuevoAgente()
         Dim sql As String = "SELECT COUNT(*) FROM Agentes WHERE Legajo = @Legajo OR NroDto = @NroDto"
         Dim parametrosCheck = CmdParams(
@@ -545,7 +552,7 @@ Public Class frmAgentes
 
         Dim parametros = ObtenerParametrosAgente(True)
         DSM.Execute(DSM.Personal, sql, parametros, True)
-        MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        MessageBox.Show("Datos guardados correctamente.", "ï¿½xito", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
     Private Function ActualizarAgente() As Boolean
@@ -566,7 +573,7 @@ Public Class frmAgentes
             End If
 
             DSM.Execute(DSM.Personal, sql, parametros, True)
-            MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("Datos guardados correctamente.", "ï¿½xito", MessageBoxButtons.OK, MessageBoxIcon.Information)
             FormModoConsulta()
 
             Return True
@@ -631,7 +638,7 @@ Public Class frmAgentes
         }
     End Function
 
-    ' Métodos CRUD para GrupoFamiliar
+    ' Mï¿½todos CRUD para GrupoFamiliar
     Private Sub InsertarGrupoFamiliar(legajo As Integer, nombre As String, parentesco As String, nacimiento As DateTime?, edad As Integer?, ocupacion As String, nivel As String)
         Dim sql As String = "INSERT INTO GrupoFamiliar (Legajo, Nombre, Parentesco, Nacimiento, Edad, Ocupacion, Nivel) " &
                            "VALUES (@Legajo, @Nombre, @Parentesco, @Nacimiento, @Edad, @Ocupacion, @Nivel)"
@@ -649,7 +656,7 @@ Public Class frmAgentes
         DSM.Execute(DSM.Personal, sql, parametros, True)
     End Sub
 
-    ' Métodos CRUD para Comentarios
+    ' Mï¿½todos CRUD para Comentarios
     Private Sub InsertarComentario(legajo As Integer, fecha As DateTime, comenta As String, motivo As String)
         Dim sql As String = "INSERT INTO Comentarios (Legajo, Fecha, Comenta, Motivo) " &
                            "VALUES (@Legajo, @Fecha, @Comenta, @Motivo)"
@@ -674,7 +681,13 @@ Public Class frmAgentes
             cmbSexo.Text = If(IsDBNull(row("Sexo")), "", row("Sexo").ToString())
 
             If Not IsDBNull(row("Nacimiento")) Then
+                dtpNacimiento.Format = DateTimePickerFormat.Custom
+                dtpNacimiento.CustomFormat = "dd/MM/yyyy"
                 dtpNacimiento.Value = Convert.ToDateTime(row("Nacimiento"))
+            Else
+                dtpNacimiento.Format = DateTimePickerFormat.Custom
+                dtpNacimiento.CustomFormat = " "
+                dtpNacimiento.Value = dtpNacimiento.MinDate
             End If
 
             txtCalle.Text = If(IsDBNull(row("Calle")), "", row("Calle").ToString())
@@ -787,6 +800,12 @@ Public Class frmAgentes
                 sql &= " AND (Baja IS NULL OR Baja = '') AND Caracter = 'Eventual'"
             End If
 
+            Dim sucursalActualId As Integer
+            If Integer.TryParse(General.SucursalActual, sucursalActualId) AndAlso sucursalActualId = 3 Then
+                sql &= " AND Instituto IN (@Inst1, @Inst2, @Inst3)"
+                parametros.AddRange(New Object() {"@Inst1", "Alcorta", "@Inst2", "Belgrano", "@Inst3", "Garay"})
+            End If
+
             Dim sucursal As String = cmbSucursal.Text.Trim()
             If Not String.IsNullOrEmpty(sucursal) And sucursal <> "(Todas)" Then
                 sql &= " AND Instituto = @Sucursal"
@@ -799,7 +818,7 @@ Public Class frmAgentes
                 parametros.AddRange(New Object() {"@Cargo", categoria})
             End If
 
-            ' Filtro por búsqueda en varias columnas
+            ' Filtro por bï¿½squeda en varias columnas
             If Not String.IsNullOrEmpty(texto) Then
                 sql &= " AND (Nombre LIKE @Nombre OR NroDto LIKE @DNI OR Legajo LIKE @Legajo)"
                 parametros.AddRange(New Object() {"@Nombre", $"%{texto}%", "@DNI", $"{texto.Trim()}%", "@Legajo", $"{texto.Trim()}%"})
@@ -841,7 +860,7 @@ Public Class frmAgentes
                 Dim fecha2 As Date = Date.Now
                 Dim diferencia As Integer = DateDiff(DateInterval.Year, fecha1, fecha2)
 
-                ' Ajuste para que no cuente el año si todavía no cumplió
+                ' Ajuste para que no cuente el aï¿½o si todavï¿½a no cumpliï¿½
                 If fecha1.AddYears(diferencia) > fecha2 Then
                     diferencia -= 1
                 End If
@@ -883,7 +902,7 @@ Public Class frmAgentes
             Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
             DgvEquipamiento.DataSource = tabla
 
-            ' Configurar columnas usando el método dedicado
+            ' Configurar columnas usando el mï¿½todo dedicado
             ConfiguraColEquipamiento()
 
         Catch ex As Exception
@@ -891,14 +910,16 @@ Public Class frmAgentes
         End Try
     End Sub
 
-    ' Métodos auxiliares
+    ' Mï¿½todos auxiliares
     Private Sub LimpiarFormulario()
 
         ' datos del agente
         txtLegajo.Clear()
         txtLegajoEventual.Clear()
         txtNombre.Clear()
-        dtpNacimiento.Value = DateTime.Now
+        dtpNacimiento.Value = dtpNacimiento.MinDate
+        dtpNacimiento.Format = DateTimePickerFormat.Custom
+        dtpNacimiento.CustomFormat = " "
         cmbSexo.SelectedIndex = -1
         cmbTipoDto.SelectedIndex = -1
         txtNroDto.Clear()
@@ -971,6 +992,7 @@ Public Class frmAgentes
             CargaGrupoFamiliar(Convert.ToInt32(txtLegajo.Text.Trim))
             CargaComentario(Convert.ToInt32(txtLegajo.Text.Trim))
             CargaEquipamiento(Convert.ToInt32(txtLegajo.Text.Trim))
+            ModificaAgente()
         End If
     End Sub
 
@@ -1012,26 +1034,26 @@ Public Class frmAgentes
     Private Sub CalcularAntiguedad()
         If dtpIngreso.Value <= DateTime.Now Then
             Dim fechaIngreso As DateTime = dtpIngreso.Value
-            ' si tiene fecha de baja, usar esa fecha para el cálculo, sino la fecha actual
+            ' si tiene fecha de baja, usar esa fecha para el cï¿½lculo, sino la fecha actual
             Dim fechaActual As DateTime = If(chkBaja.Checked AndAlso dtpBaja.Value > dtpBaja.MinDate, dtpBaja.Value, DateTime.Now)
 
-            ' Calcular años completos
-            Dim años As Integer = fechaActual.Year - fechaIngreso.Year
+            ' Calcular aï¿½os completos
+            Dim aÃ±os As Integer = fechaActual.Year - fechaIngreso.Year
 
-            ' Ajustar si aún no ha pasado el aniversario este año
+            ' Ajustar si aï¿½n no ha pasado el aniversario este aï¿½o
             If fechaActual.Month < fechaIngreso.Month OrElse (fechaActual.Month = fechaIngreso.Month AndAlso fechaActual.Day < fechaIngreso.Day) Then
-                años -= 1
+                aÃ±os -= 1
             End If
 
-            If años >= 1 Then
-                ' Si tiene 1 año o más, mostrar solo años
-                If años = 1 Then
-                    txtAntiguedad.Text = "1 año"
+            If aÃ±os >= 1 Then
+                ' Si tiene 1 aï¿½o o mï¿½s, mostrar solo aï¿½os
+                If aÃ±os = 1 Then
+                    txtAntiguedad.Text = "1 aï¿½o"
                 Else
-                    txtAntiguedad.Text = años.ToString() & " años"
+                    txtAntiguedad.Text = aÃ±os.ToString() & " aï¿½os"
                 End If
             Else
-                ' Si tiene menos de 1 año, calcular meses
+                ' Si tiene menos de 1 aï¿½o, calcular meses
                 Dim meses As Integer = 0
                 Dim fechaTemporal As DateTime = fechaIngreso
 
@@ -1052,7 +1074,7 @@ Public Class frmAgentes
             lblAntiguedadCorregida.Text = ""
             Dim AjusteAntiguedad As Integer = filaActual.Cells("AjusteAntiguedad").Value
             If (AjusteAntiguedad <> 0) Then
-                lblAntiguedadCorregida.Text = "Antigüedad Corregida: " & (años + AjusteAntiguedad).ToString() & " años"
+                lblAntiguedadCorregida.Text = "Antiguedad Corregida: " & (aÃ±os + AjusteAntiguedad).ToString() & " aï¿½os"
             End If
         Else
             txtAntiguedad.Text = "Fecha futura"
@@ -1060,7 +1082,7 @@ Public Class frmAgentes
     End Sub
 
     Private Sub HabilitarControles(habilitar As Boolean)
-        ' Usar la función SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
+        ' Usar la funciï¿½n SetControlesEnabled de Funciones.vb para habilitar/deshabilitar controles
         Funciones.SetControlesEnabled(habilitar, txtLegajo, txtNombre, cmbInstituto, txtCorreoE, cmbSexo, dtpNacimiento,
                            txtCalle, txtNro, txtLocalidad,
                            txtUrgencias, cmbHorasDiarias, cmbEscalafon, cmbJefe,
@@ -1068,6 +1090,15 @@ Public Class frmAgentes
                            txtInterno, txtCelular, txtUltimaActualizacion, dtpIngreso, chkBaja, dtpBaja, txtTitulo,
                             cmbEstadoParental, txtFechaJubilacion, cmbTipoDto, txtCUIL, txtNroDto, CmbMotivo, txtAntiguedad, chkSindicato)
         'txtLicAnual, 
+    End Sub
+    Private Sub dtpNacimiento_ValueChanged(sender As Object, e As EventArgs) Handles dtpNacimiento.ValueChanged
+        If dtpNacimiento.Value = dtpNacimiento.MinDate Then
+            dtpNacimiento.Format = DateTimePickerFormat.Custom
+            dtpNacimiento.CustomFormat = " "
+        Else
+            dtpNacimiento.Format = DateTimePickerFormat.Custom
+            dtpNacimiento.CustomFormat = "dd/MM/yyyy"
+        End If
     End Sub
     Private Sub dtpNacimientoFamiliar_ValueChanged(sender As Object, e As EventArgs) Handles dtpNacimientoFamiliar.ValueChanged
 
@@ -1089,7 +1120,7 @@ Public Class frmAgentes
 
     Private Sub DgvGrupoFamiliar_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvGrupoFamiliar.CellEndEdit
 
-        ' Ejecutar la misma lógica del RowLeave para actualizar la base de datos
+        ' Ejecutar la misma lï¿½gica del RowLeave para actualizar la base de datos
         Dim rowIndex = DgvGrupoFamiliar.Rows(e.RowIndex)
         Dim idTrans = Convert.ToInt32(rowIndex.Cells("Id").Value)
 
@@ -1123,7 +1154,7 @@ Public Class frmAgentes
 
     Private Sub DgvComentarios_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvComentarios.CellEndEdit
 
-        ' Ejecutar la misma lógica del RowLeave para actualizar la base de datos
+        ' Ejecutar la misma lï¿½gica del RowLeave para actualizar la base de datos
         Dim rowIndex = DgvComentarios.Rows(e.RowIndex)
         Dim idTrans = Convert.ToInt32(rowIndex.Cells("idComentario").Value)
         Dim fecha = rowIndex.Cells("Fecha").Value
@@ -1184,14 +1215,14 @@ Public Class frmAgentes
     Private Sub btnDocumentacion_Click(sender As Object, e As EventArgs) Handles btnDocumentacion.Click
         ' Verificar que hay un agente seleccionado
         If filaActual Is Nothing OrElse filaActualIndice < 0 Then
-            MessageBox.Show("Debe seleccionar un agente para ver su documentación.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("Debe seleccionar un agente para ver su documentaciï¿½n.", "Informaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
 
         ' Obtener el legajo del agente seleccionado
         Dim legajo = txtLegajo.Text 'filaActual.Cells("Legajo").Value.ToString
 
-        ' Crear y mostrar el formulario de documentación
+        ' Crear y mostrar el formulario de documentaciï¿½n
         Dim frmDoc As New frmDocumentacion
         frmDoc.Legajo = legajo
         frmDoc.MdiParent = MdiParent
@@ -1230,7 +1261,7 @@ Public Class frmAgentes
                 dgvListado.Columns("Instituto").DisplayIndex = 3
 
                 dgvListado.Columns("Telefono").Visible = True
-                dgvListado.Columns("Telefono").HeaderText = "Teléfono"
+                dgvListado.Columns("Telefono").HeaderText = "Telï¿½fono"
                 dgvListado.Columns("Telefono").Width = 110
                 dgvListado.Columns("Telefono").DisplayIndex = 4
 
@@ -1262,7 +1293,7 @@ Public Class frmAgentes
 
             End If
         Catch ex As Exception
-            ' Ignorar errores de configuración de columnas
+            ' Ignorar errores de configuraciï¿½n de columnas
         End Try
     End Sub
 
@@ -1283,7 +1314,7 @@ Public Class frmAgentes
 
                 ' Configurar columna Parentesco como ComboBox
                 If DgvGrupoFamiliar.Columns.Contains("Parentesco") Then
-                    ' Obtener el índice de la columna actual
+                    ' Obtener el ï¿½ndice de la columna actual
                     Dim indiceParentesco As Integer = DgvGrupoFamiliar.Columns("Parentesco").Index
 
                     ' Remover la columna existente
@@ -1301,7 +1332,7 @@ Public Class frmAgentes
                         colParentesco.Items.Add(item)
                     Next
 
-                    ' Insertar en la posición original
+                    ' Insertar en la posiciï¿½n original
                     DgvGrupoFamiliar.Columns.Insert(indiceParentesco, colParentesco)
                 End If
 
@@ -1315,12 +1346,12 @@ Public Class frmAgentes
                 DgvGrupoFamiliar.Columns("Edad").Width = 50
 
                 DgvGrupoFamiliar.Columns("Ocupacion").Visible = True
-                DgvGrupoFamiliar.Columns("Ocupacion").HeaderText = "Ocupación"
+                DgvGrupoFamiliar.Columns("Ocupacion").HeaderText = "Ocupaciï¿½n"
                 DgvGrupoFamiliar.Columns("Ocupacion").Width = 150
 
                 ' Configurar columna Parentesco como ComboBox
                 If DgvGrupoFamiliar.Columns.Contains("Nivel") Then
-                    ' Obtener el índice de la columna actual
+                    ' Obtener el ï¿½ndice de la columna actual
                     Dim indiceNivel As Integer = DgvGrupoFamiliar.Columns("Nivel").Index
 
                     ' Remover la columna existente
@@ -1338,7 +1369,7 @@ Public Class frmAgentes
                         colNivel.Items.Add(item)
                     Next
 
-                    ' Insertar en la posición original
+                    ' Insertar en la posiciï¿½n original
                     DgvGrupoFamiliar.Columns.Insert(indiceNivel, colNivel)
                 End If
 
@@ -1346,7 +1377,7 @@ Public Class frmAgentes
 
             End If
         Catch ex As Exception
-            ' Ignorar errores de configuración de columnas
+            ' Ignorar errores de configuraciï¿½n de columnas
         End Try
     End Sub
 
@@ -1370,7 +1401,7 @@ Public Class frmAgentes
 
                 ' Configurar columna Parentesco como ComboBox
                 If DgvComentarios.Columns.Contains("Motivo") Then
-                    ' Obtener el índice de la columna actual
+                    ' Obtener el ï¿½ndice de la columna actual
                     Dim indiceMotivo As Integer = DgvComentarios.Columns("Motivo").Index
 
                     ' Remover la columna existente
@@ -1386,7 +1417,7 @@ Public Class frmAgentes
                     ' Motivos para Comentarios
                     CargarCombosGrid(colMotivo, "Inasistencias", "Descripcion", "Descripcion")
 
-                    ' Insertar en la posición original
+                    ' Insertar en la posiciï¿½n original
                     DgvComentarios.Columns.Insert(indiceMotivo, colMotivo)
                 End If
 
@@ -1394,7 +1425,7 @@ Public Class frmAgentes
 
             End If
         Catch ex As Exception
-            ' Ignorar errores de configuración de columnas
+            ' Ignorar errores de configuraciï¿½n de columnas
         End Try
     End Sub
 
@@ -1414,7 +1445,7 @@ Public Class frmAgentes
 
                 ' Configurar columna Parentesco como ComboBox
                 If DgvEquipamiento.Columns.Contains("Tipo") Then
-                    ' Obtener el índice de la columna actual
+                    ' Obtener el ï¿½ndice de la columna actual
                     Dim indiceTipo As Integer = DgvEquipamiento.Columns("Tipo").Index
 
                     ' Remover la columna existente
@@ -1432,7 +1463,7 @@ Public Class frmAgentes
                         colTipo.Items.Add(item)
                     Next
 
-                    ' Insertar en la posición original
+                    ' Insertar en la posiciï¿½n original
                     DgvEquipamiento.Columns.Insert(indiceTipo, colTipo)
                 End If
 
@@ -1445,7 +1476,7 @@ Public Class frmAgentes
                 DgvEquipamiento.Columns("Modelo").Width = 100
 
                 DgvEquipamiento.Columns("NroTel").Visible = True
-                DgvEquipamiento.Columns("NroTel").HeaderText = "Nro. Teléfono"
+                DgvEquipamiento.Columns("NroTel").HeaderText = "Nro. Telï¿½fono"
                 DgvEquipamiento.Columns("NroTel").Width = 120
 
                 DgvEquipamiento.Columns("NroSerie").Visible = True
@@ -1469,7 +1500,7 @@ Public Class frmAgentes
 
             End If
         Catch ex As Exception
-            ' Ignorar errores de configuración de columnas
+            ' Ignorar errores de configuraciï¿½n de columnas
         End Try
     End Sub
 
@@ -1530,11 +1561,11 @@ Public Class frmAgentes
 
         ' Horas Diarias
         cmbHorasDiarias.Items.Clear()
-        cmbHorasDiarias.Items.AddRange({"4", "6", "8", "Tiempo Completo", "Dedicación Full Time"})
+        cmbHorasDiarias.Items.AddRange({"4", "6", "8", "Tiempo Completo", "Dedicaciï¿½n Full Time"})
 
         ' Parentesco
         cmbParentesco.Items.Clear()
-        cmbParentesco.Items.AddRange({"Padre", "Madre", "Cónyuge", "Hijo/a", "Nieto/a", "Otros"})
+        cmbParentesco.Items.AddRange({"Padre", "Madre", "Cï¿½nyuge", "Hijo/a", "Nieto/a", "Otros"})
 
         ' Nivel de estudio
         cmbNivelEstudio.Items.Clear()
@@ -1555,7 +1586,7 @@ Public Class frmAgentes
 
     Private Sub FormModoEdicion()
         HabilitarControles(True)
-        ' Configurar botones para modo edición usando SetControlesEnabled
+        ' Configurar botones para modo ediciï¿½n usando SetControlesEnabled
         SetControlesEnabled(False, btnAgregar, btnModificar, btnBorrar)
         SetControlesEnabled(True, btnAceptar, btnCancelar)
     End Sub
@@ -1566,7 +1597,7 @@ Public Class frmAgentes
         Dim verificador As Integer
         Dim factores() As Integer = {5, 4, 3, 2, 7, 6, 5, 4, 3, 2}
 
-        ' Determinar el prefijo según el género
+        ' Determinar el prefijo segï¿½n el gï¿½nero
         Select Case genero
             Case "M" ' Masculino
                 prefijo = "20"
@@ -1575,19 +1606,19 @@ Public Class frmAgentes
             Case "E" ' Extranjero
                 prefijo = "23"
             Case Else
-                Return "Género no válido"
+                Return "Gï¿½nero no vï¿½lido"
         End Select
 
-        ' Crear la base del CUIL sin el dígito verificador
+        ' Crear la base del CUIL sin el dï¿½gito verificador
         cuilSinVerificador = prefijo & dni
 
-        ' Calcular la suma del producto de cada dígito por su factor correspondiente
+        ' Calcular la suma del producto de cada dï¿½gito por su factor correspondiente
         suma = 0
         For i As Integer = 0 To 9
             suma += Convert.ToInt32(cuilSinVerificador(i).ToString()) * factores(i)
         Next
 
-        ' Calcular el dígito verificador
+        ' Calcular el dï¿½gito verificador
         verificador = 11 - (suma Mod 11)
 
         If verificador = 11 Then
@@ -1645,7 +1676,7 @@ Public Class frmAgentes
         For Each fila As DataRow In saldos.Rows
             saldoTexto &= $"{fila("Motivo")}: {fila("diasRestantes")}, " & vbCrLf
         Next
-        MessageBox.Show(saldoTexto, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        MessageBox.Show(saldoTexto, "Informaciï¿½n", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
 
@@ -1663,8 +1694,24 @@ Public Class frmAgentes
             saldoTotal += Convert.ToInt32(fila("diasRestantes"))
         Next
 
-        lblSaldoVacaciones.Text = "Saldo: " & saldoTotal.ToString() & " días"
+        lblSaldoVacaciones.Text = "Saldo: " & saldoTotal.ToString() & " dï¿½as"
     End Sub
-
-
+    Private Sub ModificaAgente()
+        'Busca en la tabla Autoriza, si el usuarioactual tiene el valor true en ModificaAgente entonces habilita el boton de modificar, agregar, eliminar
+        Try
+            Dim sql = "SELECT AltaAgente FROM Autoriza WHERE Usuario = @Usuario"
+            Dim tabla = DSM.ExecuteQuery(DSM.Stock, sql, CmdParams("@Usuario", General.UsuarioActual))
+            If tabla.Rows.Count > 0 AndAlso Convert.ToBoolean(tabla.Rows(0)("AltaAgente")) Then
+                btnModificar.Enabled = True
+                btnAgregar.Enabled = True
+                btnBorrar.Enabled = True
+            Else
+                btnModificar.Enabled = False
+                btnAgregar.Enabled = False
+                btnBorrar.Enabled = False
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Error al verificar permisos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 End Class
