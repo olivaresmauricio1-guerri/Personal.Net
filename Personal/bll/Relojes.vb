@@ -200,9 +200,9 @@ Public Module Relojes
             MERGE dbo.Movimiento AS tgt
             USING (
               SELECT DISTINCT
-                  Legajo, Dia, Entro, Salio, HsCumplidas,
+                  Legajo,  Dia, Entro, Salio, HsCumplidas,
                   SinFicha, Autorizo, NoPromedia, Nopromedianada
-              FROM #mov_pre
+              FROM #mov_pre 
             ) AS src
             ON  tgt.Legajo = src.Legajo
             AND tgt.Dia    = src.Dia
@@ -218,6 +218,19 @@ Public Module Relojes
                       src.SinFicha, src.Autorizo, src.NoPromedia, src.Nopromedianada)
             ;
 
+            /* Actualiza sucursal a la que pertenece el agente */
+            UPDATE mv
+            SET mv.Instituto = a.Instituto
+            FROM dbo.Movimiento mv
+            INNER JOIN #mov_pre p
+              ON p.Legajo = mv.Legajo
+             AND p.Dia    = mv.Dia
+             AND p.Entro  = mv.Entro
+            INNER JOIN Agentes a
+              ON a.Legajo = mv.Legajo
+            WHERE mv.Instituto IS NULL OR LTRIM(RTRIM(mv.Instituto)) = '';
+
+
             /* 2) Marca como procesadas sólo las usadas en esta corrida */
             UPDATE m
             SET m.procesado = 1
@@ -225,6 +238,7 @@ Public Module Relojes
             WHERE EXISTS (
               SELECT 1 FROM #mov_pre p WHERE p.entrada_id = m.id OR p.salida_id = m.id
             );
+
 
             COMMIT;
             "

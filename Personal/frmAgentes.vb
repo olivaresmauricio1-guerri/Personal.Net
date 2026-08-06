@@ -1,13 +1,25 @@
 Imports Microsoft.Data.SqlClient
 Imports DSM = DataSourceManager.Lib.DataSourceManager
+Imports Google.Apis.Auth.OAuth2
+Imports Google.Apis.Services
+Imports Google.Apis.Sheets.v4
+Imports Google.Apis.Sheets.v4.Data
+Imports System.Globalization
+Imports System.IO
+Imports System.Net
+Imports System.Net.Mail
 
 Public Class frmAgentes
+    Private Const NombreColumnaSeleccionBonos As String = "SeleccionadoBono"
     Private _suspenderAccionFiltros As Boolean = False
     'Public Property MostrarSoloEventuales As Boolean?
 
     Private tabla As New DataTable()
     Private tablaGrupoFamiliar As New DataTable()
     Private tablaComentarios As New DataTable()
+    Private tablaTalles As DataTable
+    Private tablaBonos As DataTable
+    Private handlersTallesAgentesInicializados As Boolean = False
     Private filaActual As DataGridViewRow
     Private filaActualIndice As Integer = -1
     Private Shared instancia As frmAgentes
@@ -86,7 +98,13 @@ Public Class frmAgentes
         GridBuscar()
         ConfiguraColListado()
     End Sub
-
+    Private Sub radBaja_CheckedChanged(sender As Object, e As EventArgs) Handles radBaja.CheckedChanged
+        If _suspenderAccionFiltros Then Exit Sub
+        FormModoConsulta()
+        FormLimpiarSeleccionado()
+        GridBuscar()
+        ConfiguraColListado()
+    End Sub
     Private Sub radeventuales_CheckedChanged(sender As Object, e As EventArgs) Handles radEventuales.CheckedChanged
         If _suspenderAccionFiltros Then Exit Sub
         FormModoConsulta()
@@ -132,10 +150,10 @@ Public Class frmAgentes
         End If
 
         If filaActual.Cells("Caracter").Value = "Eventual" AndAlso cmbCaracter.Text = "Efectivo" Then
-            txtLegajo.BackColor = Color.Gold
+            txtLegajo.BackColor = System.Drawing.Color.Gold
             txtLegajo.ReadOnly = False
         Else
-            txtLegajo.BackColor = SystemColors.Control
+            txtLegajo.BackColor = System.Drawing.SystemColors.Control
             txtLegajo.ReadOnly = True
         End If
     End Sub
@@ -147,7 +165,7 @@ Public Class frmAgentes
         filaActualIndice = -1
         FormModoEdicion()
         FormLimpiarSeleccionado()
-        txtLegajo.BackColor = Color.Gold
+        txtLegajo.BackColor = System.Drawing.Color.Gold
         txtLegajo.ReadOnly = False
         txtLegajo.Focus()
     End Sub
@@ -353,6 +371,37 @@ Public Class frmAgentes
         CargaEquipamiento(Convert.ToInt32(txtLegajo.Text.Trim))
     End Sub
 
+    Private Sub btnAgregarUniforme_Click(sender As Object, e As EventArgs) Handles btnAgregarUniforme.Click
+        Dim legajoText = txtLegajo.Text.Trim
+        Dim legajo As Integer
+        If Not Integer.TryParse(legajoText, legajo) Then
+            MessageBox.Show("El Legajo debe ser un número válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtLegajo.Focus()
+            Return
+        End If
+
+        Dim tipoUniforme = cmbTipoUniforme.Text.Trim
+        Dim talleUniforme = cmbTalleUniforme.Text.Trim
+        Dim fecha = dtpFechaUniforme.Value
+        Dim observaciones = txtObservacionesUniforme.Text.Trim
+
+
+        Dim sql = "INSERT INTO Uniformes (Legajo, TipoUniforme, Talle, Fecha, Observaciones) " &
+                          "VALUES (@Legajo, @TipoUniforme, @Talle, @Fecha, @Observaciones)"
+        Dim parametros = CmdParams(
+            "@Legajo", legajo,
+            "@TipoUniforme", If(String.IsNullOrEmpty(tipoUniforme), DBNull.Value, tipoUniforme),
+            "@Talle", If(String.IsNullOrEmpty(talleUniforme), DBNull.Value, talleUniforme),
+            "@Fecha", fecha,
+            "@Observaciones", If(String.IsNullOrEmpty(observaciones), DBNull.Value, observaciones)
+        )
+        DSM.Execute(DSM.Personal, sql, parametros, True)
+
+        FormModoConsulta()
+        GridBuscar()
+        ConfiguraColListado()
+        CargaUniformes(Convert.ToInt32(txtLegajo.Text.Trim))
+    End Sub
     Private Sub btnEliminarEquipamiento_Click(sender As Object, e As EventArgs) Handles btnEliminarEquipamiento.Click
         If DgvEquipamiento.CurrentRow Is Nothing Then Return
 
@@ -368,7 +417,21 @@ Public Class frmAgentes
             CargaEquipamiento(Convert.ToInt32(txtLegajo.Text.Trim))
         End If
     End Sub
+    Private Sub btnEliminarUniforme_Click(sender As Object, e As EventArgs) Handles btnEliminarUniforme.Click
+        If dgvUniformes.CurrentRow Is Nothing Then Return
 
+        If MessageBox.Show("�Est� seguro de que desea eliminar este uniforme?", "Confirmar borrado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            Dim Principal = Convert.ToInt32(dgvUniformes.CurrentRow.Cells("IdUniforme").Value)
+            Dim sql = "DELETE FROM Uniformes WHERE IdUniforme = @Id"
+            Dim parametros = CmdParams("@Id", Principal)
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+
+            FormModoConsulta()
+            GridBuscar()
+            ConfiguraColListado()
+            CargaUniformes(Convert.ToInt32(txtLegajo.Text.Trim))
+        End If
+    End Sub
     Private Sub txtNroDto_LostFocus(sender As Object, e As EventArgs) Handles txtNroDto.LostFocus
         ' Validar DNI
         'If Len(txtNroDto.Text) < 7 Then
@@ -800,6 +863,11 @@ Public Class frmAgentes
                 sql &= " AND (Baja IS NULL OR Baja = '') AND Caracter = 'Eventual'"
             End If
 
+            ' Filtrar por Baja
+            If radBaja.Checked Then
+                sql &= " AND (Baja IS NOT NULL AND Baja <> '')"
+            End If
+
             Dim sucursalActualId As Integer
             If Integer.TryParse(General.SucursalActual, sucursalActualId) AndAlso sucursalActualId = 3 Then
                 sql &= " AND Instituto IN (@Inst1, @Inst2, @Inst3)"
@@ -909,7 +977,60 @@ Public Class frmAgentes
             MessageBox.Show("Error al cargar equipamiento: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+    Private Sub CargaUniformes(legajo As Integer)
+        Try
+            ' Traer los registros de uniformes
+            Dim sql As String = "SELECT * FROM Uniformes WHERE Legajo = @Legajo ORDER BY Fecha DESC"
+            Dim parametros As New List(Of Object) From {"@Legajo", legajo}
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
+            dgvUniformes.DataSource = tabla
 
+            ' Configurar columnas usando el m�todo dedicado
+            ConfiguraColUniformes()
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar uniformes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+    Private Sub CargaTiposUniformes(legajo As Integer)
+        Try
+            If tablaTalles Is Nothing Then
+                Dim sqlTalles As String = "SELECT idTalle, Talle FROM Talles ORDER BY Talle"
+                tablaTalles = DSM.ExecuteQuery(DSM.Personal, sqlTalles)
+            End If
+
+            Dim sql As String =
+                "SELECT tu.idTipoUniforme, tu.TipoUniforme, at.idTalle, at.FechaActualizacion " &
+                "FROM TipoUniformes tu " &
+                "LEFT JOIN AgenteTalles at ON at.Legajo = @Legajo AND at.idTipoUniforme = tu.idTipoUniforme " &
+                "ORDER BY tu.TipoUniforme"
+
+            Dim parametros = CmdParams("@Legajo", legajo)
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+            dgvTallesAgentes.DataSource = tabla
+
+            ' Configurar columnas usando el m�todo dedicado
+            ConfiguraColTipoUniformes()
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar tipos de uniformes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+    Private Sub CargaBonos(legajo As Integer)
+        Try
+            ' Traer los registros de uniformes
+            Dim sql As String = "SELECT * FROM RecibosProcesosDetalles WHERE Legajo = @Legajo  ORDER BY PeriodoProcesado DESC" 'AND PeriodoProcesado >= @FechaInicio AND PeriodoProcesado <= @FechaFin
+            'Dim parametros As New List(Of Object) From {"@Legajo", legajo, "@FechaInicio", dtpFechaInicio.Value, "@FechaFin", dtpFechaFin.Value}
+            Dim parametros As New List(Of Object) From {
+            "@Legajo", legajo}
+            Dim tabla As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(parametros.ToArray()))
+            dgvBonos.DataSource = tabla
+            AsegurarColumnaSeleccionBonos()
+
+            ' Configurar columnas usando el mtodo dedicado
+            ConfiguraColBonos()
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar bonos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
     ' M�todos auxiliares
     Private Sub LimpiarFormulario()
 
@@ -992,6 +1113,9 @@ Public Class frmAgentes
             CargaGrupoFamiliar(Convert.ToInt32(txtLegajo.Text.Trim))
             CargaComentario(Convert.ToInt32(txtLegajo.Text.Trim))
             CargaEquipamiento(Convert.ToInt32(txtLegajo.Text.Trim))
+            CargaUniformes(Convert.ToInt32(txtLegajo.Text.Trim))
+            CargaTiposUniformes(Convert.ToInt32(txtLegajo.Text.Trim))
+            CargaBonos(Convert.ToInt32(txtLegajo.Text.Trim))
             ModificaAgente()
         End If
     End Sub
@@ -1192,7 +1316,7 @@ Public Class frmAgentes
         Dim fecha = rowIndex.Cells("Fecha").Value
         Dim observaciones = rowIndex.Cells("Observaciones").Value
 
-        Dim sqlUpdateEquipamiento As String = "
+        Dim sqlUpdateEquipamiento = "
             UPDATE Equipamiento 
             SET 
                 Tipo = @TipoEquipamiento,
@@ -1212,6 +1336,83 @@ Public Class frmAgentes
         DgvEquipamiento.ReadOnly = True
 
     End Sub
+
+    Private Sub dgvTallesAgentes_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs)
+        If dgvTallesAgentes Is Nothing OrElse dgvTallesAgentes.CurrentCell Is Nothing Then Return
+        If dgvTallesAgentes.IsCurrentCellDirty Then
+            dgvTallesAgentes.CommitEdit(DataGridViewDataErrorContexts.Commit)
+        End If
+    End Sub
+
+    Private Sub dgvTallesAgentes_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
+        If dgvTallesAgentes Is Nothing Then Return
+        If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Return
+        If dgvTallesAgentes.Columns(e.ColumnIndex).Name <> "Talle" Then Return
+
+        Dim legajoText As String = txtLegajo.Text.Trim()
+        Dim legajo As Integer
+        If Not Integer.TryParse(legajoText, legajo) Then Return
+
+        Dim row = dgvTallesAgentes.Rows(e.RowIndex)
+        If row Is Nothing Then Return
+
+        Dim idTipoUniformeObj = row.Cells("idTipoUniforme").Value
+        If idTipoUniformeObj Is Nothing OrElse idTipoUniformeObj Is DBNull.Value Then Return
+
+        Dim idTipoUniforme As Integer = Convert.ToInt32(idTipoUniformeObj)
+        Dim tipoUniforme As String = Convert.ToString(row.Cells("TipoUniforme").Value)
+
+        Dim idTalleObj = row.Cells("Talle").Value
+        If idTalleObj Is Nothing OrElse idTalleObj Is DBNull.Value Then
+            Dim sqlDelete As String = "DELETE FROM AgenteTalles WHERE Legajo = @Legajo AND idTipoUniforme = @idTipoUniforme"
+            DSM.Execute(DSM.Personal, sqlDelete, CmdParams("@Legajo", legajo, "@idTipoUniforme", idTipoUniforme), True)
+            If dgvTallesAgentes.Columns.Contains("FechaActualizacion") Then
+                row.Cells("FechaActualizacion").Value = DBNull.Value
+            End If
+            Return
+        End If
+
+        Dim idTalle As Integer = Convert.ToInt32(idTalleObj)
+        Dim talle As String = ""
+
+        If tablaTalles IsNot Nothing Then
+            Dim rows = tablaTalles.Select("idTalle = " & idTalle.ToString())
+            If rows IsNot Nothing AndAlso rows.Length > 0 Then
+                talle = Convert.ToString(rows(0)("Talle"))
+            End If
+        End If
+
+        Dim fechaActualizacion As DateTime = DateTime.Now
+
+        Dim sqlUpsert As String = "
+IF EXISTS (SELECT 1 FROM AgenteTalles WHERE Legajo = @Legajo AND idTipoUniforme = @idTipoUniforme)
+    UPDATE AgenteTalles
+    SET
+        idTalle = @idTalle,
+        FechaActualizacion = @FechaActualizacion
+    WHERE Legajo = @Legajo AND idTipoUniforme = @idTipoUniforme
+ELSE
+    INSERT INTO AgenteTalles (Legajo, idTipoUniforme, idTalle, FechaActualizacion)
+    VALUES (@Legajo, @idTipoUniforme,  @idTalle, @FechaActualizacion)
+"
+
+        Dim parametros = CmdParams(
+            "@Legajo", legajo,
+            "@idTipoUniforme", idTipoUniforme,
+            "@idTalle", idTalle,
+            "@FechaActualizacion", fechaActualizacion
+        )
+
+        DSM.Execute(DSM.Personal, sqlUpsert, parametros, True)
+        If dgvTallesAgentes.Columns.Contains("FechaActualizacion") Then
+            row.Cells("FechaActualizacion").Value = fechaActualizacion
+        End If
+    End Sub
+
+    Private Sub dgvTallesAgentes_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
+        e.ThrowException = False
+    End Sub
+
     Private Sub btnDocumentacion_Click(sender As Object, e As EventArgs) Handles btnDocumentacion.Click
         ' Verificar que hay un agente seleccionado
         If filaActual Is Nothing OrElse filaActualIndice < 0 Then
@@ -1503,7 +1704,166 @@ Public Class frmAgentes
             ' Ignorar errores de configuraci�n de columnas
         End Try
     End Sub
+    Private Sub ConfiguraColUniformes()
+        Try
+            If dgvUniformes.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In dgvUniformes.Columns
+                    col.Visible = False
+                Next
+                ' Configurar columnas del grid de uniformes
+                dgvUniformes.Columns("idUniforme").Visible = False
+                dgvUniformes.Columns("idUniforme").HeaderText = "Id"
+                dgvUniformes.Columns("Legajo").Visible = False
+                dgvUniformes.Columns("Legajo").HeaderText = "Legajo"
+                dgvUniformes.Columns("TipoUniforme").Visible = True
+                dgvUniformes.Columns("TipoUniforme").HeaderText = "Tipo"
+                dgvUniformes.Columns("TipoUniforme").Width = 150
+                dgvUniformes.Columns("Talle").Visible = True
+                dgvUniformes.Columns("Talle").HeaderText = "Talle"
+                dgvUniformes.Columns("Talle").Width = 80
+                dgvUniformes.Columns("Fecha").Visible = True
+                dgvUniformes.Columns("Fecha").HeaderText = "Fecha"
+                dgvUniformes.Columns("Fecha").Width = 100
+                dgvUniformes.Columns("Fecha").DefaultCellStyle.Format = "dd/MM/yyyy"
+                dgvUniformes.Columns("Observaciones").Visible = True
+                dgvUniformes.Columns("Observaciones").HeaderText = "Observaciones"
+                dgvUniformes.Columns("Observaciones").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
 
+                ConfigurarEstiloGrid(dgvUniformes)
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuraci�n de columnas
+        End Try
+    End Sub
+
+    Private Sub ConfiguraColTipoUniformes()
+        Try
+            If dgvTallesAgentes.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In dgvTallesAgentes.Columns
+                    col.Visible = False
+                Next
+
+                dgvTallesAgentes.ReadOnly = False
+
+                dgvTallesAgentes.Columns("idTipoUniforme").Visible = False
+                dgvTallesAgentes.Columns("idTipoUniforme").HeaderText = "Id"
+                dgvTallesAgentes.Columns("idTipoUniforme").ReadOnly = True
+
+                dgvTallesAgentes.Columns("TipoUniforme").Visible = True
+                dgvTallesAgentes.Columns("TipoUniforme").HeaderText = "Tipo"
+                dgvTallesAgentes.Columns("TipoUniforme").Width = 200
+                dgvTallesAgentes.Columns("TipoUniforme").ReadOnly = True
+
+                If dgvTallesAgentes.Columns.Contains("idTalle") Then
+                    Dim indiceIdTalle As Integer = dgvTallesAgentes.Columns("idTalle").Index
+                    dgvTallesAgentes.Columns.Remove("idTalle")
+
+                    Dim colTalle As New DataGridViewComboBoxColumn()
+                    colTalle.Name = "Talle"
+                    colTalle.HeaderText = "Talle"
+                    colTalle.DataPropertyName = "idTalle"
+                    colTalle.DisplayMember = "Talle"
+                    colTalle.ValueMember = "idTalle"
+                    colTalle.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton
+                    colTalle.Width = 120
+
+                    If tablaTalles IsNot Nothing Then
+                        colTalle.DataSource = tablaTalles
+                    End If
+
+                    dgvTallesAgentes.Columns.Insert(indiceIdTalle, colTalle)
+                ElseIf dgvTallesAgentes.Columns.Contains("Talle") Then
+                    Dim colTalle = TryCast(dgvTallesAgentes.Columns("Talle"), DataGridViewComboBoxColumn)
+                    If colTalle IsNot Nothing Then
+                        colTalle.DataPropertyName = "idTalle"
+                        colTalle.DisplayMember = "Talle"
+                        colTalle.ValueMember = "idTalle"
+                        colTalle.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton
+                        If tablaTalles IsNot Nothing Then
+                            colTalle.DataSource = tablaTalles
+                        End If
+                    End If
+                End If
+
+                If dgvTallesAgentes.Columns.Contains("Talle") Then
+                    dgvTallesAgentes.Columns("Talle").Visible = True
+                    dgvTallesAgentes.Columns("Talle").Width = 120
+                    dgvTallesAgentes.Columns("Talle").ReadOnly = False
+                End If
+
+                If dgvTallesAgentes.Columns.Contains("FechaActualizacion") Then
+                    dgvTallesAgentes.Columns("FechaActualizacion").Visible = True
+                    dgvTallesAgentes.Columns("FechaActualizacion").HeaderText = "Actualización"
+                    dgvTallesAgentes.Columns("FechaActualizacion").Width = 110
+                    dgvTallesAgentes.Columns("FechaActualizacion").DefaultCellStyle.Format = "dd/MM/yyyy"
+                    dgvTallesAgentes.Columns("FechaActualizacion").ReadOnly = True
+                End If
+
+                ConfigurarEstiloGrid(dgvTallesAgentes)
+
+                If Not handlersTallesAgentesInicializados Then
+                    AddHandler dgvTallesAgentes.CurrentCellDirtyStateChanged, AddressOf dgvTallesAgentes_CurrentCellDirtyStateChanged
+                    AddHandler dgvTallesAgentes.CellValueChanged, AddressOf dgvTallesAgentes_CellValueChanged
+                    AddHandler dgvTallesAgentes.DataError, AddressOf dgvTallesAgentes_DataError
+                    handlersTallesAgentesInicializados = True
+                End If
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuraci�n de columnas
+        End Try
+    End Sub
+    Private Sub ConfiguraColBonos()
+        Try
+            If dgvBonos.Columns.Count > 0 Then
+                For Each col As DataGridViewColumn In dgvBonos.Columns
+                    col.Visible = False
+                    col.ReadOnly = True
+                Next
+
+                dgvBonos.ReadOnly = False
+                dgvBonos.AllowUserToAddRows = False
+
+                If dgvBonos.Columns.Contains(NombreColumnaSeleccionBonos) Then
+                    dgvBonos.Columns(NombreColumnaSeleccionBonos).Visible = rdbSeleccion.Checked
+                    dgvBonos.Columns(NombreColumnaSeleccionBonos).Width = 30
+                    dgvBonos.Columns(NombreColumnaSeleccionBonos).ReadOnly = False
+                    dgvBonos.Columns(NombreColumnaSeleccionBonos).DisplayIndex = 0
+                End If
+
+                dgvBonos.Columns("PeriodoProcesado").Visible = True
+                dgvBonos.Columns("PeriodoProcesado").HeaderText = "Periodo Liquidado"
+                dgvBonos.Columns("PeriodoProcesado").Width = 150
+                dgvBonos.Columns("PeriodoProcesado").DefaultCellStyle.Format = "MM/yyyy"
+
+                dgvBonos.Columns("FechaGeneracion").Visible = True
+                dgvBonos.Columns("FechaGeneracion").HeaderText = "Fecha Generacion"
+                dgvBonos.Columns("FechaGeneracion").Width = 200
+                dgvBonos.Columns("FechaGeneracion").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
+
+                dgvBonos.Columns("ArchivoPdf").Visible = True
+                dgvBonos.Columns("ArchivoPdf").HeaderText = "Archivo PDF"
+                dgvBonos.Columns("ArchivoPdf").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+                dgvBonos.Columns("EstadoEnvio").Visible = True
+                dgvBonos.Columns("EstadoEnvio").HeaderText = "Estado Envio"
+                dgvBonos.Columns("EstadoEnvio").Width = 150
+
+                dgvBonos.Columns("FechaEnvio").Visible = True
+                dgvBonos.Columns("FechaEnvio").HeaderText = "Fecha Envio"
+                dgvBonos.Columns("FechaEnvio").Width = 150
+                dgvBonos.Columns("FechaEnvio").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
+
+                dgvBonos.Columns("RutaPdf").Visible = True
+                dgvBonos.Columns("RutaPdf").HeaderText = "Ruta PDF"
+                dgvBonos.Columns("RutaPdf").Width = 200
+
+
+                ConfigurarEstiloGrid(dgvBonos)
+            End If
+        Catch ex As Exception
+            ' Ignorar errores de configuracin de columnas
+        End Try
+    End Sub
     Private Sub CargarComboBoxes()
         Try
             ' Cargar sucursales
@@ -1532,6 +1892,10 @@ Public Class frmAgentes
 
             ' Motivos para Comentarios
             CargarCombos(cmbMotivoComentario, "Inasistencias", "Descripcion", "Descripcion")
+
+            ' Cargar Tipos de Uniforme y Talles
+            CargarCombos(cmbTipoUniforme, "TipoUniformes", "TipoUniforme", "TipoUniforme")
+            CargarCombos(cmbTalleUniforme, "Talles", "Talle", "Talle")
 
             ' Configurar ComboBoxes con valores fijos
             ConfigurarComboBoxesFijos()
@@ -1666,7 +2030,7 @@ Public Class frmAgentes
     Private Sub btnSaldoVacaciones_Click(sender As Object, e As EventArgs) Handles btnSaldoVacaciones.Click
         If filaActual Is Nothing Then
             lblSaldoVacaciones.Text = "Saldo: "
-            lblSaldoVacaciones.ForeColor = Color.Blue
+            lblSaldoVacaciones.ForeColor = System.Drawing.Color.Blue
             Return
         End If
 
@@ -1683,7 +2047,7 @@ Public Class frmAgentes
     Private Sub ActualizarSaldoVacaciones()
         If filaActual Is Nothing Then
             lblSaldoVacaciones.Text = "Saldo: "
-            lblSaldoVacaciones.ForeColor = Color.Blue
+            lblSaldoVacaciones.ForeColor = System.Drawing.Color.Blue
             Return
         End If
 
@@ -1714,4 +2078,766 @@ Public Class frmAgentes
             MessageBox.Show("Error al verificar permisos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Sub ObtieneGoogle()
+
+        Try
+
+            Dim credentialPath As String =
+        "F:\Personal.net\infotalles.json"
+
+            Dim spreadsheetId As String = "1sGPEGyS4IBOlIQv_NXF75a-h1ZnWslV2DozU57AxAxg"
+            '"1mOXQTwr399hU_dwD_XolMxP1fPzYJ5mh2Gjo5YsUqMI"
+
+            Dim sheetName As String = "Respuestas de formulario 1"
+
+            Dim range As String = sheetName & "!A:I"
+
+            ' =========================
+            ' AUTENTICACION
+            ' =========================
+
+            Dim credential = GoogleCredential.FromFile(credentialPath).CreateScoped(SheetsService.Scope.Spreadsheets)
+
+            ' =========================
+            ' SERVICIO
+            ' =========================
+
+            Dim service As New SheetsService(
+        New BaseClientService.Initializer() With {
+            .HttpClientInitializer = credential,
+            .ApplicationName = "MiSistema"
+        })
+
+            ' =========================
+            ' LECTURA GOOGLE SHEETS
+            ' =========================
+
+            Dim request =
+        service.Spreadsheets.Values.Get(
+            spreadsheetId,
+            range)
+
+            Dim response = request.Execute()
+
+            Dim values = response.Values
+
+            Dim filaGoogle As Integer = 2
+
+            ' =========================
+            ' CARGAR TALLES EN MEMORIA
+            ' =========================
+
+            Dim dicTalles As Dictionary(Of String, Integer)
+            Dim dicTiposUniforme As Dictionary(Of String, Integer)
+
+            dicTalles = CargarTalles()
+            dicTiposUniforme = CargarTiposUniforme()
+
+            If values IsNot Nothing AndAlso values.Count > 0 Then
+
+                For Each fila As IList(Of Object) In values.Skip(1)
+
+                    Dim legajo As String = ""
+                    If fila.Count > 1 Then
+                        legajo = fila(1).ToString()
+                    End If
+
+                    'If legajo = txtLegajo.Text.Trim Then
+                    Dim nombre As String = ""
+                    Dim sucursal As String = ""
+
+                    Dim talleCalzado As String = ""
+                    Dim talleRemera As String = ""
+                    Dim talleCampera As String = ""
+                    Dim talleCamperon As String = ""
+                    Dim tallePantalon As String = ""
+                    Dim talleFaja As String = ""
+
+                    Dim importado As String = ""
+
+                    ' =========================
+                    ' LEER COLUMNAS GOOGLE
+                    ' =========================
+
+
+
+                    If fila.Count > 2 Then
+                        nombre = fila(2).ToString()
+                    End If
+
+                    If fila.Count > 3 Then
+                        sucursal = fila(3).ToString()
+                    End If
+
+                    If fila.Count > 4 Then
+                        talleCalzado = fila(4).ToString()
+                    End If
+
+                    If fila.Count > 5 Then
+                        talleRemera = fila(5).ToString()
+                    End If
+
+                    If fila.Count > 6 Then
+                        talleCampera = fila(6).ToString()
+                    End If
+
+                    If fila.Count > 7 Then
+                        tallePantalon = fila(7).ToString()
+                    End If
+
+                    If fila.Count > 8 Then
+                        talleFaja = fila(8).ToString()
+                    End If
+
+                    'If fila.Count > 9 Then
+                    '    importado = fila(9).ToString()
+                    'End If
+
+                    ' =========================
+                    ' SOLO NO IMPORTADOS
+                    ' =========================
+
+                    'If legajo = Convert.ToInt32(txtLegajo.Text.Trim) Then 'AndAlso (importado = "" OrElse importado = "0") Then
+                    Dim legajoInt As Integer
+                    If Not Integer.TryParse(legajo.Trim(), legajoInt) Then
+                        filaGoogle += 1
+                        Continue For
+                    End If
+
+                    Dim fechaActualizacion As DateTime = DateTime.Now
+
+                    ' =========================
+                    ' CONVERTIR TALLES → IDs
+                    ' =========================
+
+                    Dim idTalleCalzado As Integer =
+            ObtenerIdTalle(dicTalles, talleCalzado)
+
+                    Dim idTalleRemera As Integer =
+            ObtenerIdTalle(dicTalles, talleRemera)
+
+                    Dim idTalleCampera As Integer =
+            ObtenerIdTalle(dicTalles, talleCampera)
+
+                    Dim idTallePantalon As Integer =
+            ObtenerIdTalle(dicTalles, tallePantalon)
+
+                    Dim idTalleFaja As Integer =
+            ObtenerIdTalle(dicTalles, talleFaja)
+
+
+                    ' ====================================================
+                    ' ACA GUARDAS EN AgenteTalles
+                    ' ====================================================
+                    Dim sqlUpsert As String = "
+                            IF EXISTS (SELECT 1 FROM AgenteTalles WHERE Legajo = @Legajo AND idTipoUniforme = @idTipoUniforme)
+                                UPDATE AgenteTalles
+                                SET
+                                    idTalle = @idTalle,
+                                    FechaActualizacion = @FechaActualizacion
+                                WHERE Legajo = @Legajo AND idTipoUniforme = @idTipoUniforme
+                            ELSE
+                                INSERT INTO AgenteTalles (Legajo, idTipoUniforme, idTalle, FechaActualizacion)
+                                VALUES (@Legajo, @idTipoUniforme, @idTalle, @FechaActualizacion)
+                            "
+
+                    Dim operaciones As New List(Of (tipoKey As String, idTalle As Integer)) From {
+                    ("ZAPATO", idTalleCalzado),
+                    ("REMERA M/C", idTalleRemera),
+                    ("REMERA M/L", idTalleRemera),
+                    ("CAMPERA", idTalleCampera),
+                    ("CHALECO", idTalleCampera),
+                    ("PANTALÓN", idTallePantalon),
+                    ("FAJA", idTalleFaja)
+                }
+
+                    Dim ok As Boolean = True
+
+                    For Each op In operaciones
+                        If op.idTalle <= 0 Then
+                            Continue For
+                        End If
+
+                        Dim idTipoUniforme As Integer = ObtenerIdTipoUniforme(dicTiposUniforme, op.tipoKey)
+                        If idTipoUniforme <= 0 Then
+                            ok = False
+                            Exit For
+                        End If
+
+                        Dim parametros = CmdParams(
+                        "@Legajo", legajoInt,
+                        "@idTipoUniforme", idTipoUniforme,
+                        "@idTalle", op.idTalle,
+                        "@FechaActualizacion", fechaActualizacion
+                    )
+
+                        DSM.Execute(DSM.Personal, sqlUpsert, parametros, True)
+                    Next
+
+                    If Not ok Then
+                        filaGoogle += 1
+                        Continue For
+                    End If
+
+                    ' =========================
+                    ' MARCAR GOOGLE = 1
+                    ' =========================
+
+                    '    Dim updateRange As String =
+                    'sheetName & "!J" & filaGoogle
+
+                    '    Dim valueRange As New Google.Apis.Sheets.v4.Data.ValueRange()
+
+                    '    valueRange.Values =
+                    'New List(Of IList(Of Object)) From {
+                    '    New List(Of Object) From {"1"}
+                    '}
+
+                    '    Dim updateRequest =
+                    'service.Spreadsheets.Values.Update(
+                    '    valueRange,
+                    '    spreadsheetId,
+                    '    updateRange)
+
+                    '    updateRequest.ValueInputOption =
+                    'SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW
+
+                    '    updateRequest.Execute()
+
+                    'End If
+                    'End If
+
+                    filaGoogle += 1
+
+                Next
+
+            Else
+
+                MsgBox("No hay datos.")
+
+            End If
+
+            MsgBox("Proceso finalizado. Se procesaron " & (filaGoogle - 2).ToString() & " filas.")
+
+        Catch ex As Exception
+
+            MsgBox(ex.Message)
+
+        End Try
+
+        'AplicarSeleccionActual()
+        'CargaUniformes(Convert.ToInt32(txtLegajo.Text.Trim))
+        'CargaTiposUniformes(Convert.ToInt32(txtLegajo.Text.Trim))
+    End Sub
+    Private Function CargarTalles() As Dictionary(Of String, Integer)
+        Dim dic As New Dictionary(Of String, Integer)
+
+        Dim sql As String = "SELECT idTalle, Talle FROM Talles"
+        Dim tablaTalles As DataTable = DSM.ExecuteQuery(DSM.Personal, sql)
+
+        If tablaTalles Is Nothing OrElse tablaTalles.Rows.Count = 0 Then
+            Return dic
+        End If
+
+        For Each fila As DataRow In tablaTalles.Rows
+            If fila Is Nothing OrElse fila.IsNull("idTalle") OrElse fila.IsNull("Talle") Then Continue For
+
+            Dim id As Integer = Convert.ToInt32(fila("idTalle"))
+            Dim talle As String = Convert.ToString(fila("Talle")).Trim().ToUpperInvariant()
+
+            If talle = "" Then Continue For
+            If Not dic.ContainsKey(talle) Then
+                dic.Add(talle, id)
+            End If
+        Next
+
+        Return dic
+
+    End Function
+    Private Function ObtenerIdTalle(
+    dic As Dictionary(Of String, Integer),
+    talle As String) As Integer
+
+        If talle Is Nothing Then Return 0
+
+        talle = talle.Trim.ToUpper
+
+        If talle = "" Then Return 0
+
+        If dic.ContainsKey(talle) Then
+
+            Return dic(talle)
+
+        End If
+
+        Return 0
+
+    End Function
+
+    Private Function CargarTiposUniforme() As Dictionary(Of String, Integer)
+        Dim dic As New Dictionary(Of String, Integer)
+
+        Dim sql As String = "SELECT idTipoUniforme, TipoUniforme FROM TipoUniformes"
+        Dim tablaTipos As DataTable = DSM.ExecuteQuery(DSM.Personal, sql)
+
+        If tablaTipos Is Nothing OrElse tablaTipos.Rows.Count = 0 Then
+            Return dic
+        End If
+
+        For Each fila As DataRow In tablaTipos.Rows
+            If fila Is Nothing OrElse fila.IsNull("idTipoUniforme") OrElse fila.IsNull("TipoUniforme") Then Continue For
+
+            Dim id As Integer = Convert.ToInt32(fila("idTipoUniforme"))
+            Dim tipo As String = Convert.ToString(fila("TipoUniforme")).Trim().ToUpperInvariant()
+
+            If tipo = "" Then Continue For
+            If Not dic.ContainsKey(tipo) Then
+                dic.Add(tipo, id)
+            End If
+        Next
+
+        Return dic
+    End Function
+
+    Private Function ObtenerIdTipoUniforme(dic As Dictionary(Of String, Integer), tipoUniforme As String) As Integer
+        If tipoUniforme Is Nothing Then Return 0
+
+        Dim key As String = tipoUniforme.Trim().ToUpperInvariant()
+        If key = "" Then Return 0
+
+        If dic.ContainsKey(key) Then
+            Return dic(key)
+        End If
+
+        Return 0
+    End Function
+    Private Sub dgvTallesAgentes_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTallesAgentes.CellClick
+
+        If e.RowIndex < 0 Then Return
+
+        Dim row = dgvTallesAgentes.Rows(e.RowIndex)
+
+        Dim tipoUniforme = Convert.ToString(row.Cells("TipoUniforme").Value)
+        cmbTipoUniforme.Text = tipoUniforme
+
+        Dim idTalleObj = row.Cells("Talle").Value
+        If idTalleObj Is Nothing OrElse idTalleObj Is DBNull.Value Then
+            cmbTalleUniforme.SelectedIndex = -1
+            Return
+        End If
+
+        Dim idTalle = Convert.ToInt32(idTalleObj)
+
+        If tablaTalles IsNot Nothing Then
+            Dim rows = tablaTalles.Select("idTalle = " & idTalle.ToString)
+            If rows IsNot Nothing AndAlso rows.Length > 0 Then
+                Dim talleTexto = Convert.ToString(rows(0)("Talle"))
+                cmbTalleUniforme.Text = talleTexto
+            Else
+                cmbTalleUniforme.SelectedIndex = -1
+            End If
+        Else
+            cmbTalleUniforme.SelectedIndex = -1
+        End If
+    End Sub
+
+    Private Sub btnActualizaTaller_Click(sender As Object, e As EventArgs) Handles btnActualizaTaller.Click
+        ObtieneGoogle()
+    End Sub
+
+    Private Sub btmImprimirTalles_Click(sender As Object, e As EventArgs) Handles btmImprimirTalles.Click
+        Try
+            Dim sql1 = "DELETE FROM WAgentesTalles"
+            DSM.Execute(DSM.Personal, sql1, Nothing, True)
+
+            ' Consulta para insertar datos en la tabla Cumple2
+            Dim consultaInsert = "-- Si querés regenerar la tabla cada vez
+                DELETE FROM WAgentesTalles;
+
+                INSERT INTO WAgentesTalles
+                (
+                    Legajo,
+                    Nombre,
+                    Instituto,
+                    Remera,
+                    Pantalon,
+                    Campera,
+                    Camperon,
+                    Faja,
+                    Chaleco,
+                    Zapato
+                )
+                SELECT
+                    a.Legajo,
+                    a.Nombre,
+                    a.Instituto,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'REMERA M/C'
+                            THEN t.Talle
+                        END) AS Remera,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'PANTALÓN'
+                            THEN t.Talle
+                        END) AS Pantalon,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'CAMPERA'
+                            THEN t.Talle
+                        END) AS Campera,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'CAMPERON'
+                            THEN t.Talle
+                        END) AS Camperon,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'FAJA'
+                            THEN t.Talle
+                        END) AS Faja,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'CHALECO'
+                            THEN t.Talle
+                        END) AS Chaleco,
+
+                    MAX(CASE
+                            WHEN tu.TipoUniforme = 'ZAPATO'
+                            THEN t.Talle
+                        END) AS Zapato
+
+                FROM Agentes a
+                LEFT JOIN AgenteTalles at
+                    ON a.Legajo = at.Legajo
+                LEFT JOIN TipoUniformes tu
+                    ON at.idTipoUniforme = tu.idTipoUniforme
+                LEFT JOIN Talles t
+                    ON at.idTalle = t.idTalle
+
+                WHERE a.Instituto IN
+                (
+                    'Halpern',
+                    'Autoshop',
+                    'Neuquen',
+                    'Buenos Aires',
+                    'Belgrano',
+                    'Garay',
+                    'Reconstruccion',
+                    'Alcorta',
+                    'Zona Franca'
+                )
+                AND (a.Baja IS NULL OR a.Baja = '')
+
+                GROUP BY
+                    a.Legajo,
+                    a.Nombre,
+                    a.Instituto
+
+                ORDER BY
+                    a.Instituto, a.Nombre;"
+
+            ' Ejecutar la consulta de inserción
+            DSM.Execute(DSM.Personal, consultaInsert)
+
+            ' Imprimir el reporte
+            Process.Start(ReportesPath, "Personal tallespersonal")
+
+        Catch ex As Exception
+            MessageBox.Show($"Error al obtener la lista de talles: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub btnBonos_Click(sender As Object, e As EventArgs) Handles btnBonos.Click
+        ' Crear y mostrar el formulario de documentaci�n
+        Dim frmRecibo As New frmEnvioRecibos
+        frmRecibo.MdiParent = MdiParent
+        frmRecibo.Show()
+    End Sub
+
+    Private Sub btnEnviarBono_Click(sender As Object, e As EventArgs) Handles btnEnviarBono.Click
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+        ServicePointManager.Expect100Continue = True
+
+        Dim legajoTexto = txtLegajo.Text.Trim()
+        If String.IsNullOrWhiteSpace(legajoTexto) Then
+            MessageBox.Show("Seleccione un agente para enviar los bonos.", "Agente no seleccionado", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Dim correoDestino = txtCorreoE.Text.Trim()
+        If String.IsNullOrWhiteSpace(correoDestino) Then
+            MessageBox.Show("El agente seleccionado no tiene correo electrónico informado.", "Correo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Dim dtCorreoConfig = ObtenerConfiguracionCorreoBonos()
+        If dtCorreoConfig Is Nothing OrElse dtCorreoConfig.Rows.Count = 0 Then
+            MessageBox.Show("No se encontraron configuraciones de correo para el envío.", "Configuración faltante", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Dim bonos = ObtenerBonosParaEnviar()
+        bonos = FiltrarBonosSegunModo(bonos)
+        If bonos.Rows.Count = 0 Then
+            Dim mensajeSinDatos = If(rdbSeleccion.Checked,
+                                     "No hay bonos seleccionados para enviar.",
+                                     "El agente seleccionado no tiene bonos para enviar.")
+            MessageBox.Show(mensajeSinDatos, "Sin datos", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        Dim filaConfig = dtCorreoConfig.Rows(0)
+        Dim servidorSMTP As String = filaConfig("Servidor_SMTP").ToString().Trim()
+        Dim puertoSMTP As Integer = 587
+        Dim usuario As String = filaConfig("Envio_Mail").ToString().Trim()
+        Dim contraseña As String = filaConfig("password_mail").ToString()
+        Dim asuntoBase As String = filaConfig("Asunto").ToString().Trim()
+        Dim mensajeBase As String = filaConfig("Mensaje").ToString().Trim()
+
+        If String.IsNullOrWhiteSpace(servidorSMTP) OrElse String.IsNullOrWhiteSpace(usuario) Then
+            MessageBox.Show("La configuración SMTP está incompleta.", "Configuración inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Dim enviados As Integer = 0
+        Dim sinArchivo As Integer = 0
+        Dim conError As Integer = 0
+
+        Try
+            Cursor.Current = Cursors.WaitCursor
+            btnEnviarBono.Enabled = False
+
+            Using smtpClient As New SmtpClient(servidorSMTP, puertoSMTP) With {
+                .DeliveryMethod = SmtpDeliveryMethod.Network,
+                .UseDefaultCredentials = False,
+                .EnableSsl = True,
+                .Credentials = New NetworkCredential(usuario, contraseña),
+                .Timeout = 100000
+            }
+                For Each filaBono As DataRow In bonos.Rows
+                    Dim idDetalle = Convert.ToInt32(filaBono("IdDetalle"))
+                    Dim rutaPdf = filaBono("RutaPdf").ToString().Trim()
+                    Dim periodoTexto = ObtenerPeriodoProcesadoBono(filaBono("PeriodoProcesado"))
+
+                    If String.IsNullOrWhiteSpace(rutaPdf) OrElse Not File.Exists(rutaPdf) Then
+                        ActualizarResultadoEnvioBono(idDetalle, "ARCHIVO_NO_ENCONTRADO", "No se encontró el archivo PDF a adjuntar.")
+                        sinArchivo += 1
+                        Continue For
+                    End If
+
+                    Dim asunto = ConstruirTextoCorreoBono(asuntoBase, periodoTexto)
+                    Dim mensaje = ConstruirTextoCorreoBono(mensajeBase, periodoTexto)
+
+                    Try
+                        Using mail As New MailMessage()
+                            mail.From = New MailAddress(usuario)
+                            mail.Subject = asunto
+                            mail.Body = mensaje
+                            mail.To.Add(correoDestino)
+                            mail.Attachments.Add(New Attachment(rutaPdf))
+
+                            smtpClient.Send(mail)
+                        End Using
+
+                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino}.")
+                        enviados += 1
+                    Catch exEnvio As Exception
+                        Dim detalleError = If(exEnvio.InnerException?.Message, exEnvio.Message)
+                        ActualizarResultadoEnvioBono(idDetalle, "ERROR", LimitarTextoBono(detalleError, 500))
+                        conError += 1
+                    End Try
+                Next
+            End Using
+
+            CargaBonos(Convert.ToInt32(legajoTexto))
+
+            MessageBox.Show(
+                $"Proceso de envío finalizado.{Environment.NewLine}" &
+                $"Enviados: {enviados}{Environment.NewLine}" &
+                $"Sin archivo: {sinArchivo}{Environment.NewLine}" &
+                $"Con error: {conError}",
+                "Envío finalizado",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+
+        Catch ex As Exception
+            Dim detail = If(ex.InnerException?.Message, ex.Message)
+            MessageBox.Show("Error al enviar correos: " & detail, "SMTP", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            btnEnviarBono.Enabled = True
+            Cursor.Current = Cursors.Default
+        End Try
+    End Sub
+
+    Private Sub dgvBonos_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles dgvBonos.CurrentCellDirtyStateChanged
+        If dgvBonos.IsCurrentCellDirty AndAlso dgvBonos.CurrentCell IsNot Nothing AndAlso
+            dgvBonos.CurrentCell.OwningColumn.Name = NombreColumnaSeleccionBonos Then
+            dgvBonos.CommitEdit(DataGridViewDataErrorContexts.Commit)
+        End If
+    End Sub
+
+    Private Sub rdbBonosModo_CheckedChanged(sender As Object, e As EventArgs) Handles rdbTodos.CheckedChanged, rdbSeleccion.CheckedChanged
+        If dgvBonos.Columns.Contains(NombreColumnaSeleccionBonos) Then
+            dgvBonos.Columns(NombreColumnaSeleccionBonos).Visible = rdbSeleccion.Checked
+        End If
+    End Sub
+
+    Private Sub dgvBonos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvBonos.CellDoubleClick
+        If e.RowIndex < 0 Then
+            Return
+        End If
+
+        Dim fila = dgvBonos.Rows(e.RowIndex)
+        Dim valorRuta = fila.Cells("RutaPdf").Value
+        Dim rutaArchivo = If(valorRuta IsNot Nothing, valorRuta.ToString(), String.Empty)
+
+        If String.IsNullOrWhiteSpace(rutaArchivo) OrElse Not File.Exists(rutaArchivo) Then
+            MessageBox.Show("No se encontró el archivo PDF seleccionado.", "Archivo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Try
+            Process.Start(New ProcessStartInfo(rutaArchivo) With {
+                .UseShellExecute = True
+            })
+        Catch ex As Exception
+            MessageBox.Show($"No se pudo abrir el archivo seleccionado.{Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub AsegurarColumnaSeleccionBonos()
+        If dgvBonos.Columns.Contains(NombreColumnaSeleccionBonos) Then
+            Return
+        End If
+
+        Dim columnaSeleccion As New DataGridViewCheckBoxColumn() With {
+            .Name = NombreColumnaSeleccionBonos,
+            .HeaderText = "",
+            .Width = 30,
+            .ReadOnly = False,
+            .FalseValue = False,
+            .TrueValue = True
+        }
+
+        dgvBonos.Columns.Insert(0, columnaSeleccion)
+    End Sub
+
+    Private Function ObtenerBonosParaEnviar() As DataTable
+        Dim tablaBonosActual = TryCast(dgvBonos.DataSource, DataTable)
+        If tablaBonosActual Is Nothing Then
+            Return New DataTable()
+        End If
+
+        Return tablaBonosActual.Copy()
+    End Function
+
+    Private Function FiltrarBonosSegunModo(bonos As DataTable) As DataTable
+        If Not rdbSeleccion.Checked Then
+            Return bonos
+        End If
+
+        Dim idsSeleccionados = ObtenerIdsBonosSeleccionados()
+        If idsSeleccionados.Count = 0 Then
+            Return bonos.Clone()
+        End If
+
+        Dim bonosSeleccionados = bonos.Clone()
+        For Each fila As DataRow In bonos.Rows
+            Dim idDetalle = Convert.ToInt32(fila("IdDetalle"))
+            If idsSeleccionados.Contains(idDetalle) Then
+                bonosSeleccionados.ImportRow(fila)
+            End If
+        Next
+
+        Return bonosSeleccionados
+    End Function
+
+    Private Function ObtenerIdsBonosSeleccionados() As HashSet(Of Integer)
+        Dim ids As New HashSet(Of Integer)()
+
+        For Each fila As DataGridViewRow In dgvBonos.Rows
+            If fila.IsNewRow Then
+                Continue For
+            End If
+
+            Dim valorSeleccion = fila.Cells(NombreColumnaSeleccionBonos).Value
+            Dim seleccionado = False
+            If valorSeleccion IsNot Nothing AndAlso valorSeleccion IsNot DBNull.Value Then
+                Boolean.TryParse(valorSeleccion.ToString(), seleccionado)
+            End If
+
+            If Not seleccionado OrElse fila.Cells("IdDetalle")?.Value Is Nothing Then
+                Continue For
+            End If
+
+            ids.Add(Convert.ToInt32(fila.Cells("IdDetalle").Value))
+        Next
+
+        Return ids
+    End Function
+
+    Private Function ObtenerConfiguracionCorreoBonos() As DataTable
+        Dim sql = "SELECT TOP 1 Servidor_SMTP, Envio_Mail, password_mail, Asunto, Mensaje " &
+                  "FROM EnvioCorreos WHERE NroEnvio = @NroEnvio"
+
+        Return DSM.ExecuteQuery(DSM.Stock, sql, CmdParams("@NroEnvio", 5))
+    End Function
+
+    Private Function ObtenerPeriodoProcesadoBono(valorPeriodo As Object) As String
+        If valorPeriodo Is Nothing OrElse valorPeriodo Is DBNull.Value Then
+            Return "período no informado"
+        End If
+
+        Dim fechaPeriodo As DateTime
+        If TypeOf valorPeriodo Is DateTime Then
+            fechaPeriodo = DirectCast(valorPeriodo, DateTime)
+        ElseIf Not DateTime.TryParse(valorPeriodo.ToString(), fechaPeriodo) Then
+            Return valorPeriodo.ToString()
+        End If
+
+        Return fechaPeriodo.ToString("MMMM yyyy", New CultureInfo("es-AR"))
+    End Function
+
+    Private Function ConstruirTextoCorreoBono(textoBase As String, periodoTexto As String) As String
+        Dim texto = If(textoBase, String.Empty).Trim()
+        If String.IsNullOrWhiteSpace(texto) Then
+            Return periodoTexto
+        End If
+
+        If texto.EndsWith(" ") Then
+            Return texto & periodoTexto
+        End If
+
+        Return texto & " " & periodoTexto
+    End Function
+
+    Private Sub ActualizarResultadoEnvioBono(idDetalle As Integer, estadoEnvio As String, mensajeEnvio As String)
+        Dim sql = "UPDATE RecibosProcesosDetalles SET " &
+                  "FechaEnvio = @FechaEnvio, " &
+                  "EstadoEnvio = @EstadoEnvio, " &
+                  "MensajeEnvio = @MensajeEnvio " &
+                  "WHERE IdDetalle = @IdDetalle"
+
+        Dim parametros = CmdParams(
+            "@FechaEnvio", DateTime.Now,
+            "@EstadoEnvio", estadoEnvio,
+            "@MensajeEnvio", LimitarTextoBono(mensajeEnvio, 500),
+            "@IdDetalle", idDetalle)
+
+        DSM.Execute(DSM.Personal, sql, parametros, True)
+    End Sub
+
+    Private Function LimitarTextoBono(texto As String, longitudMaxima As Integer) As String
+        If String.IsNullOrEmpty(texto) Then
+            Return String.Empty
+        End If
+
+        If texto.Length <= longitudMaxima Then
+            Return texto
+        End If
+
+        Return texto.Substring(0, longitudMaxima)
+    End Function
 End Class

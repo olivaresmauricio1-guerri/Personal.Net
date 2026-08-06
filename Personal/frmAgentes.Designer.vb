@@ -104,6 +104,7 @@ Partial Class frmAgentes
         btnModificar = New Button()
         btnBorrar = New Button()
         Panel3 = New Panel()
+        btnBonos = New Button()
         btnAceptar = New Button()
         btnCancelar = New Button()
         Panel4 = New Panel()
@@ -157,6 +158,32 @@ Partial Class frmAgentes
         Label49 = New Label()
         txtObservacionesEquipamiento = New TextBox()
         Label50 = New Label()
+        TabPage2 = New TabPage()
+        GroupBox1 = New GroupBox()
+        btmImprimirTalles = New Button()
+        btnActualizaTaller = New Button()
+        Label32 = New Label()
+        dgvTallesAgentes = New DataGridView()
+        cmbTalleUniforme = New ComboBox()
+        dgvUniformes = New DataGridView()
+        btnEliminarUniforme = New Button()
+        btnAgregarUniforme = New Button()
+        cmbTipoUniforme = New ComboBox()
+        Label31 = New Label()
+        Label33 = New Label()
+        dtpFechaUniforme = New DateTimePicker()
+        Label51 = New Label()
+        txtObservacionesUniforme = New TextBox()
+        Label52 = New Label()
+        TabPage3 = New TabPage()
+        GroupBox4 = New GroupBox()
+        rdbSeleccion = New RadioButton()
+        rdbTodos = New RadioButton()
+        dgvBonos = New DataGridView()
+        btnEnviarBono = New Button()
+        DataGridView1 = New DataGridView()
+        DataGridView2 = New DataGridView()
+        Button3 = New Button()
         chkEncabezados = New CheckBox()
         lnkCopiar = New LinkLabel()
         radActivos = New RadioButton()
@@ -171,6 +198,7 @@ Partial Class frmAgentes
         radEventuales = New RadioButton()
         CmbCate = New ComboBox()
         Label1 = New Label()
+        radBaja = New RadioButton()
         tabDatos.SuspendLayout()
         tabDatosAgente.SuspendLayout()
         tlpDatosAgente.SuspendLayout()
@@ -191,6 +219,15 @@ Partial Class frmAgentes
         TabPage1.SuspendLayout()
         GroupBoxEquipamiento.SuspendLayout()
         CType(DgvEquipamiento, ComponentModel.ISupportInitialize).BeginInit()
+        TabPage2.SuspendLayout()
+        GroupBox1.SuspendLayout()
+        CType(dgvTallesAgentes, ComponentModel.ISupportInitialize).BeginInit()
+        CType(dgvUniformes, ComponentModel.ISupportInitialize).BeginInit()
+        TabPage3.SuspendLayout()
+        GroupBox4.SuspendLayout()
+        CType(dgvBonos, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DataGridView1, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DataGridView2, ComponentModel.ISupportInitialize).BeginInit()
         CType(dgvListado, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
@@ -201,6 +238,8 @@ Partial Class frmAgentes
         tabDatos.Controls.Add(tabGrupoFamiliar)
         tabDatos.Controls.Add(tabComentarios)
         tabDatos.Controls.Add(TabPage1)
+        tabDatos.Controls.Add(TabPage2)
+        tabDatos.Controls.Add(TabPage3)
         tabDatos.Location = New Point(10, 177)
         tabDatos.Margin = New Padding(4, 3, 4, 3)
         tabDatos.Name = "tabDatos"
@@ -1066,6 +1105,7 @@ Partial Class frmAgentes
         ' 
         ' Panel3
         ' 
+        Panel3.Controls.Add(btnBonos)
         Panel3.Controls.Add(btnAceptar)
         Panel3.Controls.Add(btnCancelar)
         Panel3.Dock = DockStyle.Fill
@@ -1074,6 +1114,18 @@ Partial Class frmAgentes
         Panel3.Size = New Size(351, 38)
         Panel3.TabIndex = 5
         ' 
+        ' btnBonos
+        ' 
+        btnBonos.BackColor = SystemColors.Control
+        btnBonos.FlatStyle = FlatStyle.Flat
+        btnBonos.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnBonos.Location = New Point(216, 5)
+        btnBonos.Name = "btnBonos"
+        btnBonos.Size = New Size(121, 30)
+        btnBonos.TabIndex = 47
+        btnBonos.Text = "Bonos de Sueldo"
+        btnBonos.UseVisualStyleBackColor = False
+        ' 
         ' btnAceptar
         ' 
         btnAceptar.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
@@ -1081,7 +1133,7 @@ Partial Class frmAgentes
         btnAceptar.Cursor = Cursors.Hand
         btnAceptar.FlatStyle = FlatStyle.Flat
         btnAceptar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnAceptar.Location = New Point(163, 5)
+        btnAceptar.Location = New Point(25, 5)
         btnAceptar.Margin = New Padding(4, 3, 4, 3)
         btnAceptar.Name = "btnAceptar"
         btnAceptar.Size = New Size(88, 30)
@@ -1096,7 +1148,7 @@ Partial Class frmAgentes
         btnCancelar.Cursor = Cursors.Hand
         btnCancelar.FlatStyle = FlatStyle.Flat
         btnCancelar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnCancelar.Location = New Point(259, 5)
+        btnCancelar.Location = New Point(121, 5)
         btnCancelar.Margin = New Padding(4, 3, 4, 3)
         btnCancelar.Name = "btnCancelar"
         btnCancelar.Size = New Size(88, 30)
@@ -1650,6 +1702,296 @@ Partial Class frmAgentes
         Label50.TabIndex = 12
         Label50.Text = "Observaciones:"
         ' 
+        ' TabPage2
+        ' 
+        TabPage2.Controls.Add(GroupBox1)
+        TabPage2.Location = New Point(4, 24)
+        TabPage2.Name = "TabPage2"
+        TabPage2.Padding = New Padding(3)
+        TabPage2.Size = New Size(1156, 358)
+        TabPage2.TabIndex = 4
+        TabPage2.Text = "Uniforme"
+        TabPage2.UseVisualStyleBackColor = True
+        ' 
+        ' GroupBox1
+        ' 
+        GroupBox1.Controls.Add(btmImprimirTalles)
+        GroupBox1.Controls.Add(btnActualizaTaller)
+        GroupBox1.Controls.Add(Label32)
+        GroupBox1.Controls.Add(dgvTallesAgentes)
+        GroupBox1.Controls.Add(cmbTalleUniforme)
+        GroupBox1.Controls.Add(dgvUniformes)
+        GroupBox1.Controls.Add(btnEliminarUniforme)
+        GroupBox1.Controls.Add(btnAgregarUniforme)
+        GroupBox1.Controls.Add(cmbTipoUniforme)
+        GroupBox1.Controls.Add(Label31)
+        GroupBox1.Controls.Add(Label33)
+        GroupBox1.Controls.Add(dtpFechaUniforme)
+        GroupBox1.Controls.Add(Label51)
+        GroupBox1.Controls.Add(txtObservacionesUniforme)
+        GroupBox1.Controls.Add(Label52)
+        GroupBox1.Location = New Point(3, 3)
+        GroupBox1.Name = "GroupBox1"
+        GroupBox1.Size = New Size(1150, 352)
+        GroupBox1.TabIndex = 0
+        GroupBox1.TabStop = False
+        GroupBox1.Text = "Uniforme"
+        ' 
+        ' btmImprimirTalles
+        ' 
+        btmImprimirTalles.FlatStyle = FlatStyle.Flat
+        btmImprimirTalles.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btmImprimirTalles.Location = New Point(464, 94)
+        btmImprimirTalles.Name = "btmImprimirTalles"
+        btmImprimirTalles.Size = New Size(79, 23)
+        btmImprimirTalles.TabIndex = 33
+        btmImprimirTalles.Text = "Imprimir"
+        btmImprimirTalles.UseVisualStyleBackColor = True
+        ' 
+        ' btnActualizaTaller
+        ' 
+        btnActualizaTaller.FlatStyle = FlatStyle.Flat
+        btnActualizaTaller.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnActualizaTaller.Location = New Point(337, 94)
+        btnActualizaTaller.Name = "btnActualizaTaller"
+        btnActualizaTaller.Size = New Size(121, 23)
+        btnActualizaTaller.TabIndex = 32
+        btnActualizaTaller.Text = "Actualizar Talles"
+        btnActualizaTaller.UseVisualStyleBackColor = True
+        ' 
+        ' Label32
+        ' 
+        Label32.AutoSize = True
+        Label32.Location = New Point(558, 97)
+        Label32.Name = "Label32"
+        Label32.Size = New Size(184, 15)
+        Label32.TabIndex = 31
+        Label32.Text = "Historial de Entrega de Uniformes"
+        ' 
+        ' dgvTallesAgentes
+        ' 
+        dgvTallesAgentes.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        dgvTallesAgentes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvTallesAgentes.Location = New Point(11, 123)
+        dgvTallesAgentes.Margin = New Padding(4, 3, 4, 3)
+        dgvTallesAgentes.Name = "dgvTallesAgentes"
+        dgvTallesAgentes.ReadOnly = True
+        dgvTallesAgentes.Size = New Size(532, 223)
+        dgvTallesAgentes.TabIndex = 30
+        ' 
+        ' cmbTalleUniforme
+        ' 
+        cmbTalleUniforme.DropDownStyle = ComboBoxStyle.DropDownList
+        cmbTalleUniforme.FormattingEnabled = True
+        cmbTalleUniforme.Items.AddRange(New Object() {"Celular", "Tablet", "Notebook", "Radio", "GPS", "Otro"})
+        cmbTalleUniforme.Location = New Point(143, 41)
+        cmbTalleUniforme.Name = "cmbTalleUniforme"
+        cmbTalleUniforme.Size = New Size(81, 23)
+        cmbTalleUniforme.TabIndex = 28
+        ' 
+        ' dgvUniformes
+        ' 
+        dgvUniformes.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        dgvUniformes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvUniformes.Location = New Point(558, 123)
+        dgvUniformes.Margin = New Padding(4, 3, 4, 3)
+        dgvUniformes.Name = "dgvUniformes"
+        dgvUniformes.ReadOnly = True
+        dgvUniformes.Size = New Size(582, 223)
+        dgvUniformes.TabIndex = 27
+        ' 
+        ' btnEliminarUniforme
+        ' 
+        btnEliminarUniforme.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        btnEliminarUniforme.FlatStyle = FlatStyle.Flat
+        btnEliminarUniforme.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnEliminarUniforme.Location = New Point(1065, 87)
+        btnEliminarUniforme.Margin = New Padding(4, 3, 4, 3)
+        btnEliminarUniforme.Name = "btnEliminarUniforme"
+        btnEliminarUniforme.Size = New Size(75, 30)
+        btnEliminarUniforme.TabIndex = 25
+        btnEliminarUniforme.Text = "Eliminar"
+        btnEliminarUniforme.UseVisualStyleBackColor = True
+        ' 
+        ' btnAgregarUniforme
+        ' 
+        btnAgregarUniforme.FlatStyle = FlatStyle.Flat
+        btnAgregarUniforme.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnAgregarUniforme.Location = New Point(983, 87)
+        btnAgregarUniforme.Margin = New Padding(4, 3, 4, 3)
+        btnAgregarUniforme.Name = "btnAgregarUniforme"
+        btnAgregarUniforme.Size = New Size(75, 30)
+        btnAgregarUniforme.TabIndex = 23
+        btnAgregarUniforme.Text = "Agregar"
+        btnAgregarUniforme.UseVisualStyleBackColor = True
+        ' 
+        ' cmbTipoUniforme
+        ' 
+        cmbTipoUniforme.DropDownStyle = ComboBoxStyle.DropDownList
+        cmbTipoUniforme.FormattingEnabled = True
+        cmbTipoUniforme.Items.AddRange(New Object() {"Celular", "Tablet", "Notebook", "Radio", "GPS", "Otro"})
+        cmbTipoUniforme.Location = New Point(11, 41)
+        cmbTipoUniforme.Name = "cmbTipoUniforme"
+        cmbTipoUniforme.Size = New Size(126, 23)
+        cmbTipoUniforme.TabIndex = 16
+        ' 
+        ' Label31
+        ' 
+        Label31.AutoSize = True
+        Label31.Location = New Point(11, 23)
+        Label31.Name = "Label31"
+        Label31.Size = New Size(34, 15)
+        Label31.TabIndex = 15
+        Label31.Text = "Tipo:"
+        ' 
+        ' Label33
+        ' 
+        Label33.AutoSize = True
+        Label33.Location = New Point(143, 23)
+        Label33.Name = "Label33"
+        Label33.Size = New Size(34, 15)
+        Label33.TabIndex = 19
+        Label33.Text = "Talle:"
+        ' 
+        ' dtpFechaUniforme
+        ' 
+        dtpFechaUniforme.Format = DateTimePickerFormat.Short
+        dtpFechaUniforme.Location = New Point(231, 41)
+        dtpFechaUniforme.Name = "dtpFechaUniforme"
+        dtpFechaUniforme.Size = New Size(100, 23)
+        dtpFechaUniforme.TabIndex = 22
+        ' 
+        ' Label51
+        ' 
+        Label51.AutoSize = True
+        Label51.Location = New Point(231, 23)
+        Label51.Name = "Label51"
+        Label51.Size = New Size(41, 15)
+        Label51.TabIndex = 21
+        Label51.Text = "Fecha:"
+        ' 
+        ' txtObservacionesUniforme
+        ' 
+        txtObservacionesUniforme.Location = New Point(11, 94)
+        txtObservacionesUniforme.Name = "txtObservacionesUniforme"
+        txtObservacionesUniforme.Size = New Size(320, 23)
+        txtObservacionesUniforme.TabIndex = 26
+        ' 
+        ' Label52
+        ' 
+        Label52.AutoSize = True
+        Label52.Location = New Point(11, 76)
+        Label52.Name = "Label52"
+        Label52.Size = New Size(87, 15)
+        Label52.TabIndex = 24
+        Label52.Text = "Observaciones:"
+        ' 
+        ' TabPage3
+        ' 
+        TabPage3.Controls.Add(GroupBox4)
+        TabPage3.Location = New Point(4, 24)
+        TabPage3.Name = "TabPage3"
+        TabPage3.Padding = New Padding(3)
+        TabPage3.Size = New Size(1156, 358)
+        TabPage3.TabIndex = 5
+        TabPage3.Text = "Bonos de Sueldo"
+        TabPage3.UseVisualStyleBackColor = True
+        ' 
+        ' GroupBox4
+        ' 
+        GroupBox4.Controls.Add(rdbSeleccion)
+        GroupBox4.Controls.Add(rdbTodos)
+        GroupBox4.Controls.Add(dgvBonos)
+        GroupBox4.Controls.Add(btnEnviarBono)
+        GroupBox4.Controls.Add(DataGridView1)
+        GroupBox4.Controls.Add(DataGridView2)
+        GroupBox4.Controls.Add(Button3)
+        GroupBox4.Location = New Point(3, 3)
+        GroupBox4.Name = "GroupBox4"
+        GroupBox4.Size = New Size(1150, 352)
+        GroupBox4.TabIndex = 1
+        GroupBox4.TabStop = False
+        GroupBox4.Text = "Bonos de Sueldo"
+        ' 
+        ' rdbSeleccion
+        ' 
+        rdbSeleccion.AutoSize = True
+        rdbSeleccion.Location = New Point(932, 37)
+        rdbSeleccion.Name = "rdbSeleccion"
+        rdbSeleccion.Size = New Size(75, 19)
+        rdbSeleccion.TabIndex = 47
+        rdbSeleccion.Text = "Selección"
+        rdbSeleccion.UseVisualStyleBackColor = True
+        ' 
+        ' rdbTodos
+        ' 
+        rdbTodos.AutoSize = True
+        rdbTodos.Checked = True
+        rdbTodos.Location = New Point(869, 37)
+        rdbTodos.Name = "rdbTodos"
+        rdbTodos.Size = New Size(57, 19)
+        rdbTodos.TabIndex = 46
+        rdbTodos.TabStop = True
+        rdbTodos.Text = "Todos"
+        rdbTodos.UseVisualStyleBackColor = True
+        ' 
+        ' dgvBonos
+        ' 
+        dgvBonos.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        dgvBonos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvBonos.Location = New Point(11, 67)
+        dgvBonos.Margin = New Padding(4, 3, 4, 3)
+        dgvBonos.Name = "dgvBonos"
+        dgvBonos.ReadOnly = True
+        dgvBonos.Size = New Size(1132, 279)
+        dgvBonos.TabIndex = 34
+        ' 
+        ' btnEnviarBono
+        ' 
+        btnEnviarBono.FlatStyle = FlatStyle.Flat
+        btnEnviarBono.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnEnviarBono.Location = New Point(1022, 31)
+        btnEnviarBono.Name = "btnEnviarBono"
+        btnEnviarBono.Size = New Size(121, 30)
+        btnEnviarBono.TabIndex = 32
+        btnEnviarBono.Text = "Enviar por Correo"
+        btnEnviarBono.UseVisualStyleBackColor = True
+        ' 
+        ' DataGridView1
+        ' 
+        DataGridView1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        DataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DataGridView1.Location = New Point(11, 375)
+        DataGridView1.Margin = New Padding(4, 3, 4, 3)
+        DataGridView1.Name = "DataGridView1"
+        DataGridView1.ReadOnly = True
+        DataGridView1.Size = New Size(1482, 223)
+        DataGridView1.TabIndex = 30
+        ' 
+        ' DataGridView2
+        ' 
+        DataGridView2.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        DataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DataGridView2.Location = New Point(558, 375)
+        DataGridView2.Margin = New Padding(4, 3, 4, 3)
+        DataGridView2.Name = "DataGridView2"
+        DataGridView2.ReadOnly = True
+        DataGridView2.Size = New Size(1532, 223)
+        DataGridView2.TabIndex = 27
+        ' 
+        ' Button3
+        ' 
+        Button3.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        Button3.FlatStyle = FlatStyle.Flat
+        Button3.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        Button3.Location = New Point(2015, 339)
+        Button3.Margin = New Padding(4, 3, 4, 3)
+        Button3.Name = "Button3"
+        Button3.Size = New Size(75, 30)
+        Button3.TabIndex = 25
+        Button3.Text = "Eliminar"
+        Button3.UseVisualStyleBackColor = True
+        ' 
         ' chkEncabezados
         ' 
         chkEncabezados.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
@@ -1679,7 +2021,7 @@ Partial Class frmAgentes
         ' 
         radActivos.AutoSize = True
         radActivos.Checked = True
-        radActivos.Location = New Point(805, 7)
+        radActivos.Location = New Point(723, 7)
         radActivos.Name = "radActivos"
         radActivos.Size = New Size(64, 19)
         radActivos.TabIndex = 3
@@ -1690,7 +2032,7 @@ Partial Class frmAgentes
         ' radTodos
         ' 
         radTodos.AutoSize = True
-        radTodos.Location = New Point(875, 7)
+        radTodos.Location = New Point(793, 7)
         radTodos.Name = "radTodos"
         radTodos.Size = New Size(57, 19)
         radTodos.TabIndex = 4
@@ -1713,7 +2055,7 @@ Partial Class frmAgentes
         txtBuscar.Location = New Point(63, 5)
         txtBuscar.Margin = New Padding(4, 3, 4, 3)
         txtBuscar.Name = "txtBuscar"
-        txtBuscar.Size = New Size(329, 23)
+        txtBuscar.Size = New Size(219, 23)
         txtBuscar.TabIndex = 1
         ' 
         ' lblBuscar
@@ -1755,7 +2097,7 @@ Partial Class frmAgentes
         ' lblSucursal
         ' 
         lblSucursal.AutoSize = True
-        lblSucursal.Location = New Point(400, 9)
+        lblSucursal.Location = New Point(318, 9)
         lblSucursal.Margin = New Padding(4, 0, 4, 0)
         lblSucursal.Name = "lblSucursal"
         lblSucursal.Size = New Size(54, 15)
@@ -1766,7 +2108,7 @@ Partial Class frmAgentes
         ' 
         cmbSucursal.DropDownStyle = ComboBoxStyle.DropDownList
         cmbSucursal.FormattingEnabled = True
-        cmbSucursal.Location = New Point(461, 5)
+        cmbSucursal.Location = New Point(379, 5)
         cmbSucursal.Name = "cmbSucursal"
         cmbSucursal.Size = New Size(121, 23)
         cmbSucursal.TabIndex = 2
@@ -1774,7 +2116,7 @@ Partial Class frmAgentes
         ' radEventuales
         ' 
         radEventuales.AutoSize = True
-        radEventuales.Location = New Point(938, 8)
+        radEventuales.Location = New Point(917, 7)
         radEventuales.Name = "radEventuales"
         radEventuales.Size = New Size(81, 19)
         radEventuales.TabIndex = 42
@@ -1785,7 +2127,7 @@ Partial Class frmAgentes
         ' 
         CmbCate.DropDownStyle = ComboBoxStyle.DropDownList
         CmbCate.FormattingEnabled = True
-        CmbCate.Location = New Point(657, 6)
+        CmbCate.Location = New Point(575, 6)
         CmbCate.Name = "CmbCate"
         CmbCate.Size = New Size(132, 23)
         CmbCate.TabIndex = 43
@@ -1793,18 +2135,29 @@ Partial Class frmAgentes
         ' Label1
         ' 
         Label1.AutoSize = True
-        Label1.Location = New Point(589, 10)
+        Label1.Location = New Point(507, 10)
         Label1.Margin = New Padding(4, 0, 4, 0)
         Label1.Name = "Label1"
         Label1.Size = New Size(61, 15)
         Label1.TabIndex = 44
         Label1.Text = "Categoría:"
         ' 
+        ' radBaja
+        ' 
+        radBaja.AutoSize = True
+        radBaja.Location = New Point(856, 7)
+        radBaja.Name = "radBaja"
+        radBaja.Size = New Size(47, 19)
+        radBaja.TabIndex = 45
+        radBaja.Text = "Baja"
+        radBaja.UseVisualStyleBackColor = True
+        ' 
         ' frmAgentes
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1184, 611)
+        Controls.Add(radBaja)
         Controls.Add(CmbCate)
         Controls.Add(Label1)
         Controls.Add(radEventuales)
@@ -1852,6 +2205,17 @@ Partial Class frmAgentes
         GroupBoxEquipamiento.ResumeLayout(False)
         GroupBoxEquipamiento.PerformLayout()
         CType(DgvEquipamiento, ComponentModel.ISupportInitialize).EndInit()
+        TabPage2.ResumeLayout(False)
+        GroupBox1.ResumeLayout(False)
+        GroupBox1.PerformLayout()
+        CType(dgvTallesAgentes, ComponentModel.ISupportInitialize).EndInit()
+        CType(dgvUniformes, ComponentModel.ISupportInitialize).EndInit()
+        TabPage3.ResumeLayout(False)
+        GroupBox4.ResumeLayout(False)
+        GroupBox4.PerformLayout()
+        CType(dgvBonos, ComponentModel.ISupportInitialize).EndInit()
+        CType(DataGridView1, ComponentModel.ISupportInitialize).EndInit()
+        CType(DataGridView2, ComponentModel.ISupportInitialize).EndInit()
         CType(dgvListado, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
@@ -2008,5 +2372,35 @@ Partial Class frmAgentes
     Friend WithEvents CmbCate As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents chkSindicato As CheckBox
+    Friend WithEvents radBaja As RadioButton
+    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents cmbTalleUniforme As ComboBox
+    Friend WithEvents dgvUniformes As DataGridView
+    Friend WithEvents btnEliminarUniforme As Button
+    Friend WithEvents btnAgregarUniforme As Button
+    Friend WithEvents cmbTipoUniforme As ComboBox
+    Friend WithEvents Label31 As Label
+    Friend WithEvents Label33 As Label
+    Friend WithEvents dtpFechaUniforme As DateTimePicker
+    Friend WithEvents Label51 As Label
+    Friend WithEvents txtObservacionesUniforme As TextBox
+    Friend WithEvents Label52 As Label
+    Friend WithEvents dgvTallesAgentes As DataGridView
+    Friend WithEvents dgvBonos As DataGridView
+    Friend WithEvents Label32 As Label
+    Friend WithEvents btnActualizaTaller As Button
+    Friend WithEvents btmImprimirTalles As Button
+    Friend WithEvents btnBonos As Button
+    Friend WithEvents TabPage3 As TabPage
+    Friend WithEvents GroupBox4 As GroupBox
+    Friend WithEvents DataGridView3 As DataGridView
+    Friend WithEvents Button1 As Button
+    Friend WithEvents btnEnviarBono As Button
+    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents DataGridView2 As DataGridView
+    Friend WithEvents Button3 As Button
+    Friend WithEvents rdbSeleccion As RadioButton
+    Friend WithEvents rdbTodos As RadioButton
 
 End Class

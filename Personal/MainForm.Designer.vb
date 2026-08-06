@@ -88,6 +88,10 @@ Partial Class MainForm
         MnuTiposInasistencias = New ToolStripMenuItem()
         ToolStripSeparator21 = New ToolStripSeparator()
         MnuTipoActividad = New ToolStripMenuItem()
+        ToolStripSeparator26 = New ToolStripSeparator()
+        UniformesToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator27 = New ToolStripSeparator()
+        TallesToolStripMenuItem = New ToolStripMenuItem()
         MnuSeguridad = New ToolStripMenuItem()
         MnuInformacionReservada = New ToolStripMenuItem()
         ToolStripSeparator22 = New ToolStripSeparator()
@@ -426,7 +430,7 @@ Partial Class MainForm
         ' 
         ' MnuNomencladores
         ' 
-        MnuNomencladores.DropDownItems.AddRange(New ToolStripItem() {MnuAreas, ToolStripSeparator16, MnuCategorias, ToolStripSeparator17, MnuFeriados, ToolStripSeparator18, MnuEncargados, ToolStripSeparator19, MnuSucursales, ToolStripSeparator20, MnuTiposInasistencias, ToolStripSeparator21, MnuTipoActividad})
+        MnuNomencladores.DropDownItems.AddRange(New ToolStripItem() {MnuAreas, ToolStripSeparator16, MnuCategorias, ToolStripSeparator17, MnuFeriados, ToolStripSeparator18, MnuEncargados, ToolStripSeparator19, MnuSucursales, ToolStripSeparator20, MnuTiposInasistencias, ToolStripSeparator21, MnuTipoActividad, ToolStripSeparator26, UniformesToolStripMenuItem, ToolStripSeparator27, TallesToolStripMenuItem})
         MnuNomencladores.Name = "MnuNomencladores"
         MnuNomencladores.Size = New Size(103, 20)
         MnuNomencladores.Text = "&Nomencladores"
@@ -502,6 +506,28 @@ Partial Class MainForm
         MnuTipoActividad.Name = "MnuTipoActividad"
         MnuTipoActividad.Size = New Size(172, 22)
         MnuTipoActividad.Text = "&Tipo Actividad"
+        ' 
+        ' ToolStripSeparator26
+        ' 
+        ToolStripSeparator26.Name = "ToolStripSeparator26"
+        ToolStripSeparator26.Size = New Size(169, 6)
+        ' 
+        ' UniformesToolStripMenuItem
+        ' 
+        UniformesToolStripMenuItem.Name = "UniformesToolStripMenuItem"
+        UniformesToolStripMenuItem.Size = New Size(172, 22)
+        UniformesToolStripMenuItem.Text = "Uniformes"
+        ' 
+        ' ToolStripSeparator27
+        ' 
+        ToolStripSeparator27.Name = "ToolStripSeparator27"
+        ToolStripSeparator27.Size = New Size(169, 6)
+        ' 
+        ' TallesToolStripMenuItem
+        ' 
+        TallesToolStripMenuItem.Name = "TallesToolStripMenuItem"
+        TallesToolStripMenuItem.Size = New Size(172, 22)
+        TallesToolStripMenuItem.Text = "Talles"
         ' 
         ' MnuSeguridad
         ' 
@@ -774,4 +800,8 @@ Partial Class MainForm
     Friend WithEvents pnlDatosAgentes As Panel
     Friend WithEvents lblDatosAgentes As Label
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents ToolStripSeparator26 As ToolStripSeparator
+    Friend WithEvents UniformesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator27 As ToolStripSeparator
+    Friend WithEvents TallesToolStripMenuItem As ToolStripMenuItem
 End Class

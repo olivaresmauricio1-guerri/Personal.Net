@@ -295,5 +295,11 @@ Public Class MainForm
         frmDatosAgentes.AbrirInstancia(Me)
     End Sub
 
+    Private Sub TallesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TallesToolStripMenuItem.Click
+        frmTalles.AbrirInstancia(Me)
+    End Sub
 
+    Private Sub UniformesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UniformesToolStripMenuItem.Click
+        frmTipoUniformes.AbrirInstancia(Me)
+    End Sub
 End Class
