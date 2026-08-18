@@ -17,6 +17,8 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 Public Class frmEnvioRecibos
     Private Const NombreColumnaSeleccion As String = "Seleccionado"
     Private Const CarpetaBaseRecibos As String = "F:\Personal.Net\Recibos"
+    Private Const BaseUrlConfirmaciones As String = "https://bonosguerrini.abrdns.com:8443"
+    Private Const DiasExpiracionTokenConfirmacion As Integer = 10
 
     Private Sub frmEnvioRecibos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PrepararGrilla()
@@ -594,21 +596,33 @@ Public Class frmEnvioRecibos
                         Continue For
                     End If
 
+                    Dim token = GenerarTokenConfirmacion()
+                    Dim fechaExpiracionToken = DateTime.Now.AddDays(DiasExpiracionTokenConfirmacion)
+                    Dim tokenGuardado = GuardarTokenConfirmacion(idDetalle, token, fechaExpiracionToken)
+                    If Not tokenGuardado Then
+                        ActualizarResultadoEnvioDetalle(idDetalle, "ERROR", "No se pudo generar el token de confirmación para este recibo.")
+                        conError += 1
+                        Continue For
+                    End If
+
+                    Dim linkConfirmacion = ObtenerLinkConfirmacion(token)
                     Dim asunto = ConstruirTextoCorreo(asuntoBase, periodoTexto)
-                    Dim mensaje = ConstruirTextoCorreo(mensajeBase, periodoTexto)
+                    Dim mensajeConPeriodo = ConstruirTextoCorreo(mensajeBase, periodoTexto)
+                    Dim mensajeHtml = ConstruirCuerpoCorreoConfirmacion(mensajeConPeriodo, linkConfirmacion)
 
                     Try
                         Using mail As New MailMessage()
                             mail.From = New MailAddress(usuario)
                             mail.Subject = asunto
-                            mail.Body = mensaje
+                            mail.Body = mensajeHtml
+                            mail.IsBodyHtml = True
                             mail.To.Add(correoDestino)
                             mail.Attachments.Add(New Attachment(rutaPdf))
 
                             smtpClient.Send(mail)
                         End Using
 
-                        ActualizarResultadoEnvioDetalle(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino}.")
+                        ActualizarResultadoEnvioDetalle(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} con links de confirmación.")
                         enviados += 1
                     Catch exEnvio As Exception
                         Dim detalleError = If(exEnvio.InnerException?.Message, exEnvio.Message)
@@ -773,6 +787,55 @@ Public Class frmEnvioRecibos
         End If
 
         Return texto & " " & periodoTexto
+    End Function
+
+    Private Function GenerarTokenConfirmacion() As String
+        Dim bytes(31) As Byte
+        System.Security.Cryptography.RandomNumberGenerator.Fill(bytes)
+        Return Convert.ToBase64String(bytes) _
+                      .Replace("+", "-") _
+                      .Replace("/", "_") _
+                      .Replace("=", "")
+    End Function
+
+    Private Function ObtenerLinkConfirmacion(token As String) As String
+        Return $"{BaseUrlConfirmaciones.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
+    End Function
+
+    Private Function GuardarTokenConfirmacion(idDetalle As Integer, token As String, fechaExpiracion As DateTime) As Boolean
+        Try
+            Dim sql = "UPDATE RecibosProcesosDetalles " &
+                      "SET TokenConfirmacion = @Token, " &
+                      "    FechaExpiracionToken = @FechaExpiracionToken, " &
+                      "    EstadoConfirmacion = ISNULL(EstadoConfirmacion,'PENDIENTE') " &
+                      "WHERE IdDetalle = @IdDetalle " &
+                      "  AND (TokenConfirmacion IS NULL OR FechaExpiracionToken IS NOT NULL)"
+
+            Dim parametros = CmdParams(
+                "@Token", token,
+                "@FechaExpiracionToken", fechaExpiracion,
+                "@IdDetalle", idDetalle)
+
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+            Return True
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Function ConstruirCuerpoCorreoConfirmacion(textoBase As String, linkConfirmacion As String) As String
+        Dim textoPlano = If(textoBase, String.Empty).Replace(Environment.NewLine, "<br/>")
+
+        Return $"<html><body style=""font-family:Arial, sans-serif; font-size:12pt;"">
+<p>{textoPlano}</p>
+<p>Por favor, abrí el siguiente enlace para confirmar tu recepción y conformidad del bono:</p>
+<p style=""margin-top:20px;"">
+  <a href=""{linkConfirmacion}""
+     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">CONFIRMAR BONO DE SUELDO</a>
+</p>
+<p style=""margin-top:12px;color:#555;font-size:10pt;"">Al abrir el enlace vas a ver los datos del bono y podrás seleccionar si estás conforme o manifestar tu disconformidad.</p>
+<p style=""margin-top:20px;color:#555;font-size:10pt;"">Este link es personal e intransferible. Si no podés abrirlo, contactate con RRHH.</p>
+</body></html>"
     End Function
 
     Private Sub ActualizarResultadoEnvioDetalle(idDetalle As Integer, estadoEnvio As String, mensajeEnvio As String)

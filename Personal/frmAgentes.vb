@@ -11,6 +11,8 @@ Imports System.Net.Mail
 
 Public Class frmAgentes
     Private Const NombreColumnaSeleccionBonos As String = "SeleccionadoBono"
+    Private Const BaseUrlConfirmacionesBonos As String = "https://bonosguerrini.abrdns.com:8443"
+    Private Const DiasExpiracionTokenConfirmacionBono As Integer = 10
     Private _suspenderAccionFiltros As Boolean = False
     'Public Property MostrarSoloEventuales As Boolean?
 
@@ -1832,12 +1834,12 @@ ELSE
 
                 dgvBonos.Columns("PeriodoProcesado").Visible = True
                 dgvBonos.Columns("PeriodoProcesado").HeaderText = "Periodo Liquidado"
-                dgvBonos.Columns("PeriodoProcesado").Width = 150
+                dgvBonos.Columns("PeriodoProcesado").Width = 100
                 dgvBonos.Columns("PeriodoProcesado").DefaultCellStyle.Format = "MM/yyyy"
 
                 dgvBonos.Columns("FechaGeneracion").Visible = True
                 dgvBonos.Columns("FechaGeneracion").HeaderText = "Fecha Generacion"
-                dgvBonos.Columns("FechaGeneracion").Width = 200
+                dgvBonos.Columns("FechaGeneracion").Width = 130
                 dgvBonos.Columns("FechaGeneracion").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
 
                 dgvBonos.Columns("ArchivoPdf").Visible = True
@@ -1846,17 +1848,25 @@ ELSE
 
                 dgvBonos.Columns("EstadoEnvio").Visible = True
                 dgvBonos.Columns("EstadoEnvio").HeaderText = "Estado Envio"
-                dgvBonos.Columns("EstadoEnvio").Width = 150
+                dgvBonos.Columns("EstadoEnvio").Width = 120
 
                 dgvBonos.Columns("FechaEnvio").Visible = True
                 dgvBonos.Columns("FechaEnvio").HeaderText = "Fecha Envio"
-                dgvBonos.Columns("FechaEnvio").Width = 150
+                dgvBonos.Columns("FechaEnvio").Width = 120
                 dgvBonos.Columns("FechaEnvio").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
 
                 dgvBonos.Columns("RutaPdf").Visible = True
                 dgvBonos.Columns("RutaPdf").HeaderText = "Ruta PDF"
                 dgvBonos.Columns("RutaPdf").Width = 200
 
+                dgvBonos.Columns("EstadoConfirmacion").Visible = True
+                dgvBonos.Columns("EstadoConfirmacion").HeaderText = "Estado Confirmacion"
+                dgvBonos.Columns("EstadoConfirmacion").Width = 130
+
+                dgvBonos.Columns("FechaConfirmacion").Visible = True
+                dgvBonos.Columns("FechaConfirmacion").HeaderText = "Fecha Confirmacion"
+                dgvBonos.Columns("FechaConfirmacion").Width = 120
+                dgvBonos.Columns("FechaConfirmacion").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
 
                 ConfigurarEstiloGrid(dgvBonos)
             End If
@@ -2627,21 +2637,33 @@ ELSE
                         Continue For
                     End If
 
+                    Dim token = GenerarTokenConfirmacionBono()
+                    Dim fechaExpiracionToken = DateTime.Now.AddDays(DiasExpiracionTokenConfirmacionBono)
+                    Dim tokenGuardado = GuardarTokenConfirmacionBono(idDetalle, token, fechaExpiracionToken)
+                    If Not tokenGuardado Then
+                        ActualizarResultadoEnvioBono(idDetalle, "ERROR", "No se pudo generar el token de confirmación para este bono.")
+                        conError += 1
+                        Continue For
+                    End If
+
+                    Dim linkConfirmacion = ObtenerLinkConfirmacionBono(token)
                     Dim asunto = ConstruirTextoCorreoBono(asuntoBase, periodoTexto)
-                    Dim mensaje = ConstruirTextoCorreoBono(mensajeBase, periodoTexto)
+                    Dim mensajeConPeriodo = ConstruirTextoCorreoBono(mensajeBase, periodoTexto)
+                    Dim mensajeHtml = ConstruirCuerpoCorreoConfirmacionBono(mensajeConPeriodo, linkConfirmacion)
 
                     Try
                         Using mail As New MailMessage()
                             mail.From = New MailAddress(usuario)
                             mail.Subject = asunto
-                            mail.Body = mensaje
+                            mail.Body = mensajeHtml
+                            mail.IsBodyHtml = True
                             mail.To.Add(correoDestino)
                             mail.Attachments.Add(New Attachment(rutaPdf))
 
                             smtpClient.Send(mail)
                         End Using
 
-                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino}.")
+                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} con links de confirmación.")
                         enviados += 1
                     Catch exEnvio As Exception
                         Dim detalleError = If(exEnvio.InnerException?.Message, exEnvio.Message)
@@ -2676,6 +2698,30 @@ ELSE
             dgvBonos.CurrentCell.OwningColumn.Name = NombreColumnaSeleccionBonos Then
             dgvBonos.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
+    End Sub
+
+    Private Sub dgvBonos_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvBonos.CellFormatting
+        If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then
+            Return
+        End If
+
+        If Not dgvBonos.Columns.Contains("EstadoConfirmacion") Then
+            Return
+        End If
+
+        Dim fila = dgvBonos.Rows(e.RowIndex)
+        Dim valorEstado = fila.Cells("EstadoConfirmacion").Value
+        Dim estado = If(valorEstado IsNot Nothing, valorEstado.ToString(), String.Empty)
+
+        Dim colorFondo As System.Drawing.Color = System.Drawing.Color.White
+
+        If String.Equals(estado, "CONFORME", StringComparison.OrdinalIgnoreCase) Then
+            colorFondo = System.Drawing.Color.FromArgb(223, 240, 216)
+        ElseIf String.Equals(estado, "NO_CONFORME", StringComparison.OrdinalIgnoreCase) Then
+            colorFondo = System.Drawing.Color.FromArgb(253, 236, 234)
+        End If
+
+        fila.DefaultCellStyle.BackColor = colorFondo
     End Sub
 
     Private Sub rdbBonosModo_CheckedChanged(sender As Object, e As EventArgs) Handles rdbTodos.CheckedChanged, rdbSeleccion.CheckedChanged
@@ -2811,6 +2857,55 @@ ELSE
         End If
 
         Return texto & " " & periodoTexto
+    End Function
+
+    Private Function GenerarTokenConfirmacionBono() As String
+        Dim bytes(31) As Byte
+        System.Security.Cryptography.RandomNumberGenerator.Fill(bytes)
+        Return Convert.ToBase64String(bytes) _
+                      .Replace("+", "-") _
+                      .Replace("/", "_") _
+                      .Replace("=", "")
+    End Function
+
+    Private Function ObtenerLinkConfirmacionBono(token As String) As String
+        Return $"{BaseUrlConfirmacionesBonos.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
+    End Function
+
+    Private Function GuardarTokenConfirmacionBono(idDetalle As Integer, token As String, fechaExpiracion As DateTime) As Boolean
+        Try
+            Dim sql = "UPDATE RecibosProcesosDetalles " &
+                      "SET TokenConfirmacion = @Token, " &
+                      "    FechaExpiracionToken = @FechaExpiracionToken, " &
+                      "    EstadoConfirmacion = ISNULL(EstadoConfirmacion,'PENDIENTE') " &
+                      "WHERE IdDetalle = @IdDetalle " &
+                      "  AND (TokenConfirmacion IS NULL OR FechaExpiracionToken IS NOT NULL)"
+
+            Dim parametros = CmdParams(
+                "@Token", token,
+                "@FechaExpiracionToken", fechaExpiracion,
+                "@IdDetalle", idDetalle)
+
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+            Return True
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Function ConstruirCuerpoCorreoConfirmacionBono(textoBase As String, linkConfirmacion As String) As String
+        Dim textoPlano = If(textoBase, String.Empty).Replace(Environment.NewLine, "<br/>")
+
+        Return $"<html><body style=""font-family:Arial, sans-serif; font-size:12pt;"">
+<p>{textoPlano}</p>
+<p>Por favor, abrí el siguiente enlace para confirmar tu bono de sueldo:</p>
+<p style=""margin-top:20px;"">
+  <a href=""{linkConfirmacion}""
+     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">CONFIRMAR BONO DE SUELDO</a>
+</p>
+<p style=""margin-top:12px;color:#555;font-size:10pt;"">Al abrir el enlace vas a ver los datos del bono y podrás seleccionar si estás conforme o manifestar tu disconformidad.</p>
+<p style=""margin-top:20px;color:#555;font-size:10pt;"">Este link es personal e intransferible. Si no podés abrirlo, contactate con RRHH.</p>
+</body></html>"
     End Function
 
     Private Sub ActualizarResultadoEnvioBono(idDetalle As Integer, estadoEnvio As String, mensajeEnvio As String)
