@@ -26,6 +26,13 @@ Public Class MainForm
                 General.EmpresaActual = empresas.Rows(0)("Descripcion").ToString()
             End If
 
+            Dim bonoSQl = DSM.ExecuteQuery(DSM.Stock, "SELECT * FROM Autoriza WHERE Usuario= @Usuario", CmdParams("@Usuario", UsuarioActual))
+            If bonoSQl.Rows(0)("VeBonos").ToString() = True Then
+                VeBonos = True
+            Else
+                VeBonos = False
+            End If
+
         Catch ex As Exception
             MessageBox.Show($"Error al cargar la configuración: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -35,6 +42,7 @@ Public Class MainForm
         Panel4.Text = UsuarioActual & " | " & Mid(General.Entorno, 1, 3).ToUpper()
         Panel2.Text = DateTime.Now.ToString("dd/MM/yyyy")
         Panel3.Text = DateTime.Now.ToString("HH:mm")
+
 
         'AplicarOpcionesHabilitadas()
         MostrarDatosAgentes()

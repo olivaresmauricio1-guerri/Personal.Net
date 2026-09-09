@@ -175,7 +175,7 @@ Partial Class frmAgentes
         Label51 = New Label()
         txtObservacionesUniforme = New TextBox()
         Label52 = New Label()
-        TabPage3 = New TabPage()
+        tabBonos = New TabPage()
         GroupBox4 = New GroupBox()
         rdbSeleccion = New RadioButton()
         rdbTodos = New RadioButton()
@@ -223,7 +223,7 @@ Partial Class frmAgentes
         GroupBox1.SuspendLayout()
         CType(dgvTallesAgentes, ComponentModel.ISupportInitialize).BeginInit()
         CType(dgvUniformes, ComponentModel.ISupportInitialize).BeginInit()
-        TabPage3.SuspendLayout()
+        tabBonos.SuspendLayout()
         GroupBox4.SuspendLayout()
         CType(dgvBonos, ComponentModel.ISupportInitialize).BeginInit()
         CType(DataGridView1, ComponentModel.ISupportInitialize).BeginInit()
@@ -239,7 +239,7 @@ Partial Class frmAgentes
         tabDatos.Controls.Add(tabComentarios)
         tabDatos.Controls.Add(TabPage1)
         tabDatos.Controls.Add(TabPage2)
-        tabDatos.Controls.Add(TabPage3)
+        tabDatos.Controls.Add(tabBonos)
         tabDatos.Location = New Point(10, 177)
         tabDatos.Margin = New Padding(4, 3, 4, 3)
         tabDatos.Name = "tabDatos"
@@ -1886,16 +1886,16 @@ Partial Class frmAgentes
         Label52.TabIndex = 24
         Label52.Text = "Observaciones:"
         ' 
-        ' TabPage3
+        ' tabBonos
         ' 
-        TabPage3.Controls.Add(GroupBox4)
-        TabPage3.Location = New Point(4, 24)
-        TabPage3.Name = "TabPage3"
-        TabPage3.Padding = New Padding(3)
-        TabPage3.Size = New Size(1156, 358)
-        TabPage3.TabIndex = 5
-        TabPage3.Text = "Bonos de Sueldo"
-        TabPage3.UseVisualStyleBackColor = True
+        tabBonos.Controls.Add(GroupBox4)
+        tabBonos.Location = New Point(4, 24)
+        tabBonos.Name = "tabBonos"
+        tabBonos.Padding = New Padding(3)
+        tabBonos.Size = New Size(1156, 358)
+        tabBonos.TabIndex = 5
+        tabBonos.Text = "Bonos de Sueldo"
+        tabBonos.UseVisualStyleBackColor = True
         ' 
         ' GroupBox4
         ' 
@@ -2210,7 +2210,7 @@ Partial Class frmAgentes
         GroupBox1.PerformLayout()
         CType(dgvTallesAgentes, ComponentModel.ISupportInitialize).EndInit()
         CType(dgvUniformes, ComponentModel.ISupportInitialize).EndInit()
-        TabPage3.ResumeLayout(False)
+        tabBonos.ResumeLayout(False)
         GroupBox4.ResumeLayout(False)
         GroupBox4.PerformLayout()
         CType(dgvBonos, ComponentModel.ISupportInitialize).EndInit()
@@ -2392,7 +2392,7 @@ Partial Class frmAgentes
     Friend WithEvents btnActualizaTaller As Button
     Friend WithEvents btmImprimirTalles As Button
     Friend WithEvents btnBonos As Button
-    Friend WithEvents TabPage3 As TabPage
+    Friend WithEvents tabBonos As TabPage
     Friend WithEvents GroupBox4 As GroupBox
     Friend WithEvents DataGridView3 As DataGridView
     Friend WithEvents Button1 As Button

@@ -15,6 +15,7 @@ Public Module General
 
     Public OpcionesHabilitadas As String = ""
     Public ClaveErronea As Boolean = True
+    Public VeBonos As Boolean = False
 
 #If DEBUG Then
     Public ReadOnly Entorno As String = "Desarrollo"
