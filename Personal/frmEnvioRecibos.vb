@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Diagnostics
 Imports System.Globalization
@@ -17,8 +17,12 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 Public Class frmEnvioRecibos
     Private Const NombreColumnaSeleccion As String = "Seleccionado"
     Private Const CarpetaBaseRecibos As String = "F:\Personal.Net\Recibos"
-    Private Const BaseUrlConfirmaciones As String = "https://bonosguerrini.abrdns.com:8443"
+    Private Const BaseUrlPublico As String = "https://rrhh.guerrinisa.com.ar" 'https://bonosguerrini.abrdns.com:8443"
     Private Const DiasExpiracionTokenConfirmacion As Integer = 10
+    Private Const SambaUncRaiz As String = "\\192.168.2.58\Recibos"
+    Private Const SambaDominio As String = ""
+    Private Const SambaUsuario As String = "rrhh"
+    Private Const SambaClave As String = "K7mQ2xP9vR4nT8zL5cW1jH6sD3fY0aB8"
 
     Private Sub frmEnvioRecibos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PrepararGrilla()
@@ -39,8 +43,11 @@ Public Class frmEnvioRecibos
         SeleccionarProcesoEnGrilla(idProcesoSeleccionado)
     End Sub
     Private Sub CargoDetalleProceso(idProceso As Integer)
-        Dim sql = "SELECT IdDetalle, Legajo, ArchivoPdf AS Archivo, CantidadPaginas AS Paginas, PaginasOrigen, RutaPdf AS Ruta, EstadoEnvio, MensajeEnvio, FechaEnvio " &
-                  "FROM RecibosProcesosDetalles WHERE IdProceso = @IdProceso ORDER BY Legajo"
+        Dim sql = "SELECT RecibosProcesosDetalles.IdDetalle, RecibosProcesosDetalles.Legajo, Agentes.Nombre, ArchivoPdf AS Archivo, CantidadPaginas AS Paginas, PaginasOrigen, RutaPdf AS Ruta,  " &
+                  "ISNULL(EstadoEnvio,'PENDIENTE') AS EstadoEnvio, MensajeEnvio, FechaEnvio, ISNULL(EstadoApertura,'PENDIENTE') AS EstadoApertura, FechaPrimerAccesoLink AS FechaApertura, ISNULL(EstadoConfirmacion,'PENDIENTE') AS EstadoConfirmacion, RecibosProcesosDetalles.FechaConfirmacion, TokenVista, " &
+                  "ISNULL(Accion,'PENDIENTE') AS Accion, RecibosConfirmaciones.FechaConfirmacion as FechaConforme " &
+                  "FROM RecibosProcesosDetalles INNER JOIN Agentes ON RecibosProcesosDetalles.Legajo = Agentes.Legajo LEFT JOIN RecibosConfirmaciones ON RecibosProcesosDetalles.IdDetalle = RecibosConfirmaciones.IdDetalle " &
+                  "WHERE IdProceso = @IdProceso ORDER BY Legajo"
         Dim parametros = CmdParams("@IdProceso", idProceso)
         Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
         dgvListaRecibos.DataSource = tabla
@@ -77,7 +84,7 @@ Public Class frmEnvioRecibos
             ActualizarProcesoLogFinalizado(idProceso.Value, resultado)
             CargoProcesos(idProceso.Value)
 
-            Dim mensaje = $"Se generaron {resultado.ArchivosGenerados.Count} archivo(s) en '{CarpetaBaseRecibos}'."
+            Dim mensaje = $"Se generaron {resultado.ArchivosGenerados.Count} archivo(s)."
             If resultado.PaginasOmitidas.Count > 0 Then
                 mensaje &= Environment.NewLine & $"Páginas omitidas por no tener legajo detectable: {String.Join(", ", resultado.PaginasOmitidas)}."
             End If
@@ -97,7 +104,6 @@ Public Class frmEnvioRecibos
     Private Function SepararRecibosPorLegajo(rutaPdfOrigen As String, idProceso As Integer, fechaProceso As DateTime, periodoProcesado As DateTime) As ResultadoProcesoRecibos
         Dim resultado As New ResultadoProcesoRecibos()
         Dim paginasPorLegajo As New Dictionary(Of String, List(Of Integer))(StringComparer.OrdinalIgnoreCase)
-        Dim carpetaDestino = Path.GetDirectoryName(rutaPdfOrigen)
         Dim marcaTiempo = $"{periodoProcesado:yyyyMM}_{fechaProceso:yyyyMMdd_HHmmss}"
 
         Using lector As New PdfReader(rutaPdfOrigen)
@@ -135,20 +141,51 @@ Public Class frmEnvioRecibos
 
                 For Each legajo In legajosOrdenados
                     Dim paginas = paginasPorLegajo(legajo)
-                    Dim rutaDestino = ObtenerRutaDestinoUnica(carpetaDestino, legajo, marcaTiempo)
 
-                    Using escritor As New PdfWriter(rutaDestino)
-                        Using pdfDestino As New PdfDocument(escritor)
-                            pdfOrigen.CopyPagesTo(paginas, pdfDestino)
+                    Dim rutaDestinoVirtual As String = ObtenerRutaDestinoUnica(CarpetaBaseRecibos, legajo, marcaTiempo)
+                    Dim pathRelativo As String = ""
+                    If rutaDestinoVirtual.StartsWith(CarpetaBaseRecibos, StringComparison.OrdinalIgnoreCase) Then
+                        pathRelativo = rutaDestinoVirtual.Substring(CarpetaBaseRecibos.Length).TrimStart("\"c)
+                    End If
+                    Dim rutaDestinoUnc As String = If(String.IsNullOrWhiteSpace(pathRelativo),
+                                                      Path.Combine(SambaUncRaiz, Path.GetFileName(rutaDestinoVirtual)),
+                                                      Path.Combine(SambaUncRaiz, pathRelativo))
+
+                    If String.IsNullOrWhiteSpace(SambaUsuario) Then
+                        Throw New InvalidOperationException("No está configurado el usuario Samba. Debe activarse la copia a UNC para generar los PDFs.")
+                    End If
+
+                    Dim rutaTempLocal As String = Path.Combine(Path.GetTempPath(), "Recibo_" & legajo & "_" & Guid.NewGuid().ToString("N") & ".pdf")
+
+                    Try
+                        Using escritor As New PdfWriter(rutaTempLocal)
+                            Using pdfDestino As New PdfDocument(escritor)
+                                pdfOrigen.CopyPagesTo(paginas, pdfDestino)
+                            End Using
                         End Using
-                    End Using
 
+                        Dim errSamba As String = ""
+                        If Not SambaShareHelper.CopiarPdfASamba(rutaTempLocal, rutaDestinoUnc, SambaUncRaiz, SambaUsuario, SambaDominio, SambaClave, True, errSamba) Then
+                            Throw New InvalidOperationException($"Error copiando PDF al share Samba (Legajo {legajo}): {errSamba}")
+                        End If
+                    Finally
+                        If File.Exists(rutaTempLocal) Then
+                            Try
+                                File.Delete(rutaTempLocal)
+                            Catch
+                            End Try
+                        End If
+                    End Try
+
+                    Dim tokenVista = GenerarTokenVista()
                     resultado.ArchivosGenerados.Add(New ArchivoGeneradoInfo With {
                         .Legajo = legajo,
-                        .Archivo = Path.GetFileName(rutaDestino),
+                        .Archivo = Path.GetFileName(rutaDestinoVirtual),
                         .CantidadPaginas = paginas.Count,
                         .PaginasOrigen = String.Join(", ", paginas),
-                        .RutaCompleta = rutaDestino
+                        .RutaCompleta = rutaDestinoUnc,
+                        .TokenVista = tokenVista,
+                        .RutaSambaUnc = rutaDestinoUnc
                     })
 
                     GuardarDetalleProceso(idProceso, resultado.ArchivosGenerados(resultado.ArchivosGenerados.Count - 1), fechaProceso)
@@ -240,8 +277,9 @@ Public Class frmEnvioRecibos
     End Function
 
     Private Function ObtenerRutaDestinoUnica(carpetaDestino As String, legajo As String, marcaTiempo As String) As String
-        Dim carpetaLegajo = Path.Combine(CarpetaBaseRecibos, legajo)
-        Directory.CreateDirectory(carpetaLegajo)
+        Dim carpetaLegajo = If(String.IsNullOrWhiteSpace(carpetaDestino),
+                               legajo,
+                               Path.Combine(carpetaDestino, legajo))
         Dim indice = 1
 
         Do
@@ -318,21 +356,24 @@ Public Class frmEnvioRecibos
     End Sub
 
     Private Sub GuardarDetalleProceso(idProceso As Integer, archivo As ArchivoGeneradoInfo, fechaProceso As DateTime)
+        Dim rutaPdfGuardar = If(Not String.IsNullOrWhiteSpace(archivo.RutaSambaUnc), archivo.RutaSambaUnc, archivo.RutaCompleta)
+
         Dim sql = "INSERT INTO RecibosProcesosDetalles " &
-                  "(IdProceso, Legajo, ArchivoPdf, RutaPdf, CantidadPaginas, PaginasOrigen, FechaGeneracion, EstadoGeneracion, MensajeGeneracion, FechaEnvio, EstadoEnvio, MensajeEnvio, PeriodoProcesado) " &
-                  "VALUES (@IdProceso, @Legajo, @ArchivoPdf, @RutaPdf, @CantidadPaginas, @PaginasOrigen, @FechaGeneracion, @EstadoGeneracion, @MensajeGeneracion, NULL, 'PENDIENTE', NULL, @PeriodoProcesado)"
+                  "(IdProceso, Legajo, ArchivoPdf, RutaPdf, CantidadPaginas, PaginasOrigen, FechaGeneracion, EstadoGeneracion, MensajeGeneracion, FechaEnvio, EstadoEnvio, MensajeEnvio, PeriodoProcesado, TokenVista) " &
+                  "VALUES (@IdProceso, @Legajo, @ArchivoPdf, @RutaPdf, @CantidadPaginas, @PaginasOrigen, @FechaGeneracion, @EstadoGeneracion, @MensajeGeneracion, NULL, 'PENDIENTE', NULL, @PeriodoProcesado, @TokenVista)"
 
         Dim parametros = CmdParams(
             "@IdProceso", idProceso,
             "@Legajo", archivo.Legajo,
             "@ArchivoPdf", archivo.Archivo,
-            "@RutaPdf", archivo.RutaCompleta,
+            "@RutaPdf", rutaPdfGuardar,
             "@CantidadPaginas", archivo.CantidadPaginas,
             "@PaginasOrigen", archivo.PaginasOrigen,
             "@FechaGeneracion", fechaProceso,
             "@EstadoGeneracion", "GENERADO",
             "@MensajeGeneracion", "Archivo generado correctamente",
-            "@PeriodoProcesado", New DateTime(dtpPeriodo.Value.Year, dtpPeriodo.Value.Month, 1))
+            "@PeriodoProcesado", New DateTime(dtpPeriodo.Value.Year, dtpPeriodo.Value.Month, 1),
+            "@TokenVista", If(String.IsNullOrWhiteSpace(archivo.TokenVista), CObj(DBNull.Value), archivo.TokenVista))
 
         DSM.Execute(DSM.Personal, sql, parametros, True)
     End Sub
@@ -412,18 +453,16 @@ Public Class frmEnvioRecibos
         Dim valorRuta = fila.Cells("Ruta").Value
         Dim rutaArchivo = If(valorRuta IsNot Nothing, valorRuta.ToString(), String.Empty)
 
-        If String.IsNullOrWhiteSpace(rutaArchivo) OrElse Not File.Exists(rutaArchivo) Then
-            MessageBox.Show("No se encontró el archivo PDF seleccionado.", "Archivo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
+        Dim errMsg As String = ""
+        If Not SambaShareHelper.AbrirPdfShareSamba(rutaArchivo, SambaUncRaiz, SambaUsuario, SambaDominio, SambaClave, errMsg) Then
+            Dim mensajeMostrar = If(String.IsNullOrWhiteSpace(errMsg), "No se encontró el archivo PDF seleccionado.", errMsg)
+            Dim iconoMostrar = If(mensajeMostrar.IndexOf("PDF", StringComparison.OrdinalIgnoreCase) >= 0, MessageBoxIcon.Warning, MessageBoxIcon.Error)
+            If iconoMostrar = MessageBoxIcon.Warning Then
+                MessageBox.Show(mensajeMostrar, "Archivo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Else
+                MessageBox.Show(mensajeMostrar, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         End If
-
-        Try
-            Process.Start(New ProcessStartInfo(rutaArchivo) With {
-                .UseShellExecute = True
-            })
-        Catch ex As Exception
-            MessageBox.Show($"No se pudo abrir el archivo seleccionado.{Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
     End Sub
 
 
@@ -446,35 +485,22 @@ Public Class frmEnvioRecibos
             dgvListaRecibos.Columns(NombreColumnaSeleccion).Visible = rdbSeleccion.Checked
         End If
 
-        dgvListaRecibos.Columns("Legajo").HeaderText = "Legajo"
-        dgvListaRecibos.Columns("Legajo").Width = 50
-        dgvListaRecibos.Columns("Legajo").Visible = True
-
-        dgvListaRecibos.Columns("Archivo").HeaderText = "Archivo Generado"
-        dgvListaRecibos.Columns("Archivo").Width = 170
-        dgvListaRecibos.Columns("Archivo").Visible = True
-
-        dgvListaRecibos.Columns("Paginas").HeaderText = "Páginas"
-        dgvListaRecibos.Columns("Paginas").Width = 60
-        dgvListaRecibos.Columns("Paginas").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        dgvListaRecibos.Columns("Paginas").Visible = True
-
-
-        dgvListaRecibos.Columns("Ruta").HeaderText = "Ruta"
-        dgvListaRecibos.Columns("Ruta").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgvListaRecibos.Columns("Ruta").Visible = True
-        dgvListaRecibos.Columns("Ruta").Width = 60
-
-        If dgvListaRecibos.Columns.Contains("EstadoEnvio") Then
-            dgvListaRecibos.Columns("EstadoEnvio").HeaderText = "Estado"
-            dgvListaRecibos.Columns("EstadoEnvio").Width = 90
-            dgvListaRecibos.Columns("EstadoEnvio").Visible = True
+        If dgvListaRecibos.Columns.Contains("Legajo") Then
+            dgvListaRecibos.Columns("Legajo").HeaderText = "Legajo"
+            dgvListaRecibos.Columns("Legajo").Width = 50
+            dgvListaRecibos.Columns("Legajo").Visible = True
         End If
 
-        If dgvListaRecibos.Columns.Contains("MensajeEnvio") Then
-            dgvListaRecibos.Columns("MensajeEnvio").HeaderText = "Mensaje Envío"
-            dgvListaRecibos.Columns("MensajeEnvio").Width = 220
-            dgvListaRecibos.Columns("MensajeEnvio").Visible = True
+        If dgvListaRecibos.Columns.Contains("Nombre") Then
+            dgvListaRecibos.Columns("Nombre").HeaderText = "Agente"
+            dgvListaRecibos.Columns("Nombre").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            dgvListaRecibos.Columns("Nombre").Visible = True
+        End If
+
+        If dgvListaRecibos.Columns.Contains("EstadoEnvio") Then
+            dgvListaRecibos.Columns("EstadoEnvio").HeaderText = "Estado Envío"
+            dgvListaRecibos.Columns("EstadoEnvio").Width = 90
+            dgvListaRecibos.Columns("EstadoEnvio").Visible = True
         End If
 
         If dgvListaRecibos.Columns.Contains("FechaEnvio") Then
@@ -482,6 +508,32 @@ Public Class frmEnvioRecibos
             dgvListaRecibos.Columns("FechaEnvio").Width = 120
             dgvListaRecibos.Columns("FechaEnvio").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
             dgvListaRecibos.Columns("FechaEnvio").Visible = True
+        End If
+
+        If dgvListaRecibos.Columns.Contains("EstadoApertura") Then
+            dgvListaRecibos.Columns("EstadoApertura").HeaderText = "Estado Apertura"
+            dgvListaRecibos.Columns("EstadoApertura").Width = 120
+            dgvListaRecibos.Columns("EstadoApertura").Visible = True
+        End If
+
+        If dgvListaRecibos.Columns.Contains("FechaApertura") Then
+            dgvListaRecibos.Columns("FechaApertura").HeaderText = "Fecha Apertura"
+            dgvListaRecibos.Columns("FechaApertura").Width = 120
+            dgvListaRecibos.Columns("FechaApertura").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
+            dgvListaRecibos.Columns("FechaApertura").Visible = True
+        End If
+
+        If dgvListaRecibos.Columns.Contains("Accion") Then
+            dgvListaRecibos.Columns("Accion").HeaderText = "Estado Conforme"
+            dgvListaRecibos.Columns("Accion").Width = 120
+            dgvListaRecibos.Columns("Accion").Visible = True
+        End If
+
+        If dgvListaRecibos.Columns.Contains("FechaConforme") Then
+            dgvListaRecibos.Columns("FechaConforme").HeaderText = "Fecha Conforme"
+            dgvListaRecibos.Columns("FechaConforme").Width = 120
+            dgvListaRecibos.Columns("FechaConforme").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
+            dgvListaRecibos.Columns("FechaConforme").Visible = True
         End If
     End Sub
 
@@ -582,6 +634,7 @@ Public Class frmEnvioRecibos
                     Dim idDetalle = Convert.ToInt32(filaDetalle("IdDetalle"))
                     Dim legajo = filaDetalle("Legajo").ToString().Trim()
                     Dim rutaPdf = filaDetalle("RutaPdf").ToString().Trim()
+                    Dim tokenVista = If(filaDetalle("TokenVista") IsNot DBNull.Value, filaDetalle("TokenVista")?.ToString(), "")
                     Dim correoDestino = ObtenerCorreoAgente(legajo)
 
                     If String.IsNullOrWhiteSpace(correoDestino) Then
@@ -590,25 +643,47 @@ Public Class frmEnvioRecibos
                         Continue For
                     End If
 
-                    If String.IsNullOrWhiteSpace(rutaPdf) OrElse Not File.Exists(rutaPdf) Then
-                        ActualizarResultadoEnvioDetalle(idDetalle, "ARCHIVO_NO_ENCONTRADO", "No se encontró el archivo PDF a adjuntar.")
+                    If String.IsNullOrWhiteSpace(rutaPdf) Then
+                        ActualizarResultadoEnvioDetalle(idDetalle, "ARCHIVO_NO_ENCONTRADO", "No hay RutaPdf informada para este recibo.")
                         sinArchivo += 1
                         Continue For
                     End If
 
-                    Dim token = GenerarTokenConfirmacion()
+                    If String.IsNullOrWhiteSpace(tokenVista) Then
+                        tokenVista = GenerarTokenVista()
+                        Dim rutaSamba = ""
+                        If Not String.IsNullOrWhiteSpace(SambaUsuario) AndAlso rutaPdf.StartsWith(CarpetaBaseRecibos, StringComparison.OrdinalIgnoreCase) Then
+                            Dim pathRelativo = rutaPdf.Substring(CarpetaBaseRecibos.Length).TrimStart("\"c)
+                            rutaSamba = If(String.IsNullOrWhiteSpace(pathRelativo),
+                                           Path.Combine(SambaUncRaiz, Path.GetFileName(rutaPdf)),
+                                           Path.Combine(SambaUncRaiz, pathRelativo))
+
+                            Dim errSamba As String = ""
+                            If SambaShareHelper.CopiarPdfASamba(rutaPdf, rutaSamba, SambaUncRaiz, SambaUsuario, SambaDominio, SambaClave, True, errSamba) Then
+                                rutaPdf = rutaSamba
+                            End If
+                        End If
+                        Dim okGuardar = GuardarTokenVistaYActualizarRuta(idDetalle, tokenVista, rutaPdf)
+                        If Not okGuardar Then
+                            ActualizarResultadoEnvioDetalle(idDetalle, "ERROR", "No se pudo generar el TokenVista para este recibo.")
+                            conError += 1
+                            Continue For
+                        End If
+                    End If
+
+                    Dim tokenConfirmacion = GenerarTokenConfirmacion()
                     Dim fechaExpiracionToken = DateTime.Now.AddDays(DiasExpiracionTokenConfirmacion)
-                    Dim tokenGuardado = GuardarTokenConfirmacion(idDetalle, token, fechaExpiracionToken)
+                    Dim tokenGuardado = GuardarTokenConfirmacion(idDetalle, tokenConfirmacion, fechaExpiracionToken)
                     If Not tokenGuardado Then
                         ActualizarResultadoEnvioDetalle(idDetalle, "ERROR", "No se pudo generar el token de confirmación para este recibo.")
                         conError += 1
                         Continue For
                     End If
 
-                    Dim linkConfirmacion = ObtenerLinkConfirmacion(token)
+                    Dim linkVista = ObtenerLinkVista(tokenVista)
                     Dim asunto = ConstruirTextoCorreo(asuntoBase, periodoTexto)
                     Dim mensajeConPeriodo = ConstruirTextoCorreo(mensajeBase, periodoTexto)
-                    Dim mensajeHtml = ConstruirCuerpoCorreoConfirmacion(mensajeConPeriodo, linkConfirmacion)
+                    Dim mensajeHtml = ConstruirCuerpoCorreoVisor(mensajeConPeriodo, linkVista)
 
                     Try
                         Using mail As New MailMessage()
@@ -617,12 +692,11 @@ Public Class frmEnvioRecibos
                             mail.Body = mensajeHtml
                             mail.IsBodyHtml = True
                             mail.To.Add(correoDestino)
-                            mail.Attachments.Add(New Attachment(rutaPdf))
 
                             smtpClient.Send(mail)
                         End Using
 
-                        ActualizarResultadoEnvioDetalle(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} con links de confirmación.")
+                        ActualizarResultadoEnvioDetalle(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} - link visor.")
                         enviados += 1
                     Catch exEnvio As Exception
                         Dim detalleError = If(exEnvio.InnerException?.Message, exEnvio.Message)
@@ -750,7 +824,7 @@ Public Class frmEnvioRecibos
     End Function
 
     Private Function ObtenerDetallesProceso(idProceso As Integer) As DataTable
-        Dim sql = "SELECT IdDetalle, Legajo, RutaPdf " &
+        Dim sql = "SELECT IdDetalle, Legajo, RutaPdf, TokenVista " &
                   "FROM RecibosProcesosDetalles " &
                   "WHERE IdProceso = @IdProceso " &
                   "ORDER BY Legajo"
@@ -798,8 +872,21 @@ Public Class frmEnvioRecibos
                       .Replace("=", "")
     End Function
 
+    Private Function GenerarTokenVista() As String
+        Dim bytes(31) As Byte
+        System.Security.Cryptography.RandomNumberGenerator.Fill(bytes)
+        Return Convert.ToBase64String(bytes) _
+                      .Replace("+", "-") _
+                      .Replace("/", "_") _
+                      .Replace("=", "")
+    End Function
+
+    Private Function ObtenerLinkVista(tokenVista As String) As String
+        Return $"{BaseUrlPublico.TrimEnd("/"c)}/ver?token={Uri.EscapeDataString(tokenVista)}"
+    End Function
+
     Private Function ObtenerLinkConfirmacion(token As String) As String
-        Return $"{BaseUrlConfirmaciones.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
+        Return $"{BaseUrlPublico.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
     End Function
 
     Private Function GuardarTokenConfirmacion(idDetalle As Integer, token As String, fechaExpiracion As DateTime) As Boolean
@@ -823,17 +910,37 @@ Public Class frmEnvioRecibos
         End Try
     End Function
 
-    Private Function ConstruirCuerpoCorreoConfirmacion(textoBase As String, linkConfirmacion As String) As String
+    Private Function GuardarTokenVistaYActualizarRuta(idDetalle As Integer, tokenVista As String, rutaPdfNueva As String) As Boolean
+        Try
+            Dim sql = "UPDATE RecibosProcesosDetalles " &
+                      "SET TokenVista = @TokenVista, " &
+                      "    RutaPdf = @RutaPdf " &
+                      "WHERE IdDetalle = @IdDetalle " &
+                      "  AND TokenVista IS NULL"
+
+            Dim parametros = CmdParams(
+                "@TokenVista", tokenVista,
+                "@RutaPdf", If(String.IsNullOrWhiteSpace(rutaPdfNueva), DBNull.Value, CObj(rutaPdfNueva)),
+                "@IdDetalle", idDetalle)
+
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+            Return True
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Function ConstruirCuerpoCorreoVisor(textoBase As String, linkVista As String) As String
         Dim textoPlano = If(textoBase, String.Empty).Replace(Environment.NewLine, "<br/>")
 
         Return $"<html><body style=""font-family:Arial, sans-serif; font-size:12pt;"">
 <p>{textoPlano}</p>
-<p>Por favor, abrí el siguiente enlace para confirmar tu recepción y conformidad del bono:</p>
+<p>Por favor, abrí el siguiente enlace para visualizar tu bono de sueldo, descargarlo y confirmar tu recepción:</p>
 <p style=""margin-top:20px;"">
-  <a href=""{linkConfirmacion}""
-     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">CONFIRMAR BONO DE SUELDO</a>
+  <a href=""{linkVista}""
+     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">VER BONO DE SUELDO</a>
 </p>
-<p style=""margin-top:12px;color:#555;font-size:10pt;"">Al abrir el enlace vas a ver los datos del bono y podrás seleccionar si estás conforme o manifestar tu disconformidad.</p>
+<p style=""margin-top:12px;color:#555;font-size:10pt;"">Dentro de la pantalla vas a encontrar el PDF del Recibo de sueldo para descargarlo.</p>
 <p style=""margin-top:20px;color:#555;font-size:10pt;"">Este link es personal e intransferible. Si no podés abrirlo, contactate con RRHH.</p>
 </body></html>"
     End Function
@@ -865,6 +972,8 @@ Public Class ArchivoGeneradoInfo
     Public Property CantidadPaginas As Integer
     Public Property PaginasOrigen As String
     Public Property RutaCompleta As String
+    Public Property TokenVista As String
+    Public Property RutaSambaUnc As String
 End Class
 
 Public Class ResultadoProcesoRecibos

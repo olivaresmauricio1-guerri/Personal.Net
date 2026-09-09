@@ -4,6 +4,7 @@ Imports Google.Apis.Auth.OAuth2
 Imports Google.Apis.Services
 Imports Google.Apis.Sheets.v4
 Imports Google.Apis.Sheets.v4.Data
+Imports System.Diagnostics
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
@@ -11,8 +12,13 @@ Imports System.Net.Mail
 
 Public Class frmAgentes
     Private Const NombreColumnaSeleccionBonos As String = "SeleccionadoBono"
-    Private Const BaseUrlConfirmacionesBonos As String = "https://bonosguerrini.abrdns.com:8443"
+    Private Const BaseUrlPublicoBonos As String = "https://rrhh.guerrinisa.com.ar" 'https://bonosguerrini.abrdns.com:8443"
     Private Const DiasExpiracionTokenConfirmacionBono As Integer = 10
+    Private Const CarpetaBaseRecibosBonos As String = "F:\Personal.Net\Recibos"
+    Private Const SambaUncRaizBonos As String = "\\192.168.2.58\Recibos"
+    Private Const SambaDominioBonos As String = ""
+    Private Const SambaUsuarioBonos As String = "rrhh"
+    Private Const SambaClaveBonos As String = "K7mQ2xP9vR4nT8zL5cW1jH6sD3fY0aB8"
     Private _suspenderAccionFiltros As Boolean = False
     'Public Property MostrarSoloEventuales As Boolean?
 
@@ -59,6 +65,14 @@ Public Class frmAgentes
         ConfiguraColFamilia()
         ConfiguraColEquipamiento()
         ModificaAgente()
+        If VeBonos Then
+            btnBonos.Visible = True
+            'ocultar el tabbons
+
+        Else
+            btnBonos.Visible = False
+            tabDatos.TabPages.Remove(tabBonos)
+        End If
         _suspenderAccionFiltros = False
         Me.KeyPreview = True
     End Sub
@@ -1855,10 +1869,6 @@ ELSE
                 dgvBonos.Columns("FechaEnvio").Width = 120
                 dgvBonos.Columns("FechaEnvio").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
 
-                dgvBonos.Columns("RutaPdf").Visible = True
-                dgvBonos.Columns("RutaPdf").HeaderText = "Ruta PDF"
-                dgvBonos.Columns("RutaPdf").Width = 200
-
                 dgvBonos.Columns("EstadoConfirmacion").Visible = True
                 dgvBonos.Columns("EstadoConfirmacion").HeaderText = "Estado Confirmacion"
                 dgvBonos.Columns("EstadoConfirmacion").Width = 130
@@ -1867,6 +1877,16 @@ ELSE
                 dgvBonos.Columns("FechaConfirmacion").HeaderText = "Fecha Confirmacion"
                 dgvBonos.Columns("FechaConfirmacion").Width = 120
                 dgvBonos.Columns("FechaConfirmacion").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
+
+                dgvBonos.Columns("EstadoApertura").Visible = True
+                dgvBonos.Columns("EstadoApertura").HeaderText = "Estado Apertura"
+                dgvBonos.Columns("EstadoApertura").Width = 130
+
+                dgvBonos.Columns("FechaPrimerAccesoLink").Visible = True
+                dgvBonos.Columns("FechaPrimerAccesoLink").HeaderText = "Fecha Apertura"
+                dgvBonos.Columns("FechaPrimerAccesoLink").Width = 120
+                dgvBonos.Columns("FechaPrimerAccesoLink").DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss"
+
 
                 ConfigurarEstiloGrid(dgvBonos)
             End If
@@ -2629,27 +2649,50 @@ ELSE
                 For Each filaBono As DataRow In bonos.Rows
                     Dim idDetalle = Convert.ToInt32(filaBono("IdDetalle"))
                     Dim rutaPdf = filaBono("RutaPdf").ToString().Trim()
+                    Dim tokenVista = If(filaBono("TokenVista") IsNot DBNull.Value, filaBono("TokenVista")?.ToString(), "")
                     Dim periodoTexto = ObtenerPeriodoProcesadoBono(filaBono("PeriodoProcesado"))
 
-                    If String.IsNullOrWhiteSpace(rutaPdf) OrElse Not File.Exists(rutaPdf) Then
-                        ActualizarResultadoEnvioBono(idDetalle, "ARCHIVO_NO_ENCONTRADO", "No se encontró el archivo PDF a adjuntar.")
+                    If String.IsNullOrWhiteSpace(rutaPdf) Then
+                        ActualizarResultadoEnvioBono(idDetalle, "ARCHIVO_NO_ENCONTRADO", "No hay RutaPdf informada para este bono.")
                         sinArchivo += 1
                         Continue For
                     End If
 
-                    Dim token = GenerarTokenConfirmacionBono()
+                    If String.IsNullOrWhiteSpace(tokenVista) Then
+                        tokenVista = GenerarTokenVistaBono()
+                        Dim rutaSamba = ""
+                        If Not String.IsNullOrWhiteSpace(SambaUsuarioBonos) AndAlso rutaPdf.StartsWith(CarpetaBaseRecibosBonos, StringComparison.OrdinalIgnoreCase) Then
+                            Dim pathRelativo = rutaPdf.Substring(CarpetaBaseRecibosBonos.Length).TrimStart("\"c)
+                            rutaSamba = If(String.IsNullOrWhiteSpace(pathRelativo),
+                                           Path.Combine(SambaUncRaizBonos, Path.GetFileName(rutaPdf)),
+                                           Path.Combine(SambaUncRaizBonos, pathRelativo))
+
+                            Dim errSamba As String = ""
+                            If SambaShareHelper.CopiarPdfASamba(rutaPdf, rutaSamba, SambaUncRaizBonos, SambaUsuarioBonos, SambaDominioBonos, SambaClaveBonos, True, errSamba) Then
+                                rutaPdf = rutaSamba
+                            End If
+                        End If
+                        Dim okGuardar = GuardarTokenVistaYActualizarRutaBono(idDetalle, tokenVista, rutaPdf)
+                        If Not okGuardar Then
+                            ActualizarResultadoEnvioBono(idDetalle, "ERROR", "No se pudo generar el TokenVista para este bono.")
+                            conError += 1
+                            Continue For
+                        End If
+                    End If
+
+                    Dim tokenConfirmacion = GenerarTokenConfirmacionBono()
                     Dim fechaExpiracionToken = DateTime.Now.AddDays(DiasExpiracionTokenConfirmacionBono)
-                    Dim tokenGuardado = GuardarTokenConfirmacionBono(idDetalle, token, fechaExpiracionToken)
+                    Dim tokenGuardado = GuardarTokenConfirmacionBono(idDetalle, tokenConfirmacion, fechaExpiracionToken)
                     If Not tokenGuardado Then
                         ActualizarResultadoEnvioBono(idDetalle, "ERROR", "No se pudo generar el token de confirmación para este bono.")
                         conError += 1
                         Continue For
                     End If
 
-                    Dim linkConfirmacion = ObtenerLinkConfirmacionBono(token)
+                    Dim linkVista = ObtenerLinkVistaBono(tokenVista)
                     Dim asunto = ConstruirTextoCorreoBono(asuntoBase, periodoTexto)
                     Dim mensajeConPeriodo = ConstruirTextoCorreoBono(mensajeBase, periodoTexto)
-                    Dim mensajeHtml = ConstruirCuerpoCorreoConfirmacionBono(mensajeConPeriodo, linkConfirmacion)
+                    Dim mensajeHtml = ConstruirCuerpoCorreoVisorBono(mensajeConPeriodo, linkVista)
 
                     Try
                         Using mail As New MailMessage()
@@ -2658,12 +2701,11 @@ ELSE
                             mail.Body = mensajeHtml
                             mail.IsBodyHtml = True
                             mail.To.Add(correoDestino)
-                            mail.Attachments.Add(New Attachment(rutaPdf))
 
                             smtpClient.Send(mail)
                         End Using
 
-                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} con links de confirmación.")
+                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} - link visor.")
                         enviados += 1
                     Catch exEnvio As Exception
                         Dim detalleError = If(exEnvio.InnerException?.Message, exEnvio.Message)
@@ -2739,18 +2781,16 @@ ELSE
         Dim valorRuta = fila.Cells("RutaPdf").Value
         Dim rutaArchivo = If(valorRuta IsNot Nothing, valorRuta.ToString(), String.Empty)
 
-        If String.IsNullOrWhiteSpace(rutaArchivo) OrElse Not File.Exists(rutaArchivo) Then
-            MessageBox.Show("No se encontró el archivo PDF seleccionado.", "Archivo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
+        Dim errMsg As String = ""
+        If Not SambaShareHelper.AbrirPdfShareSamba(rutaArchivo, SambaUncRaizBonos, SambaUsuarioBonos, SambaDominioBonos, SambaClaveBonos, errMsg) Then
+            Dim mensajeMostrar = If(String.IsNullOrWhiteSpace(errMsg), "No se encontró el archivo PDF seleccionado.", errMsg)
+            Dim iconoMostrar = If(mensajeMostrar.IndexOf("PDF", StringComparison.OrdinalIgnoreCase) >= 0, MessageBoxIcon.Warning, MessageBoxIcon.Error)
+            If iconoMostrar = MessageBoxIcon.Warning Then
+                MessageBox.Show(mensajeMostrar, "Archivo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Else
+                MessageBox.Show(mensajeMostrar, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
         End If
-
-        Try
-            Process.Start(New ProcessStartInfo(rutaArchivo) With {
-                .UseShellExecute = True
-            })
-        Catch ex As Exception
-            MessageBox.Show($"No se pudo abrir el archivo seleccionado.{Environment.NewLine}{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
     End Sub
 
     Private Sub AsegurarColumnaSeleccionBonos()
@@ -2868,8 +2908,21 @@ ELSE
                       .Replace("=", "")
     End Function
 
+    Private Function GenerarTokenVistaBono() As String
+        Dim bytes(31) As Byte
+        System.Security.Cryptography.RandomNumberGenerator.Fill(bytes)
+        Return Convert.ToBase64String(bytes) _
+                      .Replace("+", "-") _
+                      .Replace("/", "_") _
+                      .Replace("=", "")
+    End Function
+
+    Private Function ObtenerLinkVistaBono(tokenVista As String) As String
+        Return $"{BaseUrlPublicoBonos.TrimEnd("/"c)}/ver?token={Uri.EscapeDataString(tokenVista)}"
+    End Function
+
     Private Function ObtenerLinkConfirmacionBono(token As String) As String
-        Return $"{BaseUrlConfirmacionesBonos.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
+        Return $"{BaseUrlPublicoBonos.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
     End Function
 
     Private Function GuardarTokenConfirmacionBono(idDetalle As Integer, token As String, fechaExpiracion As DateTime) As Boolean
@@ -2893,17 +2946,37 @@ ELSE
         End Try
     End Function
 
-    Private Function ConstruirCuerpoCorreoConfirmacionBono(textoBase As String, linkConfirmacion As String) As String
+    Private Function GuardarTokenVistaYActualizarRutaBono(idDetalle As Integer, tokenVista As String, rutaPdfNueva As String) As Boolean
+        Try
+            Dim sql = "UPDATE RecibosProcesosDetalles " &
+                      "SET TokenVista = @TokenVista, " &
+                      "    RutaPdf = @RutaPdf " &
+                      "WHERE IdDetalle = @IdDetalle " &
+                      "  AND TokenVista IS NULL"
+
+            Dim parametros = CmdParams(
+                "@TokenVista", tokenVista,
+                "@RutaPdf", If(String.IsNullOrWhiteSpace(rutaPdfNueva), DBNull.Value, CObj(rutaPdfNueva)),
+                "@IdDetalle", idDetalle)
+
+            DSM.Execute(DSM.Personal, sql, parametros, True)
+            Return True
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Function ConstruirCuerpoCorreoVisorBono(textoBase As String, linkVista As String) As String
         Dim textoPlano = If(textoBase, String.Empty).Replace(Environment.NewLine, "<br/>")
 
         Return $"<html><body style=""font-family:Arial, sans-serif; font-size:12pt;"">
 <p>{textoPlano}</p>
-<p>Por favor, abrí el siguiente enlace para confirmar tu bono de sueldo:</p>
+<p>Por favor, abrí el siguiente enlace para visualizar tu bono de sueldo, descargarlo y confirmar tu recepción:</p>
 <p style=""margin-top:20px;"">
-  <a href=""{linkConfirmacion}""
-     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">CONFIRMAR BONO DE SUELDO</a>
+  <a href=""{linkVista}""
+     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">VER BONO DE SUELDO</a>
 </p>
-<p style=""margin-top:12px;color:#555;font-size:10pt;"">Al abrir el enlace vas a ver los datos del bono y podrás seleccionar si estás conforme o manifestar tu disconformidad.</p>
+<p style=""margin-top:12px;color:#555;font-size:10pt;"">Dentro de la pantalla vas a encontrar el PDF del Recibo de sueldo para descargarlo.</p>
 <p style=""margin-top:20px;color:#555;font-size:10pt;"">Este link es personal e intransferible. Si no podés abrirlo, contactate con RRHH.</p>
 </body></html>"
     End Function
