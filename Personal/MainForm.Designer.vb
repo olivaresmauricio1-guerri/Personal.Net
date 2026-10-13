@@ -172,12 +172,14 @@ Partial Class MainForm
         MnuConfiguracion.DropDownItems.AddRange(New ToolStripItem() {MnuConImp, ToolStripSeparator1, MnuCalculadora, MnuAlmanaque, ToolStripSeparator2, MnuClave, ToolStripSeparator3, MnuSalir})
         MnuConfiguracion.Name = "MnuConfiguracion"
         MnuConfiguracion.Size = New Size(95, 20)
+        MnuConfiguracion.Tag = "RELOJ_CONFIGURACION"
         MnuConfiguracion.Text = "&Configuración"
         ' 
         ' MnuConImp
         ' 
         MnuConImp.Name = "MnuConImp"
         MnuConImp.Size = New Size(186, 22)
+        MnuConImp.Tag = "RELOJ_CONFIGURACION_ESPECIFICAR_IMPRESORA"
         MnuConImp.Text = "Especificar &Impresora"
         ' 
         ' ToolStripSeparator1
@@ -189,12 +191,14 @@ Partial Class MainForm
         ' 
         MnuCalculadora.Name = "MnuCalculadora"
         MnuCalculadora.Size = New Size(186, 22)
+        MnuCalculadora.Tag = "RELOJ_CONFIGURACION_CALCULADORA"
         MnuCalculadora.Text = "&Calculadora"
         ' 
         ' MnuAlmanaque
         ' 
         MnuAlmanaque.Name = "MnuAlmanaque"
         MnuAlmanaque.Size = New Size(186, 22)
+        MnuAlmanaque.Tag = "RELOJ_CONFIGURACION_ALMANAQUE"
         MnuAlmanaque.Text = "&Almanaque"
         ' 
         ' ToolStripSeparator2
@@ -206,6 +210,7 @@ Partial Class MainForm
         ' 
         MnuClave.Name = "MnuClave"
         MnuClave.Size = New Size(186, 22)
+        MnuClave.Tag = "RELOJ_CONFIGURACION_INGRESO_DE_CLAVES"
         MnuClave.Text = "Ingreso de Claves"
         ' 
         ' ToolStripSeparator3
@@ -217,6 +222,7 @@ Partial Class MainForm
         ' 
         MnuSalir.Name = "MnuSalir"
         MnuSalir.Size = New Size(186, 22)
+        MnuSalir.Tag = "RELOJ_CONFIGURACION_SALIR"
         MnuSalir.Text = "&Salir"
         ' 
         ' MnuImportaciones
@@ -224,12 +230,14 @@ Partial Class MainForm
         MnuImportaciones.DropDownItems.AddRange(New ToolStripItem() {MnuBajaNovedades, ToolStripSeparator4, MnuImportarAuto})
         MnuImportaciones.Name = "MnuImportaciones"
         MnuImportaciones.Size = New Size(95, 20)
+        MnuImportaciones.Tag = "RELOJ_IMPORTACIONES"
         MnuImportaciones.Text = "&Importaciones"
         ' 
         ' MnuBajaNovedades
         ' 
         MnuBajaNovedades.Name = "MnuBajaNovedades"
         MnuBajaNovedades.Size = New Size(267, 22)
+        MnuBajaNovedades.Tag = "RELOJ_IMPORTACIONES_BAJAR_NOVEDADES_RELOJ"
         MnuBajaNovedades.Text = "Bajar Novedades Reloj"
         ' 
         ' ToolStripSeparator4
@@ -241,6 +249,7 @@ Partial Class MainForm
         ' 
         MnuImportarAuto.Name = "MnuImportarAuto"
         MnuImportarAuto.Size = New Size(267, 22)
+        MnuImportarAuto.Tag = "RELOJ_IMPORTACIONES_IMPORTAR_NOVEDADES_RELOJ_AUTOSHOP"
         MnuImportarAuto.Text = "Importar Novedades Reloj AutoShop"
         ' 
         ' MnuActualizaciones
@@ -248,18 +257,21 @@ Partial Class MainForm
         MnuActualizaciones.DropDownItems.AddRange(New ToolStripItem() {MnuMantenimientoAgentes, MnuMantenimientoEventuales, ToolStripSeparator5, MnuIngresoHorario, MnuIngresoInasistencias, MnuBajaInasistencia, ToolStripSeparator6, MnuDetectarInasistencias, ToolStripSeparator7, MnuIngresoHorarioManual, ToolStripSeparator8, MnuCambiarLegajo, ToolStripSeparator9, MnuVacaciones})
         MnuActualizaciones.Name = "MnuActualizaciones"
         MnuActualizaciones.Size = New Size(101, 20)
+        MnuActualizaciones.Tag = "RELOJ_ACTUALIZACIONES"
         MnuActualizaciones.Text = "&Actualizaciones"
         ' 
         ' MnuMantenimientoAgentes
         ' 
         MnuMantenimientoAgentes.Name = "MnuMantenimientoAgentes"
         MnuMantenimientoAgentes.Size = New Size(245, 22)
+        MnuMantenimientoAgentes.Tag = "RELOJ_ACTUALIZACIONES_MANTENIMIENTO_DE_AGENTES"
         MnuMantenimientoAgentes.Text = "Mantenimiento de &Agentes"
         ' 
         ' MnuMantenimientoEventuales
         ' 
         MnuMantenimientoEventuales.Name = "MnuMantenimientoEventuales"
         MnuMantenimientoEventuales.Size = New Size(245, 22)
+        MnuMantenimientoEventuales.Tag = "RELOJ_ACTUALIZACIONES_MANTENIMIENTO_DE_EVENTUALES"
         MnuMantenimientoEventuales.Text = "Mantenimiento de Eventuales"
         MnuMantenimientoEventuales.Visible = False
         ' 
@@ -272,18 +284,21 @@ Partial Class MainForm
         ' 
         MnuIngresoHorario.Name = "MnuIngresoHorario"
         MnuIngresoHorario.Size = New Size(245, 22)
+        MnuIngresoHorario.Tag = "RELOJ_ACTUALIZACIONES_INGRESO_HORARIO"
         MnuIngresoHorario.Text = "&Ingreso Horario"
         ' 
         ' MnuIngresoInasistencias
         ' 
         MnuIngresoInasistencias.Name = "MnuIngresoInasistencias"
         MnuIngresoInasistencias.Size = New Size(245, 22)
+        MnuIngresoInasistencias.Tag = "RELOJ_ACTUALIZACIONES_INGRESO_INASISTENCIAS_JUSTIFICADAS"
         MnuIngresoInasistencias.Text = "&Ingreso Inasistencias Justificadas"
         ' 
         ' MnuBajaInasistencia
         ' 
         MnuBajaInasistencia.Name = "MnuBajaInasistencia"
         MnuBajaInasistencia.Size = New Size(245, 22)
+        MnuBajaInasistencia.Tag = "RELOJ_ACTUALIZACIONES_BAJA_INASISTENCIA"
         MnuBajaInasistencia.Text = "&Baja Inasistencia"
         ' 
         ' ToolStripSeparator6
@@ -295,6 +310,7 @@ Partial Class MainForm
         ' 
         MnuDetectarInasistencias.Name = "MnuDetectarInasistencias"
         MnuDetectarInasistencias.Size = New Size(245, 22)
+        MnuDetectarInasistencias.Tag = "RELOJ_ACTUALIZACIONES_DETECTAR_INASISTENCIAS"
         MnuDetectarInasistencias.Text = "&Detectar Inasistencias"
         ' 
         ' ToolStripSeparator7
@@ -306,6 +322,7 @@ Partial Class MainForm
         ' 
         MnuIngresoHorarioManual.Name = "MnuIngresoHorarioManual"
         MnuIngresoHorarioManual.Size = New Size(245, 22)
+        MnuIngresoHorarioManual.Tag = "RELOJ_ACTUALIZACIONES_INGRESO_HORARIO_MANUAL"
         MnuIngresoHorarioManual.Text = "Ingreso Horario Manual"
         ' 
         ' ToolStripSeparator8
@@ -317,6 +334,7 @@ Partial Class MainForm
         ' 
         MnuCambiarLegajo.Name = "MnuCambiarLegajo"
         MnuCambiarLegajo.Size = New Size(245, 22)
+        MnuCambiarLegajo.Tag = "RELOJ_ACTUALIZACIONES_CAMBIAR_LEGAJO_EN_MOVMIENTO"
         MnuCambiarLegajo.Text = "&Cambiar Legajo en Movimiento"
         ' 
         ' ToolStripSeparator9
@@ -328,6 +346,7 @@ Partial Class MainForm
         ' 
         MnuVacaciones.Name = "MnuVacaciones"
         MnuVacaciones.Size = New Size(245, 22)
+        MnuVacaciones.Tag = "RELOJ_ACTUALIZACIONES_VACACIONES"
         MnuVacaciones.Text = "&Vacaciones"
         ' 
         ' MnuConsultas
@@ -335,12 +354,14 @@ Partial Class MainForm
         MnuConsultas.DropDownItems.AddRange(New ToolStripItem() {MnuListadoMensualSucursal, ToolStripSeparator10, MnuListadoMensualOficina, ToolStripSeparator11, MnuListadoDiario, ToolStripSeparator12, MnuConsultarAgentes, ToolStripSeparator13, MnuResumenAsistencia, MnuResumenEventuales, ToolStripSeparator14, MnuInasistenciaSinAviso, MnuListadoInasistencias, ToolStripSeparator15, MnuListadoAgentes, MnuCumpleanos})
         MnuConsultas.Name = "MnuConsultas"
         MnuConsultas.Size = New Size(71, 20)
+        MnuConsultas.Tag = "RELOJ_CONSULTAS"
         MnuConsultas.Text = "C&onsultas"
         ' 
         ' MnuListadoMensualSucursal
         ' 
         MnuListadoMensualSucursal.Name = "MnuListadoMensualSucursal"
         MnuListadoMensualSucursal.Size = New Size(264, 22)
+        MnuListadoMensualSucursal.Tag = "RELOJ_CONSULTAS_LISTADO_MENSUAL_X_SUCURSAL"
         MnuListadoMensualSucursal.Text = "Listado Mensual x Sucursal"
         ' 
         ' ToolStripSeparator10
@@ -352,6 +373,7 @@ Partial Class MainForm
         ' 
         MnuListadoMensualOficina.Name = "MnuListadoMensualOficina"
         MnuListadoMensualOficina.Size = New Size(264, 22)
+        MnuListadoMensualOficina.Tag = "RELOJ_CONSULTAS_LISTADO_MENSUAL_X_SUCURSAL_X_OFICINA"
         MnuListadoMensualOficina.Text = "&Listado Mensual x Sucursal x Oficina"
         ' 
         ' ToolStripSeparator11
@@ -363,6 +385,7 @@ Partial Class MainForm
         ' 
         MnuListadoDiario.Name = "MnuListadoDiario"
         MnuListadoDiario.Size = New Size(264, 22)
+        MnuListadoDiario.Tag = "RELOJ_CONSULTAS_LISTADO_DIARIO_CONTROL_HORARIO"
         MnuListadoDiario.Text = "Listado Diario Control Horario"
         ' 
         ' ToolStripSeparator12
@@ -374,6 +397,7 @@ Partial Class MainForm
         ' 
         MnuConsultarAgentes.Name = "MnuConsultarAgentes"
         MnuConsultarAgentes.Size = New Size(264, 22)
+        MnuConsultarAgentes.Tag = "RELOJ_CONSULTAS_CONSULTAR_AGENTES"
         MnuConsultarAgentes.Text = "&Consultar Agentes"
         ' 
         ' ToolStripSeparator13
@@ -385,12 +409,14 @@ Partial Class MainForm
         ' 
         MnuResumenAsistencia.Name = "MnuResumenAsistencia"
         MnuResumenAsistencia.Size = New Size(264, 22)
+        MnuResumenAsistencia.Tag = "RELOJ_CONSULTAS_RESUMEN_DE_ASISTENCIA"
         MnuResumenAsistencia.Text = "&Resumen de Asistencia"
         ' 
         ' MnuResumenEventuales
         ' 
         MnuResumenEventuales.Name = "MnuResumenEventuales"
         MnuResumenEventuales.Size = New Size(264, 22)
+        MnuResumenEventuales.Tag = "RELOJ_CONSULTAS_RESUMEN_DE_ASISTENCIA_EVENTUALES"
         MnuResumenEventuales.Text = "Resumen de Asistencia Eventuales"
         MnuResumenEventuales.Visible = False
         ' 
@@ -403,12 +429,14 @@ Partial Class MainForm
         ' 
         MnuInasistenciaSinAviso.Name = "MnuInasistenciaSinAviso"
         MnuInasistenciaSinAviso.Size = New Size(264, 22)
+        MnuInasistenciaSinAviso.Tag = "RELOJ_CONSULTAS_INASISTENCIA_SIN_AVISO"
         MnuInasistenciaSinAviso.Text = "Inasistencia sin aviso"
         ' 
         ' MnuListadoInasistencias
         ' 
         MnuListadoInasistencias.Name = "MnuListadoInasistencias"
         MnuListadoInasistencias.Size = New Size(264, 22)
+        MnuListadoInasistencias.Tag = "RELOJ_CONSULTAS_LISTADO_DE_INASISTENCIAS"
         MnuListadoInasistencias.Text = "Listado de Inasistencias"
         ' 
         ' ToolStripSeparator15
@@ -420,12 +448,14 @@ Partial Class MainForm
         ' 
         MnuListadoAgentes.Name = "MnuListadoAgentes"
         MnuListadoAgentes.Size = New Size(264, 22)
+        MnuListadoAgentes.Tag = "RELOJ_CONSULTAS_LISTADOS_DE_AGENTES"
         MnuListadoAgentes.Text = "&Listados de Agentes"
         ' 
         ' MnuCumpleanos
         ' 
         MnuCumpleanos.Name = "MnuCumpleanos"
         MnuCumpleanos.Size = New Size(264, 22)
+        MnuCumpleanos.Tag = "RELOJ_CONSULTAS_CUMPLEANOS_DEL_MES"
         MnuCumpleanos.Text = "Cumpleaños del Mes"
         ' 
         ' MnuNomencladores
@@ -433,100 +463,110 @@ Partial Class MainForm
         MnuNomencladores.DropDownItems.AddRange(New ToolStripItem() {MnuAreas, ToolStripSeparator16, MnuCategorias, ToolStripSeparator17, MnuFeriados, ToolStripSeparator18, MnuEncargados, ToolStripSeparator19, MnuSucursales, ToolStripSeparator20, MnuTiposInasistencias, ToolStripSeparator21, MnuTipoActividad, ToolStripSeparator26, UniformesToolStripMenuItem, ToolStripSeparator27, TallesToolStripMenuItem})
         MnuNomencladores.Name = "MnuNomencladores"
         MnuNomencladores.Size = New Size(103, 20)
+        MnuNomencladores.Tag = "RELOJ_NOMENCLADORES"
         MnuNomencladores.Text = "&Nomencladores"
         ' 
         ' MnuAreas
         ' 
         MnuAreas.Name = "MnuAreas"
-        MnuAreas.Size = New Size(172, 22)
+        MnuAreas.Size = New Size(180, 22)
+        MnuAreas.Tag = "RELOJ_NOMENCLADORES_AREAS"
         MnuAreas.Text = "&Áreas"
         ' 
         ' ToolStripSeparator16
         ' 
         ToolStripSeparator16.Name = "ToolStripSeparator16"
-        ToolStripSeparator16.Size = New Size(169, 6)
+        ToolStripSeparator16.Size = New Size(177, 6)
         ' 
         ' MnuCategorias
         ' 
         MnuCategorias.Name = "MnuCategorias"
-        MnuCategorias.Size = New Size(172, 22)
+        MnuCategorias.Size = New Size(180, 22)
+        MnuCategorias.Tag = "RELOJ_NOMENCLADORES_CATEGORIAS"
         MnuCategorias.Text = "&Categorías"
         ' 
         ' ToolStripSeparator17
         ' 
         ToolStripSeparator17.Name = "ToolStripSeparator17"
-        ToolStripSeparator17.Size = New Size(169, 6)
+        ToolStripSeparator17.Size = New Size(177, 6)
         ' 
         ' MnuFeriados
         ' 
         MnuFeriados.Name = "MnuFeriados"
-        MnuFeriados.Size = New Size(172, 22)
+        MnuFeriados.Size = New Size(180, 22)
+        MnuFeriados.Tag = "RELOJ_NOMENCLADORES_FERIADOS"
         MnuFeriados.Text = "&Feriados"
         ' 
         ' ToolStripSeparator18
         ' 
         ToolStripSeparator18.Name = "ToolStripSeparator18"
-        ToolStripSeparator18.Size = New Size(169, 6)
+        ToolStripSeparator18.Size = New Size(177, 6)
         ' 
         ' MnuEncargados
         ' 
         MnuEncargados.Name = "MnuEncargados"
-        MnuEncargados.Size = New Size(172, 22)
+        MnuEncargados.Size = New Size(180, 22)
+        MnuEncargados.Tag = "RELOJ_NOMENCLADORES_ENCARGADOS"
         MnuEncargados.Text = "Encargados"
         ' 
         ' ToolStripSeparator19
         ' 
         ToolStripSeparator19.Name = "ToolStripSeparator19"
-        ToolStripSeparator19.Size = New Size(169, 6)
+        ToolStripSeparator19.Size = New Size(177, 6)
         ' 
         ' MnuSucursales
         ' 
         MnuSucursales.Name = "MnuSucursales"
-        MnuSucursales.Size = New Size(172, 22)
+        MnuSucursales.Size = New Size(180, 22)
+        MnuSucursales.Tag = "RELOJ_NOMENCLADORES_SUCURSALES"
         MnuSucursales.Text = "&Sucursales"
         ' 
         ' ToolStripSeparator20
         ' 
         ToolStripSeparator20.Name = "ToolStripSeparator20"
-        ToolStripSeparator20.Size = New Size(169, 6)
+        ToolStripSeparator20.Size = New Size(177, 6)
         ' 
         ' MnuTiposInasistencias
         ' 
         MnuTiposInasistencias.Name = "MnuTiposInasistencias"
-        MnuTiposInasistencias.Size = New Size(172, 22)
+        MnuTiposInasistencias.Size = New Size(180, 22)
+        MnuTiposInasistencias.Tag = "RELOJ_NOMENCLADORES_TIPOS_INASISTENCIAS"
         MnuTiposInasistencias.Text = "&Tipos Inasistencias"
         ' 
         ' ToolStripSeparator21
         ' 
         ToolStripSeparator21.Name = "ToolStripSeparator21"
-        ToolStripSeparator21.Size = New Size(169, 6)
+        ToolStripSeparator21.Size = New Size(177, 6)
         ' 
         ' MnuTipoActividad
         ' 
         MnuTipoActividad.Name = "MnuTipoActividad"
-        MnuTipoActividad.Size = New Size(172, 22)
+        MnuTipoActividad.Size = New Size(180, 22)
+        MnuTipoActividad.Tag = "RELOJ_NOMENCLADORES_TIPO_ACTIVIDAD"
         MnuTipoActividad.Text = "&Tipo Actividad"
         ' 
         ' ToolStripSeparator26
         ' 
         ToolStripSeparator26.Name = "ToolStripSeparator26"
-        ToolStripSeparator26.Size = New Size(169, 6)
+        ToolStripSeparator26.Size = New Size(177, 6)
         ' 
         ' UniformesToolStripMenuItem
         ' 
         UniformesToolStripMenuItem.Name = "UniformesToolStripMenuItem"
-        UniformesToolStripMenuItem.Size = New Size(172, 22)
+        UniformesToolStripMenuItem.Size = New Size(180, 22)
+        UniformesToolStripMenuItem.Tag = "RELOJ_NOMENCLADORES_UNIFORMES"
         UniformesToolStripMenuItem.Text = "Uniformes"
         ' 
         ' ToolStripSeparator27
         ' 
         ToolStripSeparator27.Name = "ToolStripSeparator27"
-        ToolStripSeparator27.Size = New Size(169, 6)
+        ToolStripSeparator27.Size = New Size(177, 6)
         ' 
         ' TallesToolStripMenuItem
         ' 
         TallesToolStripMenuItem.Name = "TallesToolStripMenuItem"
-        TallesToolStripMenuItem.Size = New Size(172, 22)
+        TallesToolStripMenuItem.Size = New Size(180, 22)
+        TallesToolStripMenuItem.Tag = "RELOJ_NOMENCLADORES_TALLES"
         TallesToolStripMenuItem.Text = "Talles"
         ' 
         ' MnuSeguridad
@@ -534,12 +574,14 @@ Partial Class MainForm
         MnuSeguridad.DropDownItems.AddRange(New ToolStripItem() {MnuInformacionReservada, ToolStripSeparator22, MnuIniciarSesion, ToolStripSeparator23, MnuEditarINI})
         MnuSeguridad.Name = "MnuSeguridad"
         MnuSeguridad.Size = New Size(72, 20)
+        MnuSeguridad.Tag = "RELOJ_SEGURIDAD"
         MnuSeguridad.Text = "&Seguridad"
         ' 
         ' MnuInformacionReservada
         ' 
         MnuInformacionReservada.Name = "MnuInformacionReservada"
         MnuInformacionReservada.Size = New Size(195, 22)
+        MnuInformacionReservada.Tag = "RELOJ_SEGURIDAD_INFORMACION_RESERVADA"
         MnuInformacionReservada.Text = "&Información Reservada"
         ' 
         ' ToolStripSeparator22
@@ -551,6 +593,7 @@ Partial Class MainForm
         ' 
         MnuIniciarSesion.Name = "MnuIniciarSesion"
         MnuIniciarSesion.Size = New Size(195, 22)
+        MnuIniciarSesion.Tag = "RELOJ_SEGURIDAD_INICIAR_SESION"
         MnuIniciarSesion.Text = "&Iniciar Sesión"
         ' 
         ' ToolStripSeparator23
@@ -562,6 +605,7 @@ Partial Class MainForm
         ' 
         MnuEditarINI.Name = "MnuEditarINI"
         MnuEditarINI.Size = New Size(195, 22)
+        MnuEditarINI.Tag = "RELOJ_SEGURIDAD_EDITAR_INI"
         MnuEditarINI.Text = "&Editar .INI"
         ' 
         ' MnuVentanas
@@ -569,24 +613,28 @@ Partial Class MainForm
         MnuVentanas.DropDownItems.AddRange(New ToolStripItem() {MnuVentanasActivas, MnuVentanasCerrar, MnuVentanasCerrarTodas, ToolStripSeparator24, MnuVentanasCascada, MnuVentanasVertical, MnuVentanasHorizontal, ToolStripSeparator25, MnuVentanasReorganizar, MnuVentanasImprimir})
         MnuVentanas.Name = "MnuVentanas"
         MnuVentanas.Size = New Size(66, 20)
+        MnuVentanas.Tag = "RELOJ_VENTANAS"
         MnuVentanas.Text = "&Ventanas"
         ' 
         ' MnuVentanasActivas
         ' 
         MnuVentanasActivas.Name = "MnuVentanasActivas"
         MnuVentanasActivas.Size = New Size(174, 22)
+        MnuVentanasActivas.Tag = "RELOJ_VENTANAS_VENTANAS_ACTIVAS"
         MnuVentanasActivas.Text = "Ventanas &Activas"
         ' 
         ' MnuVentanasCerrar
         ' 
         MnuVentanasCerrar.Name = "MnuVentanasCerrar"
         MnuVentanasCerrar.Size = New Size(174, 22)
+        MnuVentanasCerrar.Tag = "RELOJ_VENTANAS_CERRAR"
         MnuVentanasCerrar.Text = "&Cerrar"
         ' 
         ' MnuVentanasCerrarTodas
         ' 
         MnuVentanasCerrarTodas.Name = "MnuVentanasCerrarTodas"
         MnuVentanasCerrarTodas.Size = New Size(174, 22)
+        MnuVentanasCerrarTodas.Tag = "RELOJ_VENTANAS_CERRAR_TODAS"
         MnuVentanasCerrarTodas.Text = "Cerrar &Todas"
         ' 
         ' ToolStripSeparator24
@@ -598,18 +646,21 @@ Partial Class MainForm
         ' 
         MnuVentanasCascada.Name = "MnuVentanasCascada"
         MnuVentanasCascada.Size = New Size(174, 22)
+        MnuVentanasCascada.Tag = "RELOJ_VENTANAS_CASCADA"
         MnuVentanasCascada.Text = "&Cascada"
         ' 
         ' MnuVentanasVertical
         ' 
         MnuVentanasVertical.Name = "MnuVentanasVertical"
         MnuVentanasVertical.Size = New Size(174, 22)
+        MnuVentanasVertical.Tag = "RELOJ_VENTANAS_VERTICAL"
         MnuVentanasVertical.Text = "&Vertical"
         ' 
         ' MnuVentanasHorizontal
         ' 
         MnuVentanasHorizontal.Name = "MnuVentanasHorizontal"
         MnuVentanasHorizontal.Size = New Size(174, 22)
+        MnuVentanasHorizontal.Tag = "RELOJ_VENTANAS_HORIZONTAL"
         MnuVentanasHorizontal.Text = "&Horizontal"
         ' 
         ' ToolStripSeparator25
@@ -621,12 +672,14 @@ Partial Class MainForm
         ' 
         MnuVentanasReorganizar.Name = "MnuVentanasReorganizar"
         MnuVentanasReorganizar.Size = New Size(174, 22)
+        MnuVentanasReorganizar.Tag = "RELOJ_VENTANAS_REORGANIZAR_ICONOS"
         MnuVentanasReorganizar.Text = "Reorganizar &Iconos"
         ' 
         ' MnuVentanasImprimir
         ' 
         MnuVentanasImprimir.Name = "MnuVentanasImprimir"
         MnuVentanasImprimir.Size = New Size(174, 22)
+        MnuVentanasImprimir.Tag = "RELOJ_VENTANAS_IMPRIMIR_VENTANA"
         MnuVentanasImprimir.Text = "&Imprimir Ventana"
         ' 
         ' MnuAyuda
@@ -634,18 +687,21 @@ Partial Class MainForm
         MnuAyuda.DropDownItems.AddRange(New ToolStripItem() {MnuAcercaDe, MnuAyudaHelp})
         MnuAyuda.Name = "MnuAyuda"
         MnuAyuda.Size = New Size(24, 20)
+        MnuAyuda.Tag = "RELOJ_"
         MnuAyuda.Text = "&?"
         ' 
         ' MnuAcercaDe
         ' 
         MnuAcercaDe.Name = "MnuAcercaDe"
         MnuAcercaDe.Size = New Size(135, 22)
+        MnuAcercaDe.Tag = "RELOJ__ACERCA_DE"
         MnuAcercaDe.Text = "&Acerca de..."
         ' 
         ' MnuAyudaHelp
         ' 
         MnuAyudaHelp.Name = "MnuAyudaHelp"
         MnuAyudaHelp.Size = New Size(135, 22)
+        MnuAyudaHelp.Tag = "RELOJ__AYUDA"
         MnuAyudaHelp.Text = "A&yuda"
         ' 
         ' MenuStrip1

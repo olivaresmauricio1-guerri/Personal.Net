@@ -1,4 +1,4 @@
-﻿Imports DSM = DataSourceManager.Lib.DataSourceManager
+Imports DSM = DataSourceManager.Lib.DataSourceManager
 Imports System.Globalization
 Imports System.Threading
 
@@ -45,6 +45,7 @@ Public Class frmSesion
     End Sub
 
     Private Sub btnAceptar_Click(sender As Object, e As EventArgs) Handles btnAceptar.Click
+        Permisos.Limpiar()
         Try
             intentos += 1
             Dim usuario As String = TxtUsuario.Text.Trim().ToUpper()
@@ -80,18 +81,14 @@ Public Class frmSesion
                 Return
             End If
 
-            General.OpcionesHabilitadas = ObtenerOpcionesHabilitadas(usuario)
+            Permisos.Cargar(usuario)
 
-            If String.IsNullOrEmpty(General.OpcionesHabilitadas) Then
-                MessageBox.Show("No se encontraron opciones habilitadas para el usuario actual.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Application.Exit()
-            End If
-
-            Me.Hide()
             Dim mainForm As New MainForm()
             mainForm.Show()
+            Me.Hide()
 
         Catch ex As Exception
+            Permisos.Limpiar()
             MessageBox.Show("Error al intentar conectar: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
@@ -99,19 +96,6 @@ Public Class frmSesion
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         Application.Exit()
     End Sub
-
-    Private Function ObtenerOpcionesHabilitadas(usuario As String) As String
-        Try
-            Dim sql = "SELECT Autoriz FROM Habilitaciones WHERE Usuario = @Usuario AND Modulo = @Modulo"
-            Dim tabla = DSM.ExecuteQuery(DSM.Seguridad, sql, CmdParams("@Usuario", usuario, "@Modulo", General.modulo), True)
-            If tabla.Rows.Count > 0 Then
-                Return tabla.Rows(0)("Autoriz").ToString()
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Error al obtener habilitaciones: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-        Return String.Empty
-    End Function
 
     Private Sub ManejarErrorLogin()
 

@@ -35,6 +35,7 @@ Partial Class frmHorario
         radAgente = New RadioButton()
         radSemana = New RadioButton()
         chkDuplicado = New CheckBox()
+        btnPublicar = New Button()
         SuspendLayout()
         ' 
         ' dtpDesde
@@ -77,7 +78,7 @@ Partial Class frmHorario
         cmbSucursal.FormattingEnabled = True
         cmbSucursal.Location = New Point(252, 30)
         cmbSucursal.Name = "cmbSucursal"
-        cmbSucursal.Size = New Size(221, 23)
+        cmbSucursal.Size = New Size(169, 23)
         cmbSucursal.TabIndex = 4
         ' 
         ' lblSucursal
@@ -106,7 +107,7 @@ Partial Class frmHorario
         btnSalir.FlatStyle = FlatStyle.Flat
         btnSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
         btnSalir.ForeColor = Color.White
-        btnSalir.Location = New Point(388, 96)
+        btnSalir.Location = New Point(479, 96)
         btnSalir.Name = "btnSalir"
         btnSalir.Size = New Size(85, 30)
         btnSalir.TabIndex = 7
@@ -170,11 +171,26 @@ Partial Class frmHorario
         chkDuplicado.Text = "Por duplicado"
         chkDuplicado.UseVisualStyleBackColor = True
         ' 
+        ' btnPublicar
+        ' 
+        btnPublicar.BackColor = Color.LightBlue
+        btnPublicar.Cursor = Cursors.Hand
+        btnPublicar.FlatStyle = FlatStyle.Flat
+        btnPublicar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
+        btnPublicar.ForeColor = SystemColors.ControlText
+        btnPublicar.Location = New Point(388, 96)
+        btnPublicar.Name = "btnPublicar"
+        btnPublicar.Size = New Size(85, 30)
+        btnPublicar.TabIndex = 13
+        btnPublicar.Text = "Publicar"
+        btnPublicar.UseVisualStyleBackColor = False
+        ' 
         ' frmHorario
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(482, 139)
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
+        ClientSize = New Size(569, 139)
+        Controls.Add(btnPublicar)
         Controls.Add(chkDuplicado)
         Controls.Add(radSemana)
         Controls.Add(radAgente)
@@ -210,4 +226,5 @@ Partial Class frmHorario
     Friend WithEvents radAgente As RadioButton
     Friend WithEvents radSemana As RadioButton
     Friend WithEvents chkDuplicado As CheckBox
+    Friend WithEvents btnPublicar As Button
 End Class

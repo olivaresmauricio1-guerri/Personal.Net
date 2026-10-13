@@ -257,8 +257,8 @@ Partial Class frmIngresoHorarioManual
         ' 
         ' frmIngresoHorarioManual
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         BackColor = SystemColors.Control
         ClientSize = New Size(484, 397)
         Controls.Add(btnGuardar)

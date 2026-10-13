@@ -131,8 +131,8 @@ Partial Class frmEnvioRecibos
         ' 
         ' frmEnvioRecibos
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(1136, 484)
         Controls.Add(rdbSeleccion)
         Controls.Add(rdbTodos)
