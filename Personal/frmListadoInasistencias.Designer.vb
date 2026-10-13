@@ -19,90 +19,90 @@ Partial Class frmListadoInasistencias
 
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.lblBuscar = New System.Windows.Forms.Label()
-        Me.txtAnio = New System.Windows.Forms.TextBox()
-        Me.cmbMes = New System.Windows.Forms.ComboBox()
-        Me.lblMes = New System.Windows.Forms.Label()
-        Me.cmdSalir = New System.Windows.Forms.Button()
-        Me.cmdVer = New System.Windows.Forms.Button()
-        Me.SuspendLayout()
+        lblBuscar = New Label()
+        txtAnio = New TextBox()
+        cmbMes = New ComboBox()
+        lblMes = New Label()
+        cmdSalir = New Button()
+        cmdVer = New Button()
+        SuspendLayout()
         ' 
         ' lblBuscar
         ' 
-        Me.lblBuscar.AutoSize = True
-        Me.lblBuscar.Location = New System.Drawing.Point(180, 15)
-        Me.lblBuscar.Name = "lblBuscar"
-        Me.lblBuscar.Size = New System.Drawing.Size(31, 15)
-        Me.lblBuscar.TabIndex = 8
-        Me.lblBuscar.Text = "Año:"
+        lblBuscar.AutoSize = True
+        lblBuscar.Location = New Point(180, 15)
+        lblBuscar.Name = "lblBuscar"
+        lblBuscar.Size = New Size(32, 15)
+        lblBuscar.TabIndex = 8
+        lblBuscar.Text = "Año:"
         ' 
         ' txtAnio
         ' 
-        Me.txtAnio.Location = New System.Drawing.Point(218, 12)
-        Me.txtAnio.Name = "txtAnio"
-        Me.txtAnio.Size = New System.Drawing.Size(64, 23)
-        Me.txtAnio.TabIndex = 9
+        txtAnio.Location = New Point(218, 12)
+        txtAnio.Name = "txtAnio"
+        txtAnio.Size = New Size(64, 23)
+        txtAnio.TabIndex = 9
         ' 
         ' cmbMes
         ' 
-        Me.cmbMes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbMes.Location = New System.Drawing.Point(47, 12)
-        Me.cmbMes.Name = "cmbMes"
-        Me.cmbMes.Size = New System.Drawing.Size(115, 23)
-        Me.cmbMes.TabIndex = 7
+        cmbMes.DropDownStyle = ComboBoxStyle.DropDownList
+        cmbMes.Location = New Point(47, 12)
+        cmbMes.Name = "cmbMes"
+        cmbMes.Size = New Size(115, 23)
+        cmbMes.TabIndex = 7
         ' 
         ' lblMes
         ' 
-        Me.lblMes.AutoSize = True
-        Me.lblMes.Location = New System.Drawing.Point(9, 15)
-        Me.lblMes.Name = "lblMes"
-        Me.lblMes.Size = New System.Drawing.Size(33, 15)
-        Me.lblMes.TabIndex = 6
-        Me.lblMes.Text = "Mes:"
+        lblMes.AutoSize = True
+        lblMes.Location = New Point(9, 15)
+        lblMes.Name = "lblMes"
+        lblMes.Size = New Size(32, 15)
+        lblMes.TabIndex = 6
+        lblMes.Text = "Mes:"
         ' 
         ' cmdSalir
         ' 
-        Me.cmdSalir.BackColor = System.Drawing.Color.IndianRed
-        Me.cmdSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.cmdSalir.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdSalir.ForeColor = System.Drawing.Color.White
-        Me.cmdSalir.Location = New System.Drawing.Point(196, 61)
-        Me.cmdSalir.Name = "cmdSalir"
-        Me.cmdSalir.Size = New System.Drawing.Size(88, 30)
-        Me.cmdSalir.TabIndex = 12
-        Me.cmdSalir.Text = "Salir"
-        Me.cmdSalir.UseVisualStyleBackColor = False
+        cmdSalir.BackColor = Color.IndianRed
+        cmdSalir.FlatStyle = FlatStyle.Flat
+        cmdSalir.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        cmdSalir.ForeColor = Color.White
+        cmdSalir.Location = New Point(196, 61)
+        cmdSalir.Name = "cmdSalir"
+        cmdSalir.Size = New Size(88, 30)
+        cmdSalir.TabIndex = 12
+        cmdSalir.Text = "Salir"
+        cmdSalir.UseVisualStyleBackColor = False
         ' 
         ' cmdVer
         ' 
-        Me.cmdVer.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.cmdVer.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdVer.Location = New System.Drawing.Point(100, 60)
-        Me.cmdVer.Name = "cmdVer"
-        Me.cmdVer.Size = New System.Drawing.Size(88, 30)
-        Me.cmdVer.TabIndex = 13
-        Me.cmdVer.Text = "Ver"
-        Me.cmdVer.UseVisualStyleBackColor = True
+        cmdVer.FlatStyle = FlatStyle.Flat
+        cmdVer.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        cmdVer.Location = New Point(100, 60)
+        cmdVer.Name = "cmdVer"
+        cmdVer.Size = New Size(88, 30)
+        cmdVer.TabIndex = 13
+        cmdVer.Text = "Ver"
+        cmdVer.UseVisualStyleBackColor = True
         ' 
         ' frmListadoInasistencias
         ' 
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(293, 102)
-        Me.Controls.Add(Me.cmdVer)
-        Me.Controls.Add(Me.cmdSalir)
-        Me.Controls.Add(Me.txtAnio)
-        Me.Controls.Add(Me.lblBuscar)
-        Me.Controls.Add(Me.cmbMes)
-        Me.Controls.Add(Me.lblMes)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.MaximizeBox = False
-        Me.MinimizeBox = False
-        Me.Name = "frmListadoInasistencias"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Listado de Inasistencias"
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
+        ClientSize = New Size(293, 102)
+        Controls.Add(cmdVer)
+        Controls.Add(cmdSalir)
+        Controls.Add(txtAnio)
+        Controls.Add(lblBuscar)
+        Controls.Add(cmbMes)
+        Controls.Add(lblMes)
+        FormBorderStyle = FormBorderStyle.FixedSingle
+        MaximizeBox = False
+        MinimizeBox = False
+        Name = "frmListadoInasistencias"
+        StartPosition = FormStartPosition.CenterScreen
+        Text = "Listado de Inasistencias"
+        ResumeLayout(False)
+        PerformLayout()
 
     End Sub
 

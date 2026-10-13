@@ -2680,16 +2680,27 @@ ELSE
                         End If
                     End If
 
-                    Dim tokenConfirmacion = GenerarTokenConfirmacionBono()
-                    Dim fechaExpiracionToken = DateTime.Now.AddDays(DiasExpiracionTokenConfirmacionBono)
-                    Dim tokenGuardado = GuardarTokenConfirmacionBono(idDetalle, tokenConfirmacion, fechaExpiracionToken)
-                    If Not tokenGuardado Then
-                        ActualizarResultadoEnvioBono(idDetalle, "ERROR", "No se pudo generar el token de confirmación para este bono.")
-                        conError += 1
-                        Continue For
+                    Dim estadoConfirmacion = Convert.ToString(filaBono("EstadoConfirmacion")).Trim()
+                    If String.IsNullOrWhiteSpace(estadoConfirmacion) OrElse
+                       estadoConfirmacion.Equals("PENDIENTE", StringComparison.OrdinalIgnoreCase) Then
+                        Dim tokenConfirmacion = GenerarTokenConfirmacionBono()
+                        Dim fechaExpiracionToken = DateTime.Now.AddDays(DiasExpiracionTokenConfirmacionBono)
+                        If Not GuardarTokenConfirmacionBono(idDetalle, tokenConfirmacion, fechaExpiracionToken) Then
+                            ActualizarResultadoEnvioBono(idDetalle, "ERROR", "No se actualizó el token: el bono pudo cambiar de estado.")
+                            conError += 1
+                            Continue For
+                        End If
                     End If
 
-                    Dim linkVista = ObtenerLinkVistaBono(tokenVista)
+                    Dim invitacion As String
+                    Try
+                        invitacion = CrearInvitacionPortalBono(idDetalle, legajoTexto, correoDestino)
+                    Catch
+                        ActualizarResultadoEnvioBono(idDetalle, "ERROR", "No se pudo crear la invitación al portal. Revisar migración, correo y habilitación.")
+                        conError += 1
+                        Continue For
+                    End Try
+                    Dim linkVista = ObtenerLinkInvitacionBono(invitacion)
                     Dim asunto = ConstruirTextoCorreoBono(asuntoBase, periodoTexto)
                     Dim mensajeConPeriodo = ConstruirTextoCorreoBono(mensajeBase, periodoTexto)
                     Dim mensajeHtml = ConstruirCuerpoCorreoVisorBono(mensajeConPeriodo, linkVista)
@@ -2705,9 +2716,10 @@ ELSE
                             smtpClient.Send(mail)
                         End Using
 
-                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Enviado correctamente a {correoDestino} - link visor.")
+                        ActualizarResultadoEnvioBono(idDetalle, "ENVIADO", $"Aviso del bono enviado a {correoDestino} - invitación al portal.")
                         enviados += 1
                     Catch exEnvio As Exception
+                        RevocarInvitacionPortalBono(invitacion)
                         Dim detalleError = If(exEnvio.InnerException?.Message, exEnvio.Message)
                         ActualizarResultadoEnvioBono(idDetalle, "ERROR", LimitarTextoBono(detalleError, 500))
                         conError += 1
@@ -2917,9 +2929,43 @@ ELSE
                       .Replace("=", "")
     End Function
 
-    Private Function ObtenerLinkVistaBono(tokenVista As String) As String
-        Return $"{BaseUrlPublicoBonos.TrimEnd("/"c)}/ver?token={Uri.EscapeDataString(tokenVista)}"
+    Private Function ObtenerLinkInvitacionBono(invitacion As String) As String
+        Return $"{BaseUrlPublicoBonos.TrimEnd("/"c)}/acceso?invitacion={Uri.EscapeDataString(invitacion)}"
     End Function
+
+    Private Function CrearInvitacionPortalBono(idDetalle As Integer, legajo As String, correo As String) As String
+        Dim direccion As New MailAddress(correo.Trim())
+        If correo.Trim().Length > 320 OrElse
+           Not direccion.Address.Equals(correo.Trim(), StringComparison.OrdinalIgnoreCase) Then
+            Throw New InvalidOperationException("Correo inválido para el portal.")
+        End If
+        Dim token = GenerarTokenVistaBono() ' Nueva credencial aleatoria independiente de los tokens del recibo.
+        Dim tokenHash = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(token))
+        Dim correoHash = System.Security.Cryptography.SHA256.HashData(
+            System.Text.Encoding.UTF8.GetBytes(correo.Trim().ToLowerInvariant()))
+        Dim sql = "EXEC dbo.PortalCrearInvitacion @Legajo=@Legajo, @IdDetalle=@IdDetalle, " &
+                  "@TokenHash=@TokenHash, @CorreoHash=@CorreoHash, @Correo=@Correo"
+        Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql, CmdParams(
+            "@Legajo", legajo.Trim(), "@IdDetalle", idDetalle,
+            "@TokenHash", tokenHash, "@CorreoHash", correoHash, "@Correo", correo.Trim()), True)
+        If tabla Is Nothing OrElse tabla.Rows.Count <> 1 OrElse Convert.ToInt32(tabla.Rows(0)("Creada")) <> 1 Then
+            Throw New InvalidOperationException("No se pudo persistir la invitación.")
+        End If
+        Return token
+    End Function
+
+    Private Sub RevocarInvitacionPortalBono(token As String)
+        Try
+            Dim tokenHash = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(token))
+            DSM.Execute(DSM.Personal,
+                "UPDATE dbo.PortalInvitaciones SET RevocadaUtc=SYSUTCDATETIME() WHERE TokenHash=@Hash AND RevocadaUtc IS NULL",
+                CmdParams("@Hash", tokenHash), True)
+        Catch
+            ' No registrar el token ni secretos de conexión.
+            MessageBox.Show("No se pudo revocar la invitación del envío fallido. Avisá al administrador del portal.",
+                            "Invitación pendiente de revisión", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
+    End Sub
 
     Private Function ObtenerLinkConfirmacionBono(token As String) As String
         Return $"{BaseUrlPublicoBonos.TrimEnd("/"c)}/api/recibos/confirmar?token={Uri.EscapeDataString(token)}"
@@ -2932,15 +2978,18 @@ ELSE
                       "    FechaExpiracionToken = @FechaExpiracionToken, " &
                       "    EstadoConfirmacion = ISNULL(EstadoConfirmacion,'PENDIENTE') " &
                       "WHERE IdDetalle = @IdDetalle " &
-                      "  AND (TokenConfirmacion IS NULL OR FechaExpiracionToken IS NOT NULL)"
+                      "  AND (EstadoConfirmacion IS NULL OR LTRIM(RTRIM(EstadoConfirmacion))='' " &
+                      "       OR UPPER(LTRIM(RTRIM(EstadoConfirmacion)))='PENDIENTE'); " &
+                      "SELECT @@ROWCOUNT AS Afectados;"
 
             Dim parametros = CmdParams(
                 "@Token", token,
                 "@FechaExpiracionToken", fechaExpiracion,
                 "@IdDetalle", idDetalle)
 
-            DSM.Execute(DSM.Personal, sql, parametros, True)
-            Return True
+            Dim tabla = DSM.ExecuteQuery(DSM.Personal, sql, parametros, True)
+            Return tabla IsNot Nothing AndAlso tabla.Rows.Count = 1 AndAlso
+                Convert.ToInt32(tabla.Rows(0)("Afectados")) = 1
         Catch
             Return False
         End Try
@@ -2967,16 +3016,18 @@ ELSE
     End Function
 
     Private Function ConstruirCuerpoCorreoVisorBono(textoBase As String, linkVista As String) As String
-        Dim textoPlano = If(textoBase, String.Empty).Replace(Environment.NewLine, "<br/>")
+        Dim textoPlano = WebUtility.HtmlEncode(If(textoBase, String.Empty)).Replace(Environment.NewLine, "<br/>")
+        Dim enlaceSeguro = WebUtility.HtmlEncode(linkVista)
 
         Return $"<html><body style=""font-family:Arial, sans-serif; font-size:12pt;"">
 <p>{textoPlano}</p>
-<p>Por favor, abrí el siguiente enlace para visualizar tu bono de sueldo, descargarlo y confirmar tu recepción:</p>
+<p>Tenés un nuevo bono disponible. Abrí el portal para consultar, descargar y confirmar tus recibos.</p>
+<p>Para acceder, deberás escribir tu correo registrado e ingresar el código que el portal te enviará automáticamente.</p>
 <p style=""margin-top:20px;"">
-  <a href=""{linkVista}""
-     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">VER BONO DE SUELDO</a>
+  <a href=""{enlaceSeguro}""
+     style=""display:inline-block;background:#0b5fc1;color:#fff;padding:14px 28px;text-decoration:none;border-radius:6px;font-size:13pt;"">ACCEDER AL BONO</a>
 </p>
-<p style=""margin-top:12px;color:#555;font-size:10pt;"">Dentro de la pantalla vas a encontrar el PDF del Recibo de sueldo para descargarlo.</p>
+<p style=""margin-top:12px;color:#555;font-size:10pt;"">La invitación es temporal. Si vence, podés ingresar al portal con tu legajo y correo registrado.</p>
 <p style=""margin-top:20px;color:#555;font-size:10pt;"">Este link es personal e intransferible. Si no podés abrirlo, contactate con RRHH.</p>
 </body></html>"
     End Function

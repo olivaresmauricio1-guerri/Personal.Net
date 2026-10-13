@@ -143,7 +143,7 @@ Partial Class frmTipoUniformes
         Label6.Location = New Point(147, 344)
         Label6.Margin = New Padding(4, 0, 4, 0)
         Label6.Name = "Label6"
-        Label6.Size = New Size(92, 15)
+        Label6.Size = New Size(87, 15)
         Label6.TabIndex = 21
         Label6.Text = "Tipo Uniforme:"
         ' 
@@ -162,7 +162,7 @@ Partial Class frmTipoUniformes
         Label2.Location = New Point(4, 344)
         Label2.Margin = New Padding(4, 0, 4, 0)
         Label2.Name = "Label2"
-        Label2.Size = New Size(56, 15)
+        Label2.Size = New Size(59, 15)
         Label2.TabIndex = 13
         Label2.Text = "Cod Tipo:"
         ' 
@@ -208,8 +208,8 @@ Partial Class frmTipoUniformes
         ' 
         ' frmTipoUniformes
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(578, 441)
         Controls.Add(DgvListado)
         Controls.Add(Label1)

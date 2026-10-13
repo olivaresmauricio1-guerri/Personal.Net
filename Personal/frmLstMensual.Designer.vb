@@ -125,8 +125,8 @@ Partial Class frmLstMensual
         ' 
         ' frmLstMensual
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(482, 106)
         Controls.Add(cmdVer)
         Controls.Add(btnSalir)

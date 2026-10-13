@@ -191,6 +191,29 @@ Public Module Reportes
         End Try
     End Sub
 
+    Public Function PublicarControlHorario(desde As Date, hasta As Date, txtSucursal As String, publicadoPor As String) As (Semanas As Integer, Agentes As Integer, Registros As Integer)
+        Dim sql As String = "EXEC dbo.sp_PublicarControlHorario " &
+            "@Desde=@desde, @Hasta=@hasta, @Sucursal=@sucursal, @PublicadoPor=@publicadoPor;"
+        Dim parametros = CmdParams(
+            "@desde", desde.Date,
+            "@hasta", hasta.Date,
+            "@sucursal", If(txtSucursal = "(Todas)", DBNull.Value, txtSucursal),
+            "@publicadoPor", publicadoPor
+        )
+
+        Dim resultado As DataTable = DSM.ExecuteQuery(DSM.Personal, sql, parametros)
+        If resultado.Rows.Count <> 1 Then
+            Throw New InvalidOperationException("La base no devolvió el resultado de la publicación.")
+        End If
+
+        Dim fila As DataRow = resultado.Rows(0)
+        Return (
+            CInt(fila("SemanasSolicitadas")),
+            CInt(fila("AgentesPublicados")),
+            CInt(fila("RegistrosPublicados"))
+        )
+    End Function
+
     Public Sub ListadoMensualPorSucursal(desde As Date, hasta As Date, idSucursal As Integer, txtSucursal As String, soloNegativos As Boolean)
 
         Dim sqlListadoMensual As String = $"

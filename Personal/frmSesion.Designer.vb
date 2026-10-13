@@ -128,8 +128,8 @@ Partial Class frmSesion
         ' frmSesion
         ' 
         AcceptButton = btnAceptar
-        AutoScaleDimensions = New SizeF(7F, 13F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(243, 145)
         Controls.Add(Frame1)
         Font = New Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
