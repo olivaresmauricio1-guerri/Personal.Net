@@ -790,8 +790,8 @@ Partial Class frmResumenAsistenciaEventuales
         ' 
         ' frmResumenAsistenciaEventuales
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(837, 622)
         Controls.Add(DgvInasistencias)
         Controls.Add(Label25)

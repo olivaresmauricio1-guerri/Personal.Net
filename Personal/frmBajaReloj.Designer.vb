@@ -115,8 +115,8 @@ Partial Class frmBajaReloj
         ' 
         ' frmBajaReloj
         ' 
-        AutoScaleDimensions = New SizeF(7F, 15F)
-        AutoScaleMode = AutoScaleMode.Font
+        AutoScaleDimensions = New SizeF(96F, 96F)
+        AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(800, 374)
         Controls.Add(chkAutoImportar)
         Controls.Add(cmdImportarTodos)
