@@ -438,95 +438,95 @@ Partial Class MainForm
         ' MnuAreas
         ' 
         MnuAreas.Name = "MnuAreas"
-        MnuAreas.Size = New Size(172, 22)
+        MnuAreas.Size = New Size(180, 22)
         MnuAreas.Text = "&Áreas"
         ' 
         ' ToolStripSeparator16
         ' 
         ToolStripSeparator16.Name = "ToolStripSeparator16"
-        ToolStripSeparator16.Size = New Size(169, 6)
+        ToolStripSeparator16.Size = New Size(177, 6)
         ' 
         ' MnuCategorias
         ' 
         MnuCategorias.Name = "MnuCategorias"
-        MnuCategorias.Size = New Size(172, 22)
+        MnuCategorias.Size = New Size(180, 22)
         MnuCategorias.Text = "&Categorías"
         ' 
         ' ToolStripSeparator17
         ' 
         ToolStripSeparator17.Name = "ToolStripSeparator17"
-        ToolStripSeparator17.Size = New Size(169, 6)
+        ToolStripSeparator17.Size = New Size(177, 6)
         ' 
         ' MnuFeriados
         ' 
         MnuFeriados.Name = "MnuFeriados"
-        MnuFeriados.Size = New Size(172, 22)
+        MnuFeriados.Size = New Size(180, 22)
         MnuFeriados.Text = "&Feriados"
         ' 
         ' ToolStripSeparator18
         ' 
         ToolStripSeparator18.Name = "ToolStripSeparator18"
-        ToolStripSeparator18.Size = New Size(169, 6)
+        ToolStripSeparator18.Size = New Size(177, 6)
         ' 
         ' MnuEncargados
         ' 
         MnuEncargados.Name = "MnuEncargados"
-        MnuEncargados.Size = New Size(172, 22)
+        MnuEncargados.Size = New Size(180, 22)
         MnuEncargados.Text = "Encargados"
         ' 
         ' ToolStripSeparator19
         ' 
         ToolStripSeparator19.Name = "ToolStripSeparator19"
-        ToolStripSeparator19.Size = New Size(169, 6)
+        ToolStripSeparator19.Size = New Size(177, 6)
         ' 
         ' MnuSucursales
         ' 
         MnuSucursales.Name = "MnuSucursales"
-        MnuSucursales.Size = New Size(172, 22)
+        MnuSucursales.Size = New Size(180, 22)
         MnuSucursales.Text = "&Sucursales"
         ' 
         ' ToolStripSeparator20
         ' 
         ToolStripSeparator20.Name = "ToolStripSeparator20"
-        ToolStripSeparator20.Size = New Size(169, 6)
+        ToolStripSeparator20.Size = New Size(177, 6)
         ' 
         ' MnuTiposInasistencias
         ' 
         MnuTiposInasistencias.Name = "MnuTiposInasistencias"
-        MnuTiposInasistencias.Size = New Size(172, 22)
+        MnuTiposInasistencias.Size = New Size(180, 22)
         MnuTiposInasistencias.Text = "&Tipos Inasistencias"
         ' 
         ' ToolStripSeparator21
         ' 
         ToolStripSeparator21.Name = "ToolStripSeparator21"
-        ToolStripSeparator21.Size = New Size(169, 6)
+        ToolStripSeparator21.Size = New Size(177, 6)
         ' 
         ' MnuTipoActividad
         ' 
         MnuTipoActividad.Name = "MnuTipoActividad"
-        MnuTipoActividad.Size = New Size(172, 22)
+        MnuTipoActividad.Size = New Size(180, 22)
         MnuTipoActividad.Text = "&Tipo Actividad"
         ' 
         ' ToolStripSeparator26
         ' 
         ToolStripSeparator26.Name = "ToolStripSeparator26"
-        ToolStripSeparator26.Size = New Size(169, 6)
+        ToolStripSeparator26.Size = New Size(177, 6)
         ' 
         ' UniformesToolStripMenuItem
         ' 
         UniformesToolStripMenuItem.Name = "UniformesToolStripMenuItem"
-        UniformesToolStripMenuItem.Size = New Size(172, 22)
+        UniformesToolStripMenuItem.Size = New Size(180, 22)
         UniformesToolStripMenuItem.Text = "Uniformes"
         ' 
         ' ToolStripSeparator27
         ' 
         ToolStripSeparator27.Name = "ToolStripSeparator27"
-        ToolStripSeparator27.Size = New Size(169, 6)
+        ToolStripSeparator27.Size = New Size(177, 6)
         ' 
         ' TallesToolStripMenuItem
         ' 
         TallesToolStripMenuItem.Name = "TallesToolStripMenuItem"
-        TallesToolStripMenuItem.Size = New Size(172, 22)
+        TallesToolStripMenuItem.Size = New Size(180, 22)
         TallesToolStripMenuItem.Text = "Talles"
         ' 
         ' MnuSeguridad
