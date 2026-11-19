@@ -31,6 +31,7 @@ Partial Class frmEnvioRecibos
         btnEnviar = New Button()
         rdbTodos = New RadioButton()
         rdbSeleccion = New RadioButton()
+        btnReporteFirmas = New Button()
         CType(dgvListaRecibos, ComponentModel.ISupportInitialize).BeginInit()
         CType(dgvProcesos, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
@@ -107,11 +108,22 @@ Partial Class frmEnvioRecibos
         btnEnviar.Text = "Enviar"
         btnEnviar.UseVisualStyleBackColor = True
         ' 
+        ' btnReporteFirmas
+        ' 
+        btnReporteFirmas.FlatStyle = FlatStyle.Flat
+        btnReporteFirmas.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnReporteFirmas.Location = New Point(194, 442)
+        btnReporteFirmas.Name = "btnReporteFirmas"
+        btnReporteFirmas.Size = New Size(92, 30)
+        btnReporteFirmas.TabIndex = 46
+        btnReporteFirmas.Text = "Reporte"
+        btnReporteFirmas.UseVisualStyleBackColor = True
+        ' 
         ' rdbTodos
         ' 
         rdbTodos.AutoSize = True
         rdbTodos.Checked = True
-        rdbTodos.Location = New Point(210, 448)
+        rdbTodos.Location = New Point(308, 448)
         rdbTodos.Name = "rdbTodos"
         rdbTodos.Size = New Size(57, 19)
         rdbTodos.TabIndex = 44
@@ -122,7 +134,7 @@ Partial Class frmEnvioRecibos
         ' rdbSeleccion
         ' 
         rdbSeleccion.AutoSize = True
-        rdbSeleccion.Location = New Point(273, 448)
+        rdbSeleccion.Location = New Point(371, 448)
         rdbSeleccion.Name = "rdbSeleccion"
         rdbSeleccion.Size = New Size(75, 19)
         rdbSeleccion.TabIndex = 45
@@ -134,6 +146,7 @@ Partial Class frmEnvioRecibos
         AutoScaleDimensions = New SizeF(96F, 96F)
         AutoScaleMode = AutoScaleMode.Dpi
         ClientSize = New Size(1136, 484)
+        Controls.Add(btnReporteFirmas)
         Controls.Add(rdbSeleccion)
         Controls.Add(rdbTodos)
         Controls.Add(btnEnviar)
@@ -161,4 +174,5 @@ Partial Class frmEnvioRecibos
     Friend WithEvents btnEnviar As Button
     Friend WithEvents rdbTodos As RadioButton
     Friend WithEvents rdbSeleccion As RadioButton
+    Friend WithEvents btnReporteFirmas As Button
 End Class

@@ -10,6 +10,7 @@ Public Class frmSesion
     Private passwordParam As String = String.Empty
 
     Private Sub frmSesion_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Icon = Drawing.Icon.ExtractAssociatedIcon(Application.ExecutablePath)
         Dim culturaFija As New CultureInfo("es-AR")
         CultureInfo.DefaultThreadCurrentCulture = culturaFija
         CultureInfo.DefaultThreadCurrentUICulture = culturaFija

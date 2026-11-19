@@ -74,6 +74,8 @@ Partial Class MainForm
         ToolStripSeparator15 = New ToolStripSeparator()
         MnuListadoAgentes = New ToolStripMenuItem()
         MnuCumpleanos = New ToolStripMenuItem()
+        ToolStripSeparator28 = New ToolStripSeparator()
+        ConfirmacionDeBonosToolStripMenuItem = New ToolStripMenuItem()
         MnuNomencladores = New ToolStripMenuItem()
         MnuAreas = New ToolStripMenuItem()
         ToolStripSeparator16 = New ToolStripSeparator()
@@ -351,7 +353,7 @@ Partial Class MainForm
         ' 
         ' MnuConsultas
         ' 
-        MnuConsultas.DropDownItems.AddRange(New ToolStripItem() {MnuListadoMensualSucursal, ToolStripSeparator10, MnuListadoMensualOficina, ToolStripSeparator11, MnuListadoDiario, ToolStripSeparator12, MnuConsultarAgentes, ToolStripSeparator13, MnuResumenAsistencia, MnuResumenEventuales, ToolStripSeparator14, MnuInasistenciaSinAviso, MnuListadoInasistencias, ToolStripSeparator15, MnuListadoAgentes, MnuCumpleanos})
+        MnuConsultas.DropDownItems.AddRange(New ToolStripItem() {MnuListadoMensualSucursal, ToolStripSeparator10, MnuListadoMensualOficina, ToolStripSeparator11, MnuListadoDiario, ToolStripSeparator12, MnuConsultarAgentes, ToolStripSeparator13, MnuResumenAsistencia, MnuResumenEventuales, ToolStripSeparator14, MnuInasistenciaSinAviso, MnuListadoInasistencias, ToolStripSeparator15, MnuListadoAgentes, MnuCumpleanos, ToolStripSeparator28, ConfirmacionDeBonosToolStripMenuItem})
         MnuConsultas.Name = "MnuConsultas"
         MnuConsultas.Size = New Size(71, 20)
         MnuConsultas.Tag = "RELOJ_CONSULTAS"
@@ -457,6 +459,18 @@ Partial Class MainForm
         MnuCumpleanos.Size = New Size(264, 22)
         MnuCumpleanos.Tag = "RELOJ_CONSULTAS_CUMPLEANOS_DEL_MES"
         MnuCumpleanos.Text = "Cumpleaños del Mes"
+        ' 
+        ' ToolStripSeparator28
+        ' 
+        ToolStripSeparator28.Name = "ToolStripSeparator28"
+        ToolStripSeparator28.Size = New Size(261, 6)
+        ' 
+        ' ConfirmacionDeBonosToolStripMenuItem
+        ' 
+        ConfirmacionDeBonosToolStripMenuItem.Name = "ConfirmacionDeBonosToolStripMenuItem"
+        ConfirmacionDeBonosToolStripMenuItem.Size = New Size(264, 22)
+        ConfirmacionDeBonosToolStripMenuItem.Tag = "RELOJ_CONSULTAS_CONFIRMACION_BONOS"
+        ConfirmacionDeBonosToolStripMenuItem.Text = "Confirmacion de Bonos"
         ' 
         ' MnuNomencladores
         ' 
@@ -860,4 +874,6 @@ Partial Class MainForm
     Friend WithEvents UniformesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator27 As ToolStripSeparator
     Friend WithEvents TallesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator28 As ToolStripSeparator
+    Friend WithEvents ConfirmacionDeBonosToolStripMenuItem As ToolStripMenuItem
 End Class
