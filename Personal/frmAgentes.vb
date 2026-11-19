@@ -14,7 +14,7 @@ Public Class frmAgentes
     Private Const NombreColumnaSeleccionBonos As String = "SeleccionadoBono"
     Private Const BaseUrlPublicoBonos As String = "https://rrhh.guerrinisa.com.ar" 'https://bonosguerrini.abrdns.com:8443"
     Private Const DiasExpiracionTokenConfirmacionBono As Integer = 10
-    Private Const CarpetaBaseRecibosBonos As String = "F:\Personal.Net\Recibos"
+    'Private Const CarpetaBaseRecibosBonos As String = "F:\Personal.Net\Recibos"
     Private Const SambaUncRaizBonos As String = "\\192.168.2.58\Recibos"
     Private Const SambaDominioBonos As String = ""
     Private Const SambaUsuarioBonos As String = "rrhh"
@@ -460,7 +460,7 @@ Public Class frmAgentes
             txtCUIL.Text = If(cuil.Length = 11, $"{cuil.Substring(0, 2)}-{cuil.Substring(2, 8)}-{cuil.Substring(10, 1)}", cuil)
         End If
     End Sub
-    Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
+    Private Sub lnkCopiar_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkCopiar.LinkClicked
         CopiarDataGrid(dgvListado, chkEncabezados.Checked)
     End Sub
     Private Sub chkEncabezados_CheckedChanged(sender As Object, e As EventArgs)
@@ -2661,8 +2661,8 @@ ELSE
                     If String.IsNullOrWhiteSpace(tokenVista) Then
                         tokenVista = GenerarTokenVistaBono()
                         Dim rutaSamba = ""
-                        If Not String.IsNullOrWhiteSpace(SambaUsuarioBonos) AndAlso rutaPdf.StartsWith(CarpetaBaseRecibosBonos, StringComparison.OrdinalIgnoreCase) Then
-                            Dim pathRelativo = rutaPdf.Substring(CarpetaBaseRecibosBonos.Length).TrimStart("\"c)
+                        If Not String.IsNullOrWhiteSpace(SambaUsuarioBonos) AndAlso rutaPdf.StartsWith(SambaUncRaizBonos, StringComparison.OrdinalIgnoreCase) Then
+                            Dim pathRelativo = rutaPdf.Substring(SambaUncRaizBonos.Length).TrimStart("\"c)
                             rutaSamba = If(String.IsNullOrWhiteSpace(pathRelativo),
                                            Path.Combine(SambaUncRaizBonos, Path.GetFileName(rutaPdf)),
                                            Path.Combine(SambaUncRaizBonos, pathRelativo))
@@ -3059,4 +3059,5 @@ ELSE
 
         Return texto.Substring(0, longitudMaxima)
     End Function
+
 End Class

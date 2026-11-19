@@ -173,11 +173,11 @@ Partial Class frmHorario
         ' 
         ' btnPublicar
         ' 
-        btnPublicar.BackColor = Color.LightBlue
+        btnPublicar.BackColor = Color.SteelBlue
         btnPublicar.Cursor = Cursors.Hand
         btnPublicar.FlatStyle = FlatStyle.Flat
         btnPublicar.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        btnPublicar.ForeColor = SystemColors.ControlText
+        btnPublicar.ForeColor = Color.White
         btnPublicar.Location = New Point(388, 96)
         btnPublicar.Name = "btnPublicar"
         btnPublicar.Size = New Size(85, 30)

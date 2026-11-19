@@ -569,6 +569,16 @@ Public Class frmEnvioRecibos
         Close()
     End Sub
 
+    Private Sub btnReporteFirmas_Click(sender As Object, e As EventArgs) Handles btnReporteFirmas.Click
+        Dim procesoInicial As Integer? = Nothing
+        Dim idProceso = ObtenerProcesoSeleccionado()
+        If idProceso > 0 Then
+            procesoInicial = idProceso
+        End If
+
+        frmReporteFirmasBonos.AbrirInstancia(Me.MdiParent, procesoInicial)
+    End Sub
+
     Private Sub dtpPeriodo_ValueChanged(sender As Object, e As EventArgs) Handles dtpPeriodo.ValueChanged
         CargoProcesos()
     End Sub

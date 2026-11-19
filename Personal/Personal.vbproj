@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
+    <ApplicationIcon>icons-20.ico</ApplicationIcon>
     <TargetFramework>net8.0-windows</TargetFramework>
 	  <StartupObject>Personal.frmSesion</StartupObject>
 	  <UseWindowsForms>true</UseWindowsForms>
@@ -25,6 +26,22 @@
 
   <ItemGroup>
     <Compile Update="frmHorario.vb" />
+    <Compile Update="frmReporteBonos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmReporteBonos.Designer.vb">
+      <DependentUpon>frmReporteBonos.vb</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="frmReporteFirmasBonos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmReporteFirmasBonos.Designer.vb">
+      <DependentUpon>frmReporteFirmasBonos.vb</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="frmResumenAsistencia - Copia.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +71,12 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
+    <EmbeddedResource Update="frmReporteBonos.resx">
+      <DependentUpon>frmReporteBonos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmReporteFirmasBonos.resx">
+      <DependentUpon>frmReporteFirmasBonos.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

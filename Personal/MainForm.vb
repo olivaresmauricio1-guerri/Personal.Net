@@ -3,7 +3,20 @@ Imports DSM = DataSourceManager.Lib.DataSourceManager
 
 Public Class MainForm
 
+    ' Todos los formularios (MDI hijos y diálogos) usan el icono del Main; se asigna en un solo lugar.
+    Private Sub AplicarIconoFormularios(sender As Object, e As EventArgs)
+        For Each f As Form In Application.OpenForms
+            If f IsNot Me AndAlso f.Icon IsNot Icon Then f.Icon = Icon
+        Next
+    End Sub
+
+    Private Sub QuitarIconoFormularios(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        RemoveHandler Application.Idle, AddressOf AplicarIconoFormularios
+    End Sub
+
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Icon = Drawing.Icon.ExtractAssociatedIcon(Application.ExecutablePath)   ' icons-20.ico (ApplicationIcon)
+        AddHandler Application.Idle, AddressOf AplicarIconoFormularios
         Me.Text = $"Personal V.{My.Application.Info.Version}"
         Me.WindowState = FormWindowState.Maximized
 
@@ -415,5 +428,10 @@ Public Class MainForm
     Private Sub UniformesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UniformesToolStripMenuItem.Click
         If Not PuedeEjecutar(UniformesToolStripMenuItem) Then Return
         frmTipoUniformes.AbrirInstancia(Me)
+    End Sub
+
+    Private Sub ConfirmacionDeBonosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfirmacionDeBonosToolStripMenuItem.Click
+        If Not PuedeEjecutar(ConfirmacionDeBonosToolStripMenuItem) Then Return
+        frmReporteBonos.AbrirInstancia(Me)
     End Sub
 End Class
